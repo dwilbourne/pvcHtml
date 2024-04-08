@@ -12,7 +12,6 @@ use pvc\interfaces\html\attribute\AttributeMultiValueInterface;
 
 /**
  * Class AttributeMultiValue
- * @extends Attribute<array<string>>
  */
 class AttributeMultiValue extends Attribute implements AttributeMultiValueInterface
 {
@@ -26,14 +25,24 @@ class AttributeMultiValue extends Attribute implements AttributeMultiValueInterf
      * @param array<string> $value
      * @throws InvalidAttributeValueException
      */
-    public function setValue(mixed $value): void
+    public function setValue($value): void
     {
         foreach ($value as $arrayItem) {
-            if (!$this->testValue(($arrayItem))) {
+            if (is_string($arrayItem) && $this->testValue($arrayItem)) {
+                $this->values[] = $arrayItem;
+            } else {
                 throw new InvalidAttributeValueException($this->getName(), $arrayItem);
             }
-            $this->values[] = $arrayItem;
         }
+    }
+
+    /**
+     * getValues
+     * @return array<string>
+     */
+    public function getValue(): array
+    {
+        return $this->values;
     }
 
     /**
@@ -45,16 +54,8 @@ class AttributeMultiValue extends Attribute implements AttributeMultiValueInterf
         if (!empty($this->getValue())) {
             return $this->name . "='" . implode(' ', $this->values) . "'";
         } else {
-            return "";
+            return '';
         }
     }
 
-    /**
-     * getValues
-     * @return array<string>
-     */
-    public function getValue(): mixed
-    {
-        return $this->values;
-    }
 }

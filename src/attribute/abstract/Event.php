@@ -7,11 +7,9 @@ declare(strict_types=1);
 
 namespace pvc\html\attribute\abstract;
 
+use pvc\html\config\HtmlConfig;
 use pvc\html\err\InvalidEventNameException;
-use pvc\html\err\InvalidEventScriptException;
-use pvc\html\tag\abstract\TagAttributes;
 use pvc\interfaces\html\attribute\EventInterface;
-use pvc\interfaces\validator\ValTesterInterface;
 
 /**
  * class Event
@@ -23,6 +21,7 @@ use pvc\interfaces\validator\ValTesterInterface;
  */
 class Event implements EventInterface
 {
+
     /**
      * @var string
      */
@@ -34,70 +33,61 @@ class Event implements EventInterface
     protected string $script;
 
     /**
-     * @var ValTesterInterface<string>
+     * getName
+     * @return string
      */
-    protected ValTesterInterface $tester;
-
-
-    /**
-     * @param ValTesterInterface<string> $tester
-     */
-    public function __construct(ValTesterInterface $tester)
-    {
-        $this->setTester($tester);
-    }
-
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * setName
+     * @param string $name
+     * @throws InvalidEventNameException
+     */
     public function setName(string $name): void
     {
-        if (!TagAttributes::isValidEvent($name)) {
+        if (!HtmlConfig::isValidEventName($name)) {
             throw new InvalidEventNameException();
         }
         $this->name = $name;
     }
 
     /**
+     * getScript
+     * @return string|null
+     */
+    public function getScript(): string|null
+    {
+        return $this->script ?? null;
+    }
+
+    /**
+     * setScript
+     * @param string $script
+     */
+    public function setScript(string $script): void
+    {
+        $this->script = $script;
+    }
+
+    /**
      * getValue
-     * @return string
+     * @return string|null
      */
     public function getValue(): mixed
     {
-        return $this->script;
+        return $this->getScript();
     }
 
     /**
      * setValue
      * @param string $value
-     * @throws InvalidEventScriptException
      */
-    public function setValue(mixed $value): void
+    public function setValue($value): void
     {
-        if (!$this->tester->testValue($value)) {
-            throw new InvalidEventScriptException();
-        }
-        $this->script = $value;
-    }
-
-    /**
-     * getTester
-     * @return ValTesterInterface<string>
-     */
-    public function getTester(): ValTesterInterface
-    {
-        return $this->tester;
-    }
-
-    /**
-     * setTester
-     * @param ValTesterInterface<string> $tester
-     */
-    public function setTester(ValTesterInterface $tester): void
-    {
-        $this->tester = $tester;
+        $this->setScript($value);
     }
 
     /**
@@ -106,6 +96,10 @@ class Event implements EventInterface
      */
     public function render(): string
     {
-        return $this->name . "='" . $this->script . "'";
+        if (!empty($this->getScript())) {
+            return $this->name . "='" . $this->getScript() . "'";
+        } else {
+            return '';
+        }
     }
 }

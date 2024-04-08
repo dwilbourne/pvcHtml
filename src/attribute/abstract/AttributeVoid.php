@@ -7,32 +7,42 @@ declare(strict_types=1);
 
 namespace pvc\html\attribute\abstract;
 
+use pvc\html\err\InvalidAttributeValueException;
+use pvc\interfaces\html\attribute\AttributeVoidInterface;
+
 /**
  * Class AttributeVoid
- * @extends Attribute<bool>
  */
-class AttributeVoid extends Attribute
+class AttributeVoid extends Attribute implements AttributeVoidInterface
 {
+    /**
+     * this class inherits a setTester method.  The tester is never actually used in this class because the
+     * value can only be boolean and both true and false are valid values in terms of managing the state of the
+     * state of the object.  So using setTester on this class will not result in any change in behavior.
+     */
 
     /**
-     * @var true
+     * @var bool
      */
     protected bool $usage = true;
 
     /**
      * setValue
-     * @param true $value
+     * @param bool $value
      */
-    public function setValue(mixed $value): void
+    public function setValue($value): void
     {
+        if (!is_bool($value)) {
+            throw new InvalidAttributeValueException($this->getName(), $value);
+        }
         $this->usage = $value;
     }
 
     /**
      * getValue
-     * @return true
+     * @return bool
      */
-    public function getValue(): bool
+    public function getValue(): mixed
     {
         return $this->usage;
     }
@@ -43,7 +53,6 @@ class AttributeVoid extends Attribute
      */
     function render(): string
     {
-        return $this->getName();
+        return ($this->usage ? $this->getName() : '');
     }
-
 }

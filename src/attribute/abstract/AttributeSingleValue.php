@@ -12,7 +12,6 @@ use pvc\interfaces\html\attribute\AttributeSingleValueInterface;
 
 /**
  * Class AttributeSingleValue
- * @extends Attribute<string>
  */
 class AttributeSingleValue extends Attribute implements AttributeSingleValueInterface
 {
@@ -20,6 +19,20 @@ class AttributeSingleValue extends Attribute implements AttributeSingleValueInte
      * @var string
      */
     protected string $value;
+
+    /**
+     * setValue
+     * @param string $value
+     * @throws InvalidAttributeValueException
+     */
+    public function setValue($value): void
+    {
+        if (is_string($value) && $this->testValue($value)) {
+            $this->value = $value;
+        } else {
+            throw new InvalidAttributeValueException($this->getName(), $value);
+        }
+    }
 
     /**
      * getValue
@@ -31,18 +44,9 @@ class AttributeSingleValue extends Attribute implements AttributeSingleValueInte
     }
 
     /**
-     * setValue
-     * @param string $value
-     * @throws InvalidAttributeValueException
+     * render
+     * @return string
      */
-    public function setValue(mixed $value): void
-    {
-        if (!$this->testValue($value)) {
-            throw new InvalidAttributeValueException($this->getName(), $value);
-        }
-        $this->value = $value;
-    }
-
     public function render(): string
     {
         if (!empty($this->value)) {

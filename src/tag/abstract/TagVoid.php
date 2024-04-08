@@ -8,23 +8,16 @@ declare(strict_types=1);
 
 namespace pvc\html\tag\abstract;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use pvc\html\attribute\factory\CustomDataAttributeFactory;
-use pvc\html\attribute\factory\EventFactory;
+use pvc\html\attribute\factory\AttributeFactory;
 use pvc\html\err\InvalidAttributeException;
 use pvc\html\err\InvalidAttributeNameException;
-use pvc\html\err\InvalidAttributeValueException;
 use pvc\html\err\InvalidCustomDataNameException;
-use pvc\html\err\InvalidEventNameException;
 use pvc\html\err\InvalidEventScriptException;
 use pvc\html\err\MissingTagAttributesException;
 use pvc\interfaces\html\attribute\AttributeInterface;
 use pvc\interfaces\html\attribute\EventInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
 use pvc\interfaces\validator\ValTesterInterface;
-use ReflectionException;
 
 /**
  * class TagVoid.  Base class for all html output in the pvc framework.  This class produces and
@@ -35,239 +28,149 @@ use ReflectionException;
 class TagVoid implements TagVoidInterface
 {
     /**
-     * @var ContainerInterface
+     * @var string
      */
-    protected ContainerInterface $attributeContainer;
+    protected string $name;
 
     /**
-     * @var array<AttributeInterface<string|array<string>|bool>>
+     * @var array<string, AttributeInterface|EventInterface>
      */
     protected array $attributes = [];
 
-    /**
-     * @var string
-     */
-    protected string $tagName;
+    protected AttributeFactory $attributeFactory;
 
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
+    public function __construct(AttributeFactory $attributeFactory)
     {
-        $this->attributeContainer = $container;
+        $this->attributeFactory = $attributeFactory;
     }
 
     /**
-     * setCustomAttribute
-     * @param string $name
-     * @param string $value
-     * @param ValTesterInterface<string>|null $tester
-     * @throws ContainerExceptionInterface
-     * @throws InvalidAttributeValueException
-     * @throws NotFoundExceptionInterface
-     * @throws InvalidCustomDataNameException
-     */
-    public function setCustomAttribute(string $name, string $value, ValTesterInterface $tester = null): void
-    {
-        /** @var CustomDataAttributeFactory $customDataAttributeFactory */
-        $customDataAttributeFactory = $this->attributeContainer->get(CustomDataAttributeFactory::class);
-
-        /** @var AttributeInterface<string|array<string>|bool> $attribute */
-        $attribute = $this->attributes[$name] ?? $customDataAttributeFactory->makeCustomData($name);
-
-        if ($tester) {
-            $attribute->setTester($tester);
-        }
-
-        $attribute->setValue($value);
-        /**
-         * note that the index into the array is the name without the 'data-' prefix.
-         */
-        $this->attributes[$name] = $attribute;
-    }
-
-    /**
-     * getAttributes
-     * @return array<string, string|array<string>|bool|null>
-     */
-    public function getAttributes(): array
-    {
-        $result = [];
-        foreach ($this->attributes as $attrName => $attribute) {
-            $result[$attrName] = $this->getAttributeValue($attrName);
-        }
-        return $result;
-    }
-
-    /**
-     * setAttributes
-     * @param array<string, string> $attributes
-     * @throws ContainerExceptionInterface
-     * @throws InvalidAttributeException
-     * @throws InvalidEventScriptException
-     * @throws MissingTagAttributesException
-     * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
-     * @throws InvalidAttributeNameException
-     */
-    public function setAttributes(array $attributes): void
-    {
-        foreach ($attributes as $name => $value) {
-            $this->setAttribute($name, $value);
-        }
-    }
-
-    /**
-     * getAttributeValue
-     * @param string $attributeName
-     * @return string|array<string>|bool|null
-     */
-    public function getAttributeValue(string $attributeName): string|array|bool|null
-    {
-        $attribute = $this->attributes[$attributeName] ?? null;
-        $value = $attribute?->getValue();
-        return $value;
-    }
-
-    /**
-     * setAttribute
-     *
-     * because events are a kind of attribute, you can use this method to set events as well.  This sets the stage
-     * for the usage of the magic setter __set for both attributes and events
-     *
-     * @param string $name
-     * @param string|array<string>|bool $value
-     * @throws ContainerExceptionInterface
-     * @throws InvalidAttributeException
-     * @throws InvalidAttributeNameException
-     * @throws InvalidEventScriptException
-     * @throws MissingTagAttributesException
-     * @throws NotFoundExceptionInterface
-     */
-    public function setAttribute(string $name, string|array|bool $value): void
-    {
-        if (TagAttributes::isValidAttribute($this->getTagName(), $name)) {
-            $attribute = ($this->attributes[$name] ?? $this->attributeContainer->get($name));
-            assert($attribute instanceof AttributeInterface);
-            $attribute->setValue($value);
-            $this->attributes[$name] = $attribute;
-            return;
-        }
-
-        if (TagAttributes::IsValidEvent($name)) {
-            assert(is_string($value));
-            $this->setEvent($name, $value);
-            return;
-        }
-
-        throw new InvalidAttributeException($name);
-    }
-
-    /**
-     * getTagName
+     * getName
      * @return string
      */
-    public function getTagName(): string
+    public function getName(): string
     {
-        return $this->tagName;
+        return $this->name;
     }
 
     /**
-     * setTagName
+     * setName
      * changing the tag name implies having to change the list of attributes the tag supports so attributes are
      * reinitialized!
-     * @param string $tagName
+     * @param string $name
      */
-    public function setTagName(string $tagName): void
+    public function setName(string $name): void
     {
-        $this->tagName = $tagName;
+        $this->name = $name;
         $this->attributes = [];
     }
 
     /**
-     * setEvent
-     * @param string $eventName
-     * @param string $script
-     * @throws ContainerExceptionInterface
+     * setAttribute
+     * @param string $name
+     * @param mixed $value
+     * @throws InvalidAttributeException
      * @throws InvalidAttributeNameException
-     * @throws InvalidEventScriptException
-     * @throws NotFoundExceptionInterface
-     * @throws InvalidEventNameException
      */
+    public function setAttribute(string $name, mixed $value): void
+    {
+        $attribute = $this->attributes[$name] ?? $this->attributeFactory->makeAttribute($name);
+        $attribute->setValue($value);
+        $this->attributes[$name] = $attribute;
+    }
+
+    /**
+     * setCustomDataAttribute
+     * @param string $name
+     * @param string $value
+     * @param ValTesterInterface<string> $tester
+     * @throws InvalidAttributeNameException
+     * @throws InvalidCustomDataNameException
+     * @throws \pvc\html\err\InvalidAttributeValueException
+     *
+     * It was tempting to eliminate this method and allow setAttribute to make custom data attributes as well.  But
+     * because the $name argument to setAttribute is a string, the logic would be to create a custom attribute
+     * if there is no such standard attribute.  Thus, there would be no way to catch a typo in the call to
+     * setAttribute
+     */
+    public function setCustomDataAttribute(string $name, string $value, ValTesterInterface $tester): void
+    {
+        $attribute = $this->attributes[$name] ?? $this->attributeFactory->makeCustomDataAttribute($name, $tester);
+        $attribute->setValue($value);
+        $this->attributes[$name] = $attribute;
+    }
+
     public function setEvent(string $eventName, string $script): void
     {
-        $event = $this->attributes[$eventName] ?? null;
+        $event = $this->attributes[$eventName] ?? $this->attributeFactory->makeEvent($eventName);
+        $event->setValue($script);
+        $this->attributes[$eventName] = $event;
+    }
 
-        if ($event) {
-            if (!$event instanceof EventInterface) {
-                throw new InvalidEventNameException();
-            }
-            $event->setValue($script);
-        } else {
-            /** @var EventFactory $eventFactory */
-            $eventFactory = $this->attributeContainer->get(EventFactory::class);
-            $event = $eventFactory->makeEvent($eventName, $script);
-        }
-        /** @var AttributeInterface<string|array<string>|bool> $attribute */
-        $attribute = $event;
-        $this->attributes[$event->getName()] = $attribute;
+    /**
+     * getAttributes
+     * @return array<string, AttributeInterface>
+     */
+    public function getAttributes(): array
+    {
+        $callback = function ($item) {
+            return ($item instanceof AttributeInterface);
+        };
+        /** @var array<AttributeInterface> */
+        return array_filter($this->attributes, $callback);
     }
 
     /**
      * getEvents
-     * @return array<string, string>
+     * @return array<string, EventInterface>
      */
     public function getEvents(): array
     {
-        $callback = function (AttributeInterface $attribute) {
-            return $attribute instanceof EventInterface;
+        $callback = function ($item) {
+            return ($item instanceof EventInterface);
         };
-        $events = array_filter($this->attributes, $callback);
-        $result = [];
-        foreach ($events as $eventName => $event) {
-            assert($event instanceof EventInterface);
-            $script = $this->getEventScript($eventName);
-            assert(is_string($script));
-            $result[$eventName] = $script;
-        }
-        return $result;
+        /** @var array<EventInterface> */
+        return array_filter($this->attributes, $callback);
     }
 
     /**
-     * getEventScript
-     * @param string $eventName
-     * @return string|null
+     * getAttribute
+     * @param string $attributeName
+     * @return AttributeInterface|null
      */
-    public function getEventScript(string $eventName): ?string
+    public function getAttribute(string $attributeName): AttributeInterface|null
     {
-        $event = $this->attributes[$eventName] ?? null;
-        if ($event) {
-            assert($event instanceof EventInterface);
-            return $event->getValue();
-        }
-        return null;
+        $attributes = $this->getAttributes();
+        return $attributes[$attributeName] ?? null;
+    }
+
+    /**
+     * getEvent
+     * @param string $eventName
+     * @return EventInterface|null
+     */
+    public function getEvent(string $eventName): EventInterface|null
+    {
+        $events = $this->getEvents();
+        return $events[$eventName] ?? null;
     }
 
     /**
      * __get
-     * @param string $attributeName
-     * @return string|array<string, string>|bool|null
+     * @param string $name
+     * @return mixed
      */
-    public function __get(string $attributeName): string|array|bool|null
+    public function __get(string $name): mixed
     {
-        return $this->getAttributeValue($attributeName);
+        $attribute = $this->attributes[$name] ?? null;
+        return $attribute?->getValue();
     }
 
     /**
      * __set
      * @param string $name
      * @param string|array<string>|bool $value
-     * @throws ContainerExceptionInterface
      * @throws InvalidAttributeException
-     * @throws InvalidEventScriptException
-     * @throws MissingTagAttributesException
-     * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
      * @throws InvalidAttributeNameException
      */
     public function __set(string $name, string|array|bool $value): void
@@ -285,8 +188,8 @@ class TagVoid implements TagVoidInterface
             return $attribute_event->render();
         };
 
-        $z = '<' . $this->tagName;
-        $attributes = implode(' ', array_map($callback, $this->attributes));
+        $z = '<' . $this->name;
+        $attributes = implode(' ', array_map($callback, $this->getAttributes()));
         $z .= (strlen($attributes) > 0) ? ' ' . $attributes : '';
         $z .= '>';
         return $z;

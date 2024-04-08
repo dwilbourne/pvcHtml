@@ -10,7 +10,7 @@ namespace pvcTests\html\tag\abstract;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
+use pvc\html\attribute\factory\AttributeFactory;
 use pvc\html\tag\abstract\Tag;
 use pvc\interfaces\html\tag\TagInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
@@ -21,11 +21,8 @@ use pvc\interfaces\msg\MsgInterface;
  */
 class TagTest extends TestCase
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected ContainerInterface $container;
 
+    protected AttributeFactory $attributeFactory;
     /**
      * @var Tag
      */
@@ -44,10 +41,10 @@ class TagTest extends TestCase
 
     public function setUp(): void
     {
-        $this->container = $this->createMock(ContainerInterface::class);
+        $this->attributeFactory = $this->createMock(AttributeFactory::class);
         $this->tagName = 'div';
-        $this->tag = new Tag($this->container);
-        $this->tag->setTagName($this->tagName);
+        $this->tag = new Tag($this->attributeFactory);
+        $this->tag->setName($this->tagName);
         $this->testMsg = $this->createMock(MsgInterface::class);
         $this->mockInnerTagVoid = $this->createMock(TagVoidInterface::class);
         $this->mockInnerTag = $this->createMock(TagInterface::class);

@@ -10,7 +10,6 @@ namespace pvcExamples\html;
 use DI\Container;
 use DI\ContainerBuilder;
 use PHPUnit\Framework\TestCase;
-use pvc\html\attribute\factory\AttributeFactory;
 use pvc\html\tag\basic_tags\TagBody;
 use pvc\html\tag\factory\TagFactory;
 use pvc\validator\dflt\ValTesterAlwaysTrue;
@@ -27,7 +26,7 @@ class TagForProject extends TestCase
     public function setUp(): void
     {
         $builder = new ContainerBuilder();
-        $builder->addDefinitions(__DIR__ . '../src/attribute/factory/AttributeDiConfig.php');
+        $builder->addDefinitions(__DIR__ . '../src/attribute/tagFactory/AttributeDiConfig.php');
         $container = $builder->build();
 
         $this->tagFactory = $container->get(TagFactory::class);

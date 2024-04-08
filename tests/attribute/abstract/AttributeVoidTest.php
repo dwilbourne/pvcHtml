@@ -3,32 +3,56 @@
 /**
  * @author: Doug Wilbourne (dougwilbourne@gmail.com)
  */
+
 declare (strict_types=1);
 
 namespace pvcTests\html\attribute\abstract;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\abstract\AttributeVoid;
+use pvc\html\err\InvalidAttributeValueException;
+use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeVoidTest extends TestCase
 {
-    protected string $testName;
+    protected string $name;
+
+    protected ValTesterInterface|MockObject $tester;
 
     protected AttributeVoid $attribute;
 
     public function setUp(): void
     {
-        $this->testName = 'foo';
-        $this->attribute = new AttributeVoid($this->testName);
+        $this->name = 'hidden';
+        $this->tester = $this->createMock(ValTesterInterface::class);
+        $this->tester->method('testValue')->willReturn(true);
+        $this->attribute = new AttributeVoid($this->tester);
+        $this->attribute->setName($this->name);
     }
 
     /**
-     * testGetValueReturnsFalseByDefault
+     * testGetValueReturnsTrueByDefault
      * @covers \pvc\html\attribute\abstract\AttributeVoid::getValue
      */
-    public function testGetValueReturnsFalseByDefault(): void
+    public function testGetValueReturnsTrueByDefault(): void
     {
         self::assertTrue($this->attribute->getValue());
+    }
+
+    /**
+     * testSetValueThrowsExceptionWithBadValue
+     * @throws InvalidAttributeValueException
+     * @covers \pvc\html\attribute\abstract\AttributeVoid::setValue
+     */
+    public function testSetValueThrowsExceptionWithBadValue(): void
+    {
+        self::expectException(InvalidAttributeValueException::class);
+        /**
+         * supposed to be boolean
+         */
+        $badValue = 'string';
+        $this->attribute->setValue($badValue);
     }
 
     /**
@@ -38,18 +62,30 @@ class AttributeVoidTest extends TestCase
      */
     public function testSetGetValue(): void
     {
-        $usage = true;
+        $usage = false;
         $this->attribute->setValue($usage);
         self::assertEquals($usage, $this->attribute->getValue());
     }
 
     /**
-     * testRenderReturnsEmptyStringWhenValueSetToFalse
+     * testRenderReturnsEmptyStringWhenUsageSetToFalse
+     * @throws \pvc\html\err\InvalidAttributeValueException
      * @covers \pvc\html\attribute\abstract\AttributeVoid::render
      */
-    public function testRenderReturnsAttributeNameWhenValueSetToTrue(): void
+    public function testRenderReturnsEmptyStringWhenUsageSetToFalse(): void
     {
-        $expectedOutput = $this->testName;
+        $usage = false;
+        $this->attribute->setValue($usage);
+        self::assertEmpty($this->attribute->render());
+    }
+
+    /**
+     * testRenderReturnsAttributeNameWhenUsageSetToTrue
+     * @covers \pvc\html\attribute\abstract\AttributeVoid::render
+     */
+    public function testRenderReturnsAttributeNameWhenUsageSetToTrue(): void
+    {
+        $expectedOutput = $this->name;
         $this->attribute->setValue(true);
         self::assertEquals($expectedOutput, $this->attribute->render());
     }

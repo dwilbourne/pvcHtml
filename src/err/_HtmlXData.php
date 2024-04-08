@@ -25,8 +25,7 @@ class _HtmlXData extends XDataAbstract
             InvalidAttributeException::class => 1002,
             InvalidCustomDataNameException::class => 1003,
             InvalidEventNameException::class => 1004,
-            InvalidEventScriptException::class => 1005,
-            MissingTagAttributesException::class => 1006,
+            InvalidTagException::class => 1005,
         ];
     }
 
@@ -38,8 +37,7 @@ class _HtmlXData extends XDataAbstract
             InvalidAttributeException::class => 'No such attribute in this tag: ${attrName}',
             InvalidCustomDataNameException::class => 'Invalid custom data name - must be only lower case letters.',
             InvalidEventNameException::class => 'Event name cannot be empty or a string which is not a valid event name.',
-            InvalidEventScriptException::class => 'Event script cannot be an empty string',
-            MissingTagAttributesException::class => 'No entry for ${tagName} in the TagAttributes class',
+            InvalidTagException::class => 'Cannot make tag ${tagName}.  Either the name is invalid or there is no entry in TagConfig for that tag.',
         ];
     }
 }

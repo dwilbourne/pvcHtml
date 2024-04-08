@@ -3,10 +3,12 @@
 /**
  * @author: Doug Wilbourne (dougwilbourne@gmail.com)
  */
+
 declare (strict_types=1);
 
 namespace pvcTests\html\attribute\abstract;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\abstract\AttributeSingleValue;
 use pvc\html\err\InvalidAttributeValueException;
@@ -14,45 +16,18 @@ use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeSingleValueTest extends TestCase
 {
+    protected string $name;
+
+    protected ValTesterInterface|MockObject $tester;
+
     protected AttributeSingleValue $attribute;
 
     public function setUp(): void
     {
-        $testName = 'foo';
-        $this->attribute = new AttributeSingleValue($testName);
-    }
-
-    /**
-     * testSetGetValueWithNoValTesterSet
-     * @throws \pvc\html\err\InvalidAttributeValueException
-     * @covers \pvc\html\attribute\abstract\AttributeSingleValue::setValue
-     * @covers \pvc\html\attribute\abstract\AttributeSingleValue::getValue
-     * @covers \pvc\html\attribute\abstract\Attribute::testValue
-     */
-    public function testSetGetValueWithNoValTesterSet(): void
-    {
-        self::assertNull($this->attribute->getValue());
-
-        $value = 'bar';
-        $this->attribute->setValue($value);
-        self::assertEquals($value, $this->attribute->getValue());
-    }
-
-    /**
-     * testSetGetValueWithValTesterSet
-     * @throws \pvc\html\err\InvalidAttributeValueException
-     * @covers \pvc\html\attribute\abstract\AttributeSingleValue::setValue
-     * @covers \pvc\html\attribute\abstract\AttributeSingleValue::getValue
-     * @covers \pvc\html\attribute\abstract\Attribute::testValue
-     */
-    public function testSetGetValueWithValTesterSet(): void
-    {
-        $value = 'bar';
-        $valTester = $this->createMock(ValTesterInterface::class);
-        $valTester->method('testValue')->willReturn(true);
-        $this->attribute->setTester($valTester);
-        $this->attribute->setValue($value);
-        self::assertEquals($value, $this->attribute->getValue());
+        $this->name = 'target';
+        $this->tester = $this->createMock(ValTesterInterface::class);
+        $this->attribute = new AttributeSingleValue($this->tester);
+        $this->attribute->setName($this->name);
     }
 
     /**
@@ -63,11 +38,24 @@ class AttributeSingleValueTest extends TestCase
     public function testSetValueThrowsExceptionWhenTesterFails(): void
     {
         $value = 'bar';
-        $valTester = $this->createMock(ValTesterInterface::class);
-        $valTester->method('testValue')->willReturn(false);
-        $this->attribute->setTester($valTester);
+        $this->tester->method('testValue')->willReturn(false);
         self::expectException(InvalidAttributeValueException::class);
         $this->attribute->setValue($value);
+    }
+
+    /**
+     * testSetGetValue
+     * @throws \pvc\html\err\InvalidAttributeValueException
+     * @covers \pvc\html\attribute\abstract\AttributeSingleValue::setValue
+     * @covers \pvc\html\attribute\abstract\AttributeSingleValue::getValue
+     * @covers \pvc\html\attribute\abstract\Attribute::testValue
+     */
+    public function testSetGetValueWithValTesterSet(): void
+    {
+        $value = 'bar';
+        $this->tester->method('testValue')->willReturn(true);
+        $this->attribute->setValue($value);
+        self::assertEquals($value, $this->attribute->getValue());
     }
 
     /**
@@ -87,9 +75,9 @@ class AttributeSingleValueTest extends TestCase
     public function testRenderWithValueSet(): void
     {
         $value = 'bar\'s';
+        $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue($value);
-        $expectedRendering = 'foo=\'bar\'s\'';
+        $expectedRendering = $this->name . '=\'bar\'s\'';
         self::assertEquals($expectedRendering, $this->attribute->render());
     }
-
 }

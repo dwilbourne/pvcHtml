@@ -25,8 +25,7 @@ class _HtmlXDataTest extends XDataTestMaster
      * @covers \pvc\html\err\InvalidAttributeValueException
      * @covers \pvc\html\err\InvalidCustomDataNameException
      * @covers \pvc\html\err\InvalidEventNameException
-     * @covers \pvc\html\err\InvalidEventScriptException
-     * @covers \pvc\html\err\MissingTagAttributesException
+     * @covers \pvc\html\err\InvalidTagException
      */
     public function testValidatorXData(): void
     {

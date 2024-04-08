@@ -18,7 +18,6 @@ use pvc\interfaces\msg\MsgInterface;
  */
 class Tag extends TagVoid
 {
-
     /**
      * @var array<TagVoidInterface|MsgInterface>
      */
@@ -43,11 +42,11 @@ class Tag extends TagVoid
     }
 
     /**
-     * display
+     * generateClosingTag
      * @return string
      */
     public function generateClosingTag(): string
     {
-        return '</' . $this->tagName . '>';
+        return '</' . $this->name . '>';
     }
 }

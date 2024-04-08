@@ -7,12 +7,10 @@ declare (strict_types=1);
 
 namespace pvcTests\html\attribute\abstract;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\abstract\Event;
 use pvc\html\err\InvalidEventNameException;
 use pvc\html\err\InvalidEventScriptException;
-use pvc\interfaces\validator\ValTesterInterface;
 
 class EventTest extends TestCase
 {
@@ -24,38 +22,22 @@ class EventTest extends TestCase
     /**
      * @var string
      */
-    protected $eventName = 'onclick';
+    protected string $eventName = 'onclick';
 
     /**
      * @var string
      */
-    protected $script = 'some javascript';
-
-    /**
-     * @var ValTesterInterface|MockObject
-     */
-    protected ValTesterInterface|MockObject $scriptTester;
+    protected string $script = 'some javascript';
 
     public function setUp(): void
     {
-        $this->scriptTester = $this->createMock(ValTesterInterface::class);
-        $this->event = new Event($this->scriptTester);
-    }
-
-    /**
-     * testConstructor
-     * @covers \pvc\html\attribute\abstract\Event::__construct
-     */
-    public function testConstructor(): void
-    {
-        self::assertInstanceOf(Event::class, $this->event);
+        $this->event = new Event();
     }
 
     /**
      * testSetNameThrowsExceptionWithInvalidString
      * @throws InvalidEventNameException
      * @covers \pvc\html\attribute\abstract\Event::setName
-     * @covers \pvc\html\tag\abstract\TagAttributes::isValidEvent
      */
     public function testSetNameThrowsExceptionWithInvalidString(): void
     {
@@ -67,7 +49,6 @@ class EventTest extends TestCase
      * testSetNameThrowsExceptionWithEmptyString
      * @throws InvalidEventNameException
      * @covers \pvc\html\attribute\abstract\Event::setName
-     * @covers \pvc\html\tag\abstract\TagAttributes::isValidEvent
      */
     public function testSetNameThrowsExceptionWithEmptyString(): void
     {
@@ -80,7 +61,6 @@ class EventTest extends TestCase
      * @throws InvalidEventNameException
      * @covers \pvc\html\attribute\abstract\Event::setName
      * @covers \pvc\html\attribute\abstract\Event::getName
-     * @covers \pvc\html\tag\abstract\TagAttributes::isValidEvent
      */
     public function testSetGetEventName(): void
     {
@@ -90,39 +70,33 @@ class EventTest extends TestCase
     }
 
     /**
-     * testSetGetScriptTester
-     * @covers \pvc\html\attribute\abstract\Event::getTester
-     * @covers \pvc\html\attribute\abstract\Event::setTester
-     */
-    public function testSetGetScriptTester(): void
-    {
-        self::assertEquals($this->scriptTester, $this->event->getTester());
-    }
-
-    /**
-     * testSetScriptThrowsExceptionWhenTesterFails
-     * @throws InvalidEventScriptException
-     * @covers \pvc\html\attribute\abstract\Event::setValue
-     */
-    public function testSetScriptThrowsExceptionWhenTesterFails(): void
-    {
-        $this->scriptTester->method('testValue')->willReturn(false);
-        self::expectException(InvalidEventScriptException::class);
-        $this->event->setValue('');
-    }
-
-    /**
      * testSetGetScript
      * @throws InvalidEventScriptException
      * @covers \pvc\html\attribute\abstract\Event::setValue
      * @covers \pvc\html\attribute\abstract\Event::getValue
+     * @covers \pvc\html\attribute\abstract\Event::setScript
+     * @covers \pvc\html\attribute\abstract\Event::getScript
      */
     public function testSetGetScript(): void
     {
         $script = 'some more javascript that is different';
-        $this->scriptTester->method('testValue')->willReturn(true);
         $this->event->setValue($script);
         self::assertEquals($script, $this->event->getValue());
+        $newScript = 'something different';
+        $this->event->setScript($newScript);
+        self::assertEquals($newScript, $this->event->getScript());
+    }
+
+    /**
+     * testRenderReturnsEmptyStringWhenScriptIsNotSet
+     * @throws InvalidEventNameException
+     * @covers \pvc\html\attribute\abstract\Event::render
+     */
+    public function testRenderReturnsEmptyStringWhenScriptIsNotSet(): void
+    {
+        $this->event->setName($this->eventName);
+        $expectedOutput = '';
+        self::assertEquals($expectedOutput, $this->event->render());
     }
 
     /**
@@ -132,7 +106,6 @@ class EventTest extends TestCase
     public function testRender(): void
     {
         $this->event->setName($this->eventName);
-        $this->scriptTester->method('testValue')->willReturn(true);
         $this->event->setValue($this->script);
         $expectedOutput = $this->eventName . '=\'' . $this->script . '\'';
         self::assertEquals($expectedOutput, $this->event->render());

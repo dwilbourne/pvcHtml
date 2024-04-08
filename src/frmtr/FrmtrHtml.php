@@ -65,21 +65,25 @@ class FrmtrHtml implements FrmtrHtmlInterface
      */
     public function format($value): string
     {
+        $z = $value->generateOpeningTag();
+
         if ($value instanceof TagInterface) {
-            $z = $value->generateOpeningTag();
             $this->msgFrmtr->setLocale($this->getLocale());
             foreach ($value->getInnerHtml() as $item) {
                 if ($item instanceof MsgInterface) {
                     $z .= htmlspecialchars($this->msgFrmtr->format($item), ENT_COMPAT | ENT_HTML5);
                 } else {
+                    /**
+                     * if it is not a Msg it must be a tag
+                     */
                     $z .= $this->format($item);
                 }
             }
             $z .= $value->generateClosingTag();
             return $z;
-        } else {
-            return $value->generateOpeningTag();
         }
+
+        return $z;
     }
 
     /**

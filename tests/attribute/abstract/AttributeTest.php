@@ -7,6 +7,7 @@ declare (strict_types=1);
 
 namespace pvcTests\html\attribute\abstract;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\abstract\Attribute;
 use pvc\html\err\InvalidAttributeNameException;
@@ -18,38 +19,48 @@ class AttributeTest extends TestCase
 
     protected string $testName = 'foo';
 
+
+    protected ValTesterInterface|MockObject $tester;
+
     public function setUp(): void
     {
+        $this->tester = $this->createMock(ValTesterInterface::class);
         $this->attribute = $this->getMockBuilder(Attribute::class)
-                                ->setConstructorArgs([$this->testName])
+            ->setConstructorArgs([$this->tester])
                                 ->getMockForAbstractClass();
     }
 
     /**
      * testConstructor
      * @covers \pvc\html\attribute\abstract\Attribute::__construct
-     * @covers \pvc\html\attribute\abstract\Attribute::getName
-     * @covers \pvc\html\attribute\abstract\Attribute::setName
      */
     public function testConstructor()
     {
         self::assertInstanceOf(Attribute::class, $this->attribute);
-        self::assertEquals($this->testName, $this->attribute->getName());
     }
 
     /**
-     * testSetNameToEmptyStringThrowsException
-     * @throws InvalidAttributeNameException
+     * testSetInvalidNameThrowsException
      * @covers \pvc\html\attribute\abstract\Attribute::setName
      */
-    public function testSetNameToEmptyStringThrowsException(): void
+    public function testSetInvalidNameThrowsException(): void
     {
-        $testName = '';
+        $testName = 'foo';
         self::expectException(InvalidAttributeNameException::class);
-        $attribute = $this->getMockBuilder(Attribute::class)
-                          ->setConstructorArgs([$testName])
-                          ->getMockForAbstractClass();
-        unset($attribute);
+        $this->attribute->setName($testName);
+    }
+
+    /**
+     * testSetGetName
+     * @throws InvalidAttributeNameException
+     * @covers \pvc\html\attribute\abstract\Attribute::setName
+     * @covers \pvc\html\attribute\abstract\Attribute::getName
+     */
+    public function testSetGetName(): void
+    {
+        $testName = 'target';
+        $this->attribute->setName($testName);
+        self::assertEquals($testName, $this->attribute->getName());
     }
 
     /**
@@ -59,7 +70,6 @@ class AttributeTest extends TestCase
      */
     public function testSetGetValTester(): void
     {
-        self::assertNull($this->attribute->getTester());
         $valTester = $this->createMock(ValTesterInterface::class);
         $this->attribute->setTester($valTester);
         self::assertEquals($valTester, $this->attribute->getTester());
