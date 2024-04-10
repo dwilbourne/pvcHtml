@@ -69,7 +69,7 @@ class FrmtrHtml implements FrmtrHtmlInterface
 
     /**
      * format
-     * @param TagVoidInterface $value
+     * @param TagVoidInterface|TagInterface $value
      * @return string
      */
     public function format($value): string

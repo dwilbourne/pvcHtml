@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace pvc\html\tag\abstract;
 
+use pvc\interfaces\html\tag\TagInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
 use pvc\interfaces\msg\MsgInterface;
 
@@ -25,16 +26,16 @@ class Tag extends TagVoid
 
     /**
      * addInnerHTML
-     * @param TagVoidInterface|MsgInterface|string $innerHtml
+     * @param TagVoidInterface|TagInterface|MsgInterface|string $innerHtml
      */
-    public function addInnerHTML(TagVoidInterface|MsgInterface|string $innerHtml): void
+    public function addInnerHTML(TagVoidInterface|TagInterface|MsgInterface|string $innerHtml): void
     {
         $this->innerHtml[] = $innerHtml;
     }
 
     /**
      * getInnerHtml
-     * @return array<TagVoidInterface|MsgInterface|string>
+     * @return array<TagVoidInterface|TagInterface|MsgInterface|string>
      */
     public function getInnerHtml(): array
     {
