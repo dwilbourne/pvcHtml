@@ -41,6 +41,15 @@ class FrmtrHtml implements FrmtrHtmlInterface
     }
 
     /**
+     * getLocale
+     * @return LocaleInterface
+     */
+    public function getLocale(): LocaleInterface
+    {
+        return $this->getMsgFrmtr()->getLocale();
+    }
+
+    /**
      * getMsgFrmtr
      * @return FrmtrMsgInterface
      */
@@ -60,7 +69,7 @@ class FrmtrHtml implements FrmtrHtmlInterface
 
     /**
      * format
-     * @param TagInterface|TagVoidInterface $value
+     * @param TagVoidInterface $value
      * @return string
      */
     public function format($value): string
@@ -68,16 +77,8 @@ class FrmtrHtml implements FrmtrHtmlInterface
         $z = $value->generateOpeningTag();
 
         if ($value instanceof TagInterface) {
-            $this->msgFrmtr->setLocale($this->getLocale());
             foreach ($value->getInnerHtml() as $item) {
-                if ($item instanceof MsgInterface) {
-                    $z .= htmlspecialchars($this->msgFrmtr->format($item), ENT_COMPAT | ENT_HTML5);
-                } else {
-                    /**
-                     * if it is not a Msg it must be a tag
-                     */
-                    $z .= $this->format($item);
-                }
+                $z .= $this->formatInnerHtmlRecurse($item);
             }
             $z .= $value->generateClosingTag();
             return $z;
@@ -86,12 +87,17 @@ class FrmtrHtml implements FrmtrHtmlInterface
         return $z;
     }
 
-    /**
-     * getLocale
-     * @return LocaleInterface
-     */
-    public function getLocale(): LocaleInterface
+    protected function formatInnerHtmlRecurse(TagVoidInterface|MsgInterface|string $value): string
     {
-        return $this->getMsgFrmtr()->getLocale();
+        if ($value instanceof TagVoidInterface) {
+            return $this->format($value);
+        } elseif ($value instanceof MsgInterface) {
+            return htmlspecialchars($this->getMsgFrmtr()->format($value), ENT_HTML5 | ENT_COMPAT);
+        } /**
+         * is a literal string, not to be translated
+         */
+        else {
+            return $value;
+        }
     }
 }

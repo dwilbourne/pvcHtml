@@ -77,8 +77,9 @@ class FrmtrHtmlTest extends TestCase
     /**
      * testFormatWithNestedTagsAndMsgs
      * @covers \pvc\html\frmtr\FrmtrHtml::format
+     * @covers \pvc\html\frmtr\FrmtrHtml::formatInnerHtmlRecurse
      */
-    public function testFormatWithNestedTagsAndMsgs(): void
+    public function testFormatWithNestedTagsMsgsAndStrings(): void
     {
         $tagOpeningString = '<div>';
         $tagClosingString = '</div>';
@@ -91,8 +92,10 @@ class FrmtrHtmlTest extends TestCase
         $innerMsg = $this->createMock(MsgInterface::class);
         $this->frmtrMsg->expects($this->once())->method('format')->with($innerMsg)->willReturn($innerMsgText);
 
+        $literalText = 'this string is njot to be translated';
+
         $innerTag = $this->createMock(TagInterface::class);
-        $innerTag->expects($this->once())->method('getInnerHtml')->willReturn([$innerMsg]);
+        $innerTag->expects($this->once())->method('getInnerHtml')->willReturn([$innerMsg, $literalText]);
         $innerTag->expects($this->once())->method('generateOpeningTag')->willReturn($innerTagOpeningString);
         $innerTag->expects($this->once())->method('generateClosingTag')->willReturn($innerTagClosingString);
 
@@ -101,8 +104,9 @@ class FrmtrHtmlTest extends TestCase
         $tag->expects($this->once())->method('generateOpeningTag')->willReturn($tagOpeningString);
         $tag->expects($this->once())->method('generateClosingTag')->willReturn($tagClosingString);
 
-        $expectedResult = $tagOpeningString . $innerTagOpeningString . $innerMsgText . $innerTagClosingString .
-            $tagClosingString;
+        $expectedResult = $tagOpeningString . $innerTagOpeningString;
+        $expectedResult .= $innerMsgText . $literalText;
+        $expectedResult .= $innerTagClosingString . $tagClosingString;
 
         self::assertEquals($expectedResult, $this->frmtrHtml->format($tag));
     }

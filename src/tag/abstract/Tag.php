@@ -19,22 +19,22 @@ use pvc\interfaces\msg\MsgInterface;
 class Tag extends TagVoid
 {
     /**
-     * @var array<TagVoidInterface|MsgInterface>
+     * @var array<TagVoidInterface|MsgInterface|string>
      */
     protected array $innerHtml = [];
 
     /**
      * addInnerHTML
-     * @param TagVoidInterface|MsgInterface $innerHtml
+     * @param TagVoidInterface|MsgInterface|string $innerHtml
      */
-    public function addInnerHTML(TagVoidInterface|MsgInterface $innerHtml): void
+    public function addInnerHTML(TagVoidInterface|MsgInterface|string $innerHtml): void
     {
         $this->innerHtml[] = $innerHtml;
     }
 
     /**
      * getInnerHtml
-     * @return array<TagVoidInterface|MsgInterface>
+     * @return array<TagVoidInterface|MsgInterface|string>
      */
     public function getInnerHtml(): array
     {
