@@ -3,6 +3,7 @@
 /**
  * @author: Doug Wilbourne (dougwilbourne@gmail.com)
  */
+
 declare (strict_types=1);
 
 namespace pvcTests\html\attribute\abstract;
@@ -61,8 +62,9 @@ class AttributeCustomDataTest extends TestCase
         $customDataName = 'foo';
         $this->customDataNameTester->expects($this->once())->method('testValue')->with($customDataName)->willReturn(true);
         $this->attribute->setName($customDataName);
-        $expectedResult = $customDataName;
+        $expectedResult = 'data-' . $customDataName;
         self::assertEquals($expectedResult, $this->attribute->getName());
     }
+
 
 }

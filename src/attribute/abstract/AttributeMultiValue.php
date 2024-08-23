@@ -12,8 +12,10 @@ use pvc\interfaces\html\attribute\AttributeMultiValueInterface;
 
 /**
  * Class AttributeMultiValue
+ * @extends Attribute<array<string, string>>
+ * @implements AttributeMultiValueInterface<array<string, string>>
  */
-class AttributeMultiValue extends Attribute implements AttributeMultiValueInterface
+class AttributeMultiValue extends Attribute
 {
     /**
      * @var array<string>
@@ -27,13 +29,40 @@ class AttributeMultiValue extends Attribute implements AttributeMultiValueInterf
      */
     public function setValue($value): void
     {
-        foreach ($value as $arrayItem) {
-            if (is_string($arrayItem) && $this->testValue($arrayItem)) {
-                $this->values[] = $arrayItem;
-            } else {
-                throw new InvalidAttributeValueException($this->getName(), $arrayItem);
-            }
+        $values = [];
+
+        /**
+         * make sure it is an array and is not empty
+         */
+        if (!is_array($value) || empty($value)) {
+            throw new InvalidAttributeValueException($this->getName());
         }
+
+        foreach ($value as $arrayItem) {
+            /**
+             * each element must be a string
+             */
+            if (!is_string($arrayItem)) {
+                throw new InvalidAttributeValueException($this->getName());
+            }
+            /**
+             * convert to lower case if not case-sensitive
+             */
+            if (!$this->valueIsCaseSensitive()) {
+                $arrayItem = strtolower($arrayItem);
+            }
+            /**
+             * test the array element
+             */
+            if (!$this->getTester()->testValue(($arrayItem))) {
+                throw new InvalidAttributeValueException($this->getName());
+            }
+            $values[] = $arrayItem;
+        }
+        /**
+         * set the values
+         */
+        $this->values = $values;
     }
 
     /**
@@ -57,5 +86,4 @@ class AttributeMultiValue extends Attribute implements AttributeMultiValueInterf
             return '';
         }
     }
-
 }

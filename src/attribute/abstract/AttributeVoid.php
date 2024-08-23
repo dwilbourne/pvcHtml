@@ -8,44 +8,19 @@ declare(strict_types=1);
 namespace pvc\html\attribute\abstract;
 
 use pvc\html\err\InvalidAttributeValueException;
-use pvc\interfaces\html\attribute\AttributeVoidInterface;
+use pvc\html\err\UnsetAttributeNameException;
+use pvc\interfaces\html\attribute\AttributeInterface;
 
 /**
  * Class AttributeVoid
+ * @implements AttributeInterface<bool>
  */
-class AttributeVoid extends Attribute implements AttributeVoidInterface
+class AttributeVoid extends Attribute implements AttributeInterface
 {
     /**
-     * this class inherits a setTester method.  The tester is never actually used in this class because the
-     * value can only be boolean and both true and false are valid values in terms of managing the state of the
-     * state of the object.  So using setTester on this class will not result in any change in behavior.
+     * set default value to true so that if name is set, attribute is rendered by default
      */
-
-    /**
-     * @var bool
-     */
-    protected bool $usage = true;
-
-    /**
-     * setValue
-     * @param bool $value
-     */
-    public function setValue($value): void
-    {
-        if (!is_bool($value)) {
-            throw new InvalidAttributeValueException($this->getName(), $value);
-        }
-        $this->usage = $value;
-    }
-
-    /**
-     * getValue
-     * @return bool
-     */
-    public function getValue(): mixed
-    {
-        return $this->usage;
-    }
+    protected mixed $value = true;
 
     /**
      * render
@@ -53,6 +28,31 @@ class AttributeVoid extends Attribute implements AttributeVoidInterface
      */
     function render(): string
     {
-        return ($this->usage ? $this->getName() : '');
+        if (empty($this->getName())) {
+            throw new UnsetAttributeNameException();
+        }
+
+        return $this->getValue() ? $this->getName() : '';
+    }
+
+    /**
+     * setValue
+     * @param bool $value
+     */
+    function setValue(mixed $value): void
+    {
+        if (!is_bool($value)) {
+            throw new InvalidAttributeValueException($this->getName());
+        }
+        $this->value = $value;
+    }
+
+    /**
+     * getValue
+     * @return bool
+     */
+    function getValue(): mixed
+    {
+        return $this->value;
     }
 }

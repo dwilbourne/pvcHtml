@@ -14,6 +14,7 @@ use pvc\regex\Regex;
  */
 class RegexId extends Regex
 {
+
     public function __construct()
     {
         $label = 'id';

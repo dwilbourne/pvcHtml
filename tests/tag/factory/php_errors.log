@@ -1,0 +1,16 @@
+[22-Aug-2024 13:49:35 America/New_York] PHP Fatal error:  Uncaught ParseError: Unclosed '{' on line 80 does not match ')' in I:\www\pvcHtml\tests\tag\factory\TagFactoryTest.php:82
+Stack trace:
+#0 I:\www\pvcHtml\vendor\phpunit\phpunit\src\Util\FileLoader.php(49): PHPUnit\Util\FileLoader::load('I:\\www\\pvcHtml\\...')
+#1 I:\www\pvcHtml\vendor\phpunit\phpunit\src\Framework\TestSuite.php(398): PHPUnit\Util\FileLoader::checkAndLoad('I:\\www\\pvcHtml\\...')
+#2 I:\www\pvcHtml\vendor\phpunit\phpunit\src\Framework\TestSuite.php(537): PHPUnit\Framework\TestSuite->addTestFile('I:\\www\\pvcHtml\\...')
+#3 I:\www\pvcHtml\vendor\phpunit\phpunit\src\Runner\BaseTestRunner.php(98): PHPUnit\Framework\TestSuite->addTestFiles(Array)
+#4 I:\www\pvcHtml\vendor\phpunit\phpunit\src\TextUI\Command.php(123): PHPUnit\Runner\BaseTestRunner->getTest('I:\\www\\pvcHtml\\...', Array)
+#5 I:\www\pvcHtml\vendor\phpunit\phpunit\src\TextUI\Command.php(99): PHPUnit\TextUI\Command->run(Array, true)
+#6 I:\www\pvcHtml\vendor\phpunit\phpunit\phpunit(107): PHPUnit\TextUI\Command::main()
+#7 {main}
+
+Next PHPUnit\TextUI\RuntimeException: Unclosed '{' on line 80 does not match ')' in I:\www\pvcHtml\vendor\phpunit\phpunit\src\TextUI\Command.php:101
+Stack trace:
+#0 I:\www\pvcHtml\vendor\phpunit\phpunit\phpunit(107): PHPUnit\TextUI\Command::main()
+#1 {main}
+  thrown in I:\www\pvcHtml\vendor\phpunit\phpunit\src\TextUI\Command.php on line 101

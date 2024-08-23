@@ -38,7 +38,7 @@ class TagForProject extends TestCase
         $tag = $this->tagFactory->makeTag($tagName);
 
         $cssClasses = 'myClass1 myClass2';
-        $tag->setAttribute('class', $cssClasses);
+        $tag->set('class', $cssClasses);
 
         $customData = 'someString';
         $customAttributeName = 'specialthing';

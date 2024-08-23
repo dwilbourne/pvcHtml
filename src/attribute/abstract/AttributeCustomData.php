@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace pvc\html\attribute\abstract;
 
 use pvc\html\err\InvalidCustomDataNameException;
-use pvc\interfaces\html\attribute\AttributeCustomDataInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
 /**
@@ -18,7 +17,7 @@ use pvc\interfaces\validator\ValTesterInterface;
  * without the 'data-' prefix.  In other words, if you have a custom attribute named 'foo', you set the
  * name of the attribute like this:  setName('foo') and similarly, getName returns 'foo', not 'data-foo'.
  */
-class AttributeCustomData extends AttributeSingleValue implements AttributeCustomDataInterface
+class AttributeCustomData extends AttributeSingleValue
 {
     /**
      * @var ValTesterInterface<string>
@@ -50,17 +49,5 @@ class AttributeCustomData extends AttributeSingleValue implements AttributeCusto
             throw new InvalidCustomDataNameException();
         }
         $this->name = 'data-' . $name;
-    }
-
-    /**
-     * getName
-     * @return string
-     */
-    public function getName(): string
-    {
-        /**
-         * remove the 'data-' prefix
-         */
-        return substr($this->name, 5);
     }
 }

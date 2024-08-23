@@ -37,6 +37,75 @@ class HtmlConfigTest extends TestCase
         self::assertFalse(HtmlConfig::isValidTagName('foo'));
     }
 
+    /**
+     * testIsRequiredSubtag
+     * @covers \pvc\html\config\HtmlConfig::isRequiredSubtag
+     */
+    public function testIsRequiredSubtag(): void
+    {
+        self::assertTrue(HtmlConfig::isRequiredSubtag('head', 'html'));
+        self::assertFalse(HtmlConfig::isRequiredSubtag('html', 'head'));
+        /**
+         * no information in the subtags array about an element named foo.....
+         */
+        self::assertFalse(HtmlConfig::isRequiredSubtag('bar', 'foo'));
+    }
+
+    /**
+     * testGetRequiredSubtags
+     * @covers \pvc\html\config\HtmlConfig::getRequiredSubtags
+     */
+    public function testGetRequiredSubtags(): void
+    {
+        $requiredSubtags = ['head', 'body'];
+        self::assertEqualsCanonicalizing($requiredSubtags, HtmlConfig::getRequiredSubtags('html'));
+        self::assertEmpty(HtmlConfig::getRequiredSubtags('div'));
+    }
+
+    /**
+     * testIsValidSubTag
+     * @covers \pvc\html\config\HtmlConfig::isValidSubtag
+     */
+    public function testIsValidSubTag(): void
+    {
+        self::assertTrue(HtmlConfig::isValidSubtag('head', 'html'));
+        self::assertFalse(HtmlConfig::isValidSubtag('html', 'head'));
+        /**
+         * no information in subtags array about an element named foo
+         */
+        self::assertTrue(HtmlConfig::isValidSubtag('foo', 'bar'));
+    }
+
+    /**
+     * testIsInlineElement
+     * @covers \pvc\html\config\HtmlConfig::isInlineElement
+     */
+    public function testIsInlineElement(): void
+    {
+        self::assertTrue(HtmlConfig::isInlineElement('span'));
+        self::assertFalse(HtmlConfig::isInlineElement('div'));
+    }
+
+    /**
+     * testIsBlockElement
+     * @covers \pvc\html\config\HtmlConfig::isBlockElement
+     */
+    public function testIsBlockElement(): void
+    {
+        self::assertTrue(HtmlConfig::isBlockElement('div'));
+        self::assertFalse(HtmlConfig::isBlockElement('span'));
+    }
+
+    /**
+     * testInnerTextNotAllowed
+     * @covers \pvc\html\config\HtmlConfig::innerTextNotAllowed
+     */
+    public function testInnerTextNotAllowed(): void
+    {
+        self::assertTrue(HtmlConfig::innerTextNotAllowed('select'));
+        self::assertFalse(HtmlConfig::innerTextNotAllowed('div'));
+    }
+
     public function isValidAttributeDataProvider(): array
     {
         return [
@@ -85,6 +154,26 @@ class HtmlConfigTest extends TestCase
     public function testIsValidAttributeName(string $name, bool $expectedValue, string $comment): void
     {
         self::assertEquals($expectedValue, HtmlConfig::isValidAttributeName($name), $comment);
+    }
+
+    /**
+     * testIsVoidAttribute
+     * @covers \pvc\html\config\HtmlConfig::isVoidAttribute
+     */
+    public function testIsVoidAttribute(): void
+    {
+        self::assertTrue(HtmlConfig::isVoidAttribute('hidden'));
+        self::assertFalse(HtmlConfig::isVoidAttribute('id'));
+    }
+
+    /**
+     * testGetRequiredAttributes
+     * @covers \pvc\html\config\HtmlConfig::getRequiredAttributes
+     */
+    public function testGetRequiredAttributes(): void
+    {
+        $expectedAttributeValues = ['lang' => 'en'];
+        self::assertEqualsCanonicalizing($expectedAttributeValues, HtmlConfig::getRequiredAttributes('html'));
     }
 
     /**

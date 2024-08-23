@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace pvc\html\tag\factory;
 
-use pvc\html\attribute\factory\AttributeFactory;
+use Psr\Container\ContainerInterface;
 use pvc\html\config\HtmlConfig;
 use pvc\html\err\InvalidTagException;
 use pvc\html\tag\abstract\Tag;
@@ -20,11 +20,11 @@ use pvc\html\tag\abstract\TagVoid;
 class TagFactory
 {
     /**
-     * @var AttributeFactory
+     * @var ContainerInterface
      */
-    protected AttributeFactory $attributeFactory;
+    protected ContainerInterface $attributeFactory;
 
-    public function __construct(AttributeFactory $attributeFactory)
+    public function __construct(ContainerInterface $attributeFactory)
     {
         $this->attributeFactory = $attributeFactory;
     }
@@ -32,19 +32,31 @@ class TagFactory
     /**
      * makeTag
      * @param string $tagName
-     * @return Tag|TagVoid
+     * @return TagVoid|Tag
      */
-    public function makeTag(string $tagName): Tag|TagVoid
+    public function makeTag(string $tagName): TagVoid|Tag
     {
+        /**
+         * make sure tag name is valid
+         */
         if (!HtmlConfig::isValidTagName($tagName)) {
             throw new InvalidTagException($tagName);
         }
-        $tag = (
-        HtmlConfig::isTagVoid($tagName) ?
-            new TagVoid($this->attributeFactory) :
-            new Tag($this->attributeFactory)
-        );
+
+        /**
+         * make the tag and set the name
+         */
+        $tag = (HtmlConfig::isTagVoid($tagName) ? new TagVoid($this->attributeFactory) : new Tag($this->attributeFactory));
+        $tag->setName($tagName);
+
+        /**
+         * make the required attributes
+         */
+        foreach (HtmlConfig::getRequiredAttributes($tag->getName()) as $attributeName => $attributeValue) {
+            $tag->$attributeName = $attributeValue;
+        }
 
         return $tag;
     }
+
 }

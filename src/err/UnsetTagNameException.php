@@ -10,8 +10,8 @@ namespace pvc\html\err;
 use pvc\err\stock\LogicException;
 
 /**
- * Class InvalidEventNameException
+ * Class UnsetTagNameException
  */
-class InvalidEventNameException extends LogicException
+class UnsetTagNameException extends LogicException
 {
 }

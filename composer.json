@@ -21,17 +21,10 @@
 	},
 	"minimum-stability": "dev",
 	"require": {
-		"ext-intl": "*",
-		"ext-tidy": "*",
-		"ext-ctype": "*",
-		"php-extended/php-mime-type-object": "*",
 		"pvc/interfaces": "*",
 		"pvc/err": "*",
-		"pvc/intl": "*",
-		"pvc/regex": "*",
-		"pvc/filtervar": "*",
-		"pvc/validator": "*",
-		"php-di/php-di": "*"
+		"psr/container": "*"
+
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^9",

@@ -7,14 +7,16 @@ declare(strict_types=1);
 
 namespace pvc\html\attribute\abstract;
 
-use pvc\html\config\AttributeTypes;
 use pvc\html\config\HtmlConfig;
-use pvc\html\err\InvalidAttributeNameException;
+use pvc\html\err\InvalidAttributeEventNameException;
 use pvc\interfaces\html\attribute\AttributeInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
 /**
  * Class Attribute
+ * @template ValueType
+ * @implements AttributeInterface<ValueType>
+ *
  */
 abstract class Attribute implements AttributeInterface
 {
@@ -24,16 +26,29 @@ abstract class Attribute implements AttributeInterface
     protected string $name;
 
     /**
-     * @var ValTesterInterface<string>
+     * @var ValTesterInterface
      */
     protected ValTesterInterface $tester;
 
     /**
-     * @param ValTesterInterface<string> $defaultValTester
+     * @var bool
+     * many (most?) attributes values are not case-sensitive, but some are.  A good example is the 'id'
+     * attribute
      */
-    public function __construct(ValTesterInterface $defaultValTester)
+    protected bool $valueIsCaseSensitive = false;
+
+
+    /**
+     * @var ValueType
+     */
+    protected mixed $value;
+
+    /**
+     * @param ValTesterInterface $tester
+     */
+    public function __construct(ValTesterInterface $tester)
     {
-        $this->setTester($defaultValTester);
+        $this->setTester($tester);
     }
 
     /**
@@ -42,30 +57,20 @@ abstract class Attribute implements AttributeInterface
      */
     public function getName(): string
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     /**
      * setName
      * @param string $name
-     * @throws InvalidAttributeNameException
+     * @throws InvalidAttributeEventNameException
      */
     public function setName(string $name): void
     {
         if (!HtmlConfig::isValidAttributeName($name)) {
-            throw new InvalidAttributeNameException($name);
+            throw new InvalidAttributeEventNameException($name);
         }
         $this->name = $name;
-    }
-
-    /**
-     * testValue
-     * @param string $value
-     * @return bool
-     */
-    protected function testValue(string $value): bool
-    {
-        return $this->tester->testValue($value);
     }
 
     /**
@@ -85,4 +90,23 @@ abstract class Attribute implements AttributeInterface
     {
         $this->tester = $tester;
     }
+
+    /**
+     * setCaseSensitive
+     * @param bool $caseSensitive
+     */
+    public function setCaseSensitive(bool $caseSensitive): void
+    {
+        $this->valueIsCaseSensitive = $caseSensitive;
+    }
+
+    /**
+     * valueIsCaseSensitive
+     * @return bool
+     */
+    public function valueIsCaseSensitive(): bool
+    {
+        return $this->valueIsCaseSensitive;
+    }
+
 }

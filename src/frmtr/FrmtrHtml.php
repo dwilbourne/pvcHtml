@@ -60,11 +60,11 @@ class FrmtrHtml implements FrmtrHtmlInterface
 
     /**
      * setMsgFrmtr
-     * @param FrmtrMsgInterface $msgFrmtr
+     * @param FrmtrMsgInterface $frmtrMsg
      */
-    public function setMsgFrmtr(FrmtrMsgInterface $msgFrmtr): void
+    public function setMsgFrmtr(FrmtrMsgInterface $frmtrMsg): void
     {
-        $this->msgFrmtr = $msgFrmtr;
+        $this->msgFrmtr = $frmtrMsg;
     }
 
     /**
@@ -76,6 +76,9 @@ class FrmtrHtml implements FrmtrHtmlInterface
     {
         $z = $value->generateOpeningTag();
 
+        /**
+         * if it is a tag (not a void tag) then go ahead and generate the inner html and the closing tag
+         */
         if ($value instanceof TagInterface) {
             foreach ($value->getInnerHtml() as $item) {
                 $z .= $this->formatInnerHtmlRecurse($item);

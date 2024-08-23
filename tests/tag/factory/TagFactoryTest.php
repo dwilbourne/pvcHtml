@@ -10,21 +10,22 @@ namespace pvcTests\html\tag\factory;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\attribute\factory\AttributeFactory;
+use Psr\Container\ContainerInterface;
 use pvc\html\err\InvalidTagException;
 use pvc\html\tag\abstract\Tag;
 use pvc\html\tag\abstract\TagVoid;
 use pvc\html\tag\factory\TagFactory;
+use pvc\interfaces\html\attribute\AttributeInterface;
 
 class TagFactoryTest extends TestCase
 {
-    protected AttributeFactory|MockObject $attributeFactory;
+    protected ContainerInterface|MockObject $attributeFactory;
 
     protected TagFactory $tagFactory;
 
     public function setUp(): void
     {
-        $this->attributeFactory = $this->createMock(AttributeFactory::class);
+        $this->attributeFactory = $this->createMock(ContainerInterface::class);
         $this->tagFactory = new TagFactory($this->attributeFactory);
     }
 
@@ -68,5 +69,37 @@ class TagFactoryTest extends TestCase
     {
         $tagName = 'div';
         self::assertInstanceOf(Tag::class, $this->tagFactory->makeTag($tagName));
+    }
+
+    /**
+     * testTagFactoryMakesRequiredAttributes
+     * @throws InvalidTagException
+     * @covers \pvc\html\tag\factory\TagFactory::makeTag
+     */
+    public function testTagFactoryMakesRequiredAttributesAndSubTags(): void
+    {
+        $tagName = 'html';
+
+        /**
+         * the html tag has one required attribute - the lang attribute, whose default value is 'en'
+         */
+        $expectedAttributeName = 'lang';
+        $expectedAttributeValue = 'en';
+
+        $attribute = $this->createMock(AttributeInterface::class);
+        $attribute->method('getName')->willReturn($expectedAttributeName);
+        $attribute->method('getValue')->willReturn($expectedAttributeValue);
+
+        $this->attributeFactory
+            ->expects($this->once())
+            ->method('get')
+            ->willReturn($attribute);
+
+        $tag = $this->tagFactory->makeTag($tagName);
+
+        self::assertEquals(1, count($tag->getAttributes()));
+        $attribute = $tag->getAttribute($expectedAttributeName);
+        self::assertInstanceOf(AttributeInterface::class, $attribute);
+        self::assertEquals($expectedAttributeValue, $tag->$expectedAttributeName);
     }
 }

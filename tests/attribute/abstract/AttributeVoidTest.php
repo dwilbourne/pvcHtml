@@ -12,6 +12,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\abstract\AttributeVoid;
 use pvc\html\err\InvalidAttributeValueException;
+use pvc\html\err\UnsetAttributeNameException;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeVoidTest extends TestCase
@@ -26,34 +27,21 @@ class AttributeVoidTest extends TestCase
     {
         $this->name = 'hidden';
         $this->tester = $this->createMock(ValTesterInterface::class);
-        $this->tester->method('testValue')->willReturn(true);
         $this->attribute = new AttributeVoid($this->tester);
-        $this->attribute->setName($this->name);
     }
 
     /**
-     * testGetValueReturnsTrueByDefault
-     * @covers \pvc\html\attribute\abstract\AttributeVoid::getValue
-     */
-    public function testGetValueReturnsTrueByDefault(): void
-    {
-        self::assertTrue($this->attribute->getValue());
-    }
-
-    /**
-     * testSetValueThrowsExceptionWithBadValue
+     * testSetAttributeThrowsExceptionWithVoidAttributeNameAndNonBooleanValue
      * @throws InvalidAttributeValueException
      * @covers \pvc\html\attribute\abstract\AttributeVoid::setValue
      */
-    public function testSetValueThrowsExceptionWithBadValue(): void
+    public function testSetAttributeThrowsExceptionWithVoidAttributeNameAndNonBooleanValue(): void
     {
         self::expectException(InvalidAttributeValueException::class);
-        /**
-         * supposed to be boolean
-         */
-        $badValue = 'string';
-        $this->attribute->setValue($badValue);
+        $value = 'foobar';
+        $this->attribute->setValue($value);
     }
+
 
     /**
      * testSetGetValue
@@ -62,31 +50,46 @@ class AttributeVoidTest extends TestCase
      */
     public function testSetGetValue(): void
     {
-        $usage = false;
-        $this->attribute->setValue($usage);
-        self::assertEquals($usage, $this->attribute->getValue());
+        $this->tester->method('testValue')->willReturn(true);
+        self::assertTrue($this->attribute->getValue());
+        $this->attribute->setValue(false);
+        self::assertFalse($this->attribute->getValue());
     }
 
     /**
-     * testRenderReturnsEmptyStringWhenUsageSetToFalse
-     * @throws \pvc\html\err\InvalidAttributeValueException
+     * testRenderReturnsAttributeNameWhenUsageValueToTrue
      * @covers \pvc\html\attribute\abstract\AttributeVoid::render
      */
-    public function testRenderReturnsEmptyStringWhenUsageSetToFalse(): void
-    {
-        $usage = false;
-        $this->attribute->setValue($usage);
-        self::assertEmpty($this->attribute->render());
-    }
-
-    /**
-     * testRenderReturnsAttributeNameWhenUsageSetToTrue
-     * @covers \pvc\html\attribute\abstract\AttributeVoid::render
-     */
-    public function testRenderReturnsAttributeNameWhenUsageSetToTrue(): void
+    public function testRenderReturnsAttributeNameWhenUsageValueToTrue(): void
     {
         $expectedOutput = $this->name;
-        $this->attribute->setValue(true);
+        $this->attribute->setName($this->name);
         self::assertEquals($expectedOutput, $this->attribute->render());
+    }
+
+    /**
+     * testRenderReturnsEmptyStringWhenValueSetToFalse
+     * @throws UnsetAttributeNameException
+     * @throws \pvc\html\err\InvalidAttributeEventNameException
+     * @covers \pvc\html\attribute\abstract\AttributeVoid::render
+     */
+    public function testRenderReturnsEmptyStringWhenValueSetToFalse(): void
+    {
+        $expectedOutput = '';
+        $this->attribute->setName($this->name);
+        $this->tester->method('testValue')->willReturn(true);
+        $this->attribute->setValue(false);
+        self::assertEquals($expectedOutput, $this->attribute->render());
+    }
+
+    /**
+     * setRenderThrowsExceptionWhenNameNotSet
+     * @throws UnsetAttributeNameException
+     * @covers \pvc\html\attribute\abstract\AttributeVoid::render
+     */
+    public function testSetRenderThrowsExceptionWhenNameNotSet(): void
+    {
+        self::expectException(UnsetAttributeNameException::class);
+        $this->attribute->render();
     }
 }

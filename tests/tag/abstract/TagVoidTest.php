@@ -11,13 +11,15 @@ namespace pvcTests\html\tag\abstract;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\attribute\factory\AttributeFactory;
-use pvc\html\err\InvalidAttributeException;
+use Psr\Container\ContainerInterface;
+use pvc\html\attribute\abstract\AttributeCustomData;
+use pvc\html\attribute\abstract\AttributeVoid;
+use pvc\html\attribute\abstract\Event;
+use pvc\html\err\InvalidAttributeEventNameException;
+use pvc\html\err\UnsetAttributeNameException;
+use pvc\html\err\UnsetTagNameException;
 use pvc\html\tag\abstract\TagVoid;
-use pvc\interfaces\html\attribute\AttributeCustomDataInterface;
 use pvc\interfaces\html\attribute\AttributeInterface;
-use pvc\interfaces\html\attribute\AttributeVoidInterface;
-use pvc\interfaces\html\attribute\EventInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class TagVoidTest extends TestCase
@@ -32,7 +34,7 @@ class TagVoidTest extends TestCase
      */
     protected TagVoid $tag;
 
-    protected AttributeFactory|MockObject $attributeFactory;
+    protected ContainerInterface|MockObject $attributeFactory;
 
     /**
      * setUp
@@ -40,9 +42,8 @@ class TagVoidTest extends TestCase
     public function setUp(): void
     {
         $this->tagName = 'a';
-        $this->attributeFactory = $this->createMock(AttributeFactory::class);
+        $this->attributeFactory = $this->createMock(ContainerInterface::class);
         $this->tag = new TagVoid($this->attributeFactory);
-        $this->tag->setName($this->tagName);
     }
 
     /**
@@ -61,77 +62,84 @@ class TagVoidTest extends TestCase
      */
     public function testSetGetTagName(): void
     {
+        self::assertEquals('', $this->tag->getName());
+        $this->tag->setName($this->tagName);
         self::assertEquals($this->tagName, $this->tag->getName());
     }
 
     /**
-     * testGetAttributeReturnsNull
-     * @covers \pvc\html\tag\abstract\TagVoid::getAttributes()
+     * testGetAttributeReturnsNullWhenAttributeDoesNotExist
      * @covers \pvc\html\tag\abstract\TagVoid::getAttribute()
-     * @covers \pvc\html\tag\abstract\TagVoid::getEvents()
-     * @covers \pvc\html\tag\abstract\TagVoid::getEvent()
      */
-    public function testGetAttributeReturnsNull(): void
+    public function testGetAttributeReturnsNullWhenAttributeDoesNotExist(): void
     {
-        self::assertEmpty($this->tag->getAttributes());
         self::assertNull($this->tag->getAttribute('href'));
-        self::assertEmpty($this->tag->getEvents());
-        self::assertNull($this->tag->getEvent('onclick'));
     }
 
     /**
-     * testSetAttribute
-     * @throws InvalidAttributeException
+     * setGetAttributesReturnsEmptyArrayWhenTagHasNoAttributes
+     * @covers \pvc\html\tag\abstract\TagVoid::getAttributes()
+     */
+    public function setGetAttributesReturnsEmptyArrayWhenTagHasNoAttributes(): void
+    {
+        self::assertIsArray($this->tag->getAttributes());
+        self::assertEmpty($this->tag->getAttributes());
+    }
+
+    /**
+     * testSetAttributeThrowsExceptionWhenAttributeNameNotSet
+     * @throws UnsetAttributeNameException
+     * @covers \pvc\html\tag\abstract\TagVoid::setAttribute
+     */
+    public function testSetAttributeThrowsExceptionWhenAttributeNameNotSet(): void
+    {
+        $attribute1 = $this->createMock(AttributeInterface::class);
+        $attribute1->method('getName')->willReturn('');
+        self::expectException(UnsetAttributeNameException::class);
+        $this->tag->setAttribute($attribute1);
+    }
+
+    /**
+     * testSetGetRemoveAttribute
      * @covers \pvc\html\tag\abstract\TagVoid::setAttribute
      * @covers \pvc\html\tag\abstract\TagVoid::getAttribute
-     * @covers \pvc\html\tag\abstract\TagVoid::getAttributes
+     * @covers \pvc\html\tag\abstract\TagVoid::removeAttribute
      */
-    public function testSetAttribute(): void
+    public function testSetGetRemoveAttribute(): void
     {
         $attrName = 'href';
-        $attrValue = 'www.microsoft.com';
 
-        $attribute = $this->createMock(AttributeInterface::class);
-        $this->attributeFactory
-            ->expects($this->once())
-            ->method('makeAttribute')
-            ->with($attrName)
-            ->willReturn($attribute);
+        $attribute1 = $this->createMock(AttributeInterface::class);
+        $attribute1->method('getName')->willReturn($attrName);
 
-        $valTester = $this->createMock(ValTesterInterface::class);
-        $valTester->method('testValue')->willReturn(true);
+        $attribute2 = $this->createMock(AttributeInterface::class);
+        $attribute2->method('getName')->willReturn($attrName);
 
-        $attribute->method('getTester')->willReturn($valTester);
-        $attribute->method('getName')->willReturn($attrName);
+        self::assertNull($this->tag->getAttribute($attrName));
+        $this->tag->setAttribute($attribute1);
+        self::assertEquals($attribute1, $this->tag->getAttribute($attrName));
 
         /**
-         * setAttribute is called twice below: first time to show a new attribute can be made and the second
-         * time to show that an existing attribute can be set
+         * illustrate that you cannot have two attributes with the same name: setting the second one overwrites
+         * the first
          */
-        $attribute->expects($this->exactly(2))->method('setValue')->with($attrValue);
+
+        $this->tag->setAttribute($attribute2);
+        $this->assertEquals(1, count($this->tag->getAttributes()));
+        self::assertEquals($attribute2, $this->tag->getAttribute($attrName));
 
         /**
-         * illustrates that a new attribute is created
+         * remove the attribute
          */
-        self::assertEmpty($this->tag->getAttributes());
-        $this->tag->setAttribute($attrName, $attrValue);
-        self::assertEquals(1, count($this->tag->getAttributes()));
-        self::assertEquals($attribute, $this->tag->getAttribute($attrName));
-
-        /**
-         * illustrates that an existing attribute is updated because the tagFactory is only called once and setValue
-         * is called twice and the count of attributes remains at 1
-         */
-        $this->tag->setAttribute($attrName, $attrValue);
-        self::assertEquals(1, count($this->tag->getAttributes()));
-        self::assertEquals($attribute, $this->tag->getAttribute($attrName));
+        $this->tag->removeAttribute($attrName);
+        self::assertNull($this->tag->getAttribute($attrName));
+        $this->assertEquals(0, count($this->tag->getAttributes()));
     }
 
     /**
      * testSetGetCustomDataAttribute
-     * @throws InvalidAttributeException
-     * @throws \pvc\html\err\InvalidAttributeNameException
-     * @covers \pvc\html\tag\abstract\TagVoid::setCustomDataAttribute()
+     * @throws \pvc\html\err\InvalidAttributeEventNameException
+     * @covers \pvc\html\tag\abstract\TagVoid::setCustomData()
      */
     public function testSetGetCustomDataAttribute(): void
     {
@@ -141,11 +149,11 @@ class TagVoidTest extends TestCase
         $valTester = $this->createMock(ValTesterInterface::class);
         $valTester->method('testValue')->willReturn(true);
 
-        $attribute = $this->createMock(AttributeCustomDataInterface::class);
+        $attribute = $this->createMock(AttributeCustomData::class);
         $this->attributeFactory
             ->expects($this->once())
-            ->method('makeCustomDataAttribute')
-            ->with($name)
+            ->method('get')
+            ->with('customData')
             ->willReturn($attribute);
 
         $attribute->expects($this->exactly(2))->method('setValue')->with($value);
@@ -156,7 +164,7 @@ class TagVoidTest extends TestCase
          * illustrates that a new attribute is created
          */
         self::assertEmpty($this->tag->getAttributes());
-        $this->tag->setCustomDataAttribute($name, $value, $valTester);
+        $this->tag->setCustomData($name, $value, $valTester);
         self::assertEquals(1, count($this->tag->getAttributes()));
         self::assertEquals($valTester, $this->tag->getAttribute($name)->getTester());
 
@@ -164,124 +172,150 @@ class TagVoidTest extends TestCase
          * illustrates that an existing attribute is updated because the tagFactory is only called once and setValue
          * is called twice and the count of attributes remains at 1
          */
-        $this->tag->setCustomDataAttribute($name, $value, $valTester);
+        $this->tag->setCustomData($name, $value, $valTester);
         self::assertEquals(1, count($this->tag->getAttributes()));
         self::assertEquals($attribute, $this->tag->getAttribute($name));
     }
 
     /**
-     * testSetGetEvent
-     * @covers \pvc\html\tag\abstract\TagVoid::setEvent()
-     * @covers \pvc\html\tag\abstract\TagVoid::getEvent()
+     * testSetGetRemoveEvent
+     * @covers \pvc\html\tag\abstract\TagVoid::getAttributes
      */
-    public function testSetGetEvent(): void
+    public function testGetAttributes(): void
     {
-        $name = 'onclick';
-        $script = 'some javascript';
+        $attr1Name = 'href';
+        $attr1 = $this->createStub(AttributeInterface::class);
+        $attr1->method('getName')->willReturn($attr1Name);
 
-        $event = $this->createMock(EventInterface::class);
+        $attr2Name = 'hidden';
+        $attr2 = $this->createStub(AttributeInterface::class);
+        $attr2->method('getName')->willReturn($attr2Name);
 
-        $this->attributeFactory
-            ->expects($this->once())
-            ->method('makeEvent')
-            ->with($name)
-            ->willReturn($event);
+        $event1Name = 'onclick';
+        $event1 = $this->createStub(Event::class);
+        $event1->method('getName')->willReturn($event1Name);
 
-        $event->expects($this->exactly(2))->method('setValue')->with($script);
-        $event->method('getName')->willReturn($name);
+        $event2Name = 'ondragstart';
+        $event2 = $this->createStub(Event::class);
+        $event2->method('getName')->willReturn($event2Name);
+
+        $this->tag->setAttribute($attr1);
+        $this->tag->setAttribute($attr2);
+        $this->tag->setAttribute($event1);
+        $this->tag->setAttribute($event2);
 
         /**
-         * this was confusing to write because the normal flow is that setValue would be called twice.  BUT, when
-         * 'makeEvent' is called, it returns a mock (because the tagFactory is a mock) and so setValue is not called
-         * when the event is created and added to the attribute list.
+         * default behavior is to return both attributes and events
          */
-        self::assertEmpty($this->tag->getEvents());
-        $this->tag->setEvent($name, $script);
-        self::assertEquals(1, count($this->tag->getEvents()));
-        self::assertEquals($event, $this->tag->getEvent($name));
+        self::assertEquals(4, count($this->tag->getAttributes()));
+        self::assertEquals(4, count($this->tag->getAttributes(TagVoid::ATTRIBUTES | TagVoid::EVENTS)));
 
-        $this->tag->setEvent($name, $script);
+        self::assertEquals(2, count($this->tag->getAttributes(TagVoid::ATTRIBUTES)));
+        self::assertEquals(2, count($this->tag->getAttributes(TagVoid::EVENTS)));
+
+        $this->tag->removeAttribute($event2Name);
+        self::assertEquals(1, count($this->tag->getAttributes(TagVoid::EVENTS)));
+    }
+
+    /**
+     * testMagicSetterThrowsExceptionWithInvalidAttributeEventName
+     * @covers \pvc\html\tag\abstract\TagVoid::__set
+     */
+    public function testMagicSetterThrowsExceptionWithInvalidAttributeEventName(): void
+    {
+        self::expectException(InvalidAttributeEventNameException::class);
+        $this->tag->foo = 'bar';
     }
 
     /**
      * testMagicSetterGetter
-     * @covers \pvc\html\tag\abstract\TagVoid::__set
      * @covers \pvc\html\tag\abstract\TagVoid::__get
+     * @covers \pvc\html\tag\abstract\TagVoid::__set
      */
     public function testMagicSetterGetter(): void
     {
         $name = 'hidden';
-        $value = false;
+        $value = true;
+        $attribute = $this->createMock(AttributeVoid::class);
+        $attribute->method('getName')->willReturn($name);
+        $attribute->method('getValue')->willReturn($value);
 
-        $attribute = $this->createMock(AttributeVoidInterface::class);
         $this->attributeFactory
             ->expects($this->once())
-            ->method('makeAttribute')
-            ->with($name)
+            ->method('get')
             ->willReturn($attribute);
 
-        $attribute->method('getName')->willReturn($name);
-        $attribute->expects($this->once())->method('setValue')->with($value);
-        $attribute->expects($this->once())->method('getValue')->willReturn($value);
-
+        /**
+         * firest time is when the attribute is set, teh second is when it is updated, showing that a
+         * new one is not created.
+         */
+        $attribute->expects($this->exactly(2))->method('setValue');
         $this->tag->$name = $value;
         self::assertEquals($value, $this->tag->$name);
+        $this->tag->$name = false;
     }
 
     /**
-     * testGenerateOpeningTagWithNoAttributesOrEvents
+     * testMagicGetterReturnsNullWithUnsetAttributeName
+     * @covers \pvc\html\tag\abstract\TagVoid::__get
+     */
+    public function testMagicGetterThrowsExceptionWithUnsetAttributeName(): void
+    {
+        self::assertNull($this->tag->foo);
+    }
+
+    /**
+     * testGenerateOpeningTagWithNoTagName
+     * @throws UnsetTagNameException
      * @covers \pvc\html\tag\abstract\TagVoid::generateOpeningTag
      */
-    public function testGenerateOpeningTagWithNoAttributesOrEvents(): void
+    public function testGenerateOpeningTagWithNoTagName(): void
+    {
+        self::expectException(UnsetTagNameException::class);
+        $this->tag->generateOpeningTag();
+    }
+
+    /**
+     * testGenerateOpeningTagWithNoAttributes
+     * @covers \pvc\html\tag\abstract\TagVoid::generateOpeningTag
+     */
+    public function testGenerateOpeningTagWithNoAttributes(): void
     {
         $expectedResult = '<a>';
+        $this->tag->setName($this->tagName);
         self::assertEquals($expectedResult, $this->tag->generateOpeningTag());
     }
 
     /**
-     * testGenerateOpeningTagWithAttributesAndEvents
+     * testGenerateOpeningTagWithAttributes
      * @covers \pvc\html\tag\abstract\TagVoid::generateOpeningTag
      */
-    public function testGenerateOpeningTagWithAttributesAndEvents(): void
+    public function testGenerateOpeningTagWithAttributes(): void
     {
-        $event1Name = 'onclick';
-        $event1Script = 'some script';
-        $event1 = $this->createMock(AttributeInterface::class);
-        //$event1->method('getName')->willReturn($event1Name);
-        //$event1->method('getValue')->willReturn($event1Script);
-        $event1->method('render')->willReturn($event1Name . '=\'' . $event1Script . '\'');
-
-        $event2Name = 'onchange';
-        $event2Script = 'more javascript';
-        $event2 = $this->createMock(AttributeInterface::class);
-        // $event2->method('getName')->willReturn($event2Name);
-        //$event2->method('getValue')->willReturn($event2Script);
-        $event2->method('render')->willReturn($event2Name . '=\'' . $event2Script . '\'');
-
         $attr1Name = 'href';
         $attr1Value = 'bar';
-        $attr1 = $this->createMock(AttributeInterface::class);
-        //$attr1->method('getName')->willReturn($attr1Name);
-        //$attr1->method('getValue')->willReturn($attr1Value);
+
+        $attr1 = $this->getMockBuilder(AttributeInterface::class)
+                      ->getMockForAbstractClass();
+        $attr1->method('getName')->willReturn($attr1Name);
+        $attr1->method('getValue')->willReturn($attr1Value);
         $attr1->method('render')->willReturn($attr1Name . '=\'' . $attr1Value . '\'');
 
-        $matcher = $this->exactly(3);
-        $this->attributeFactory
-            ->expects($matcher)
-            ->method('makeAttribute')
-            ->willReturnCallback(function () use ($matcher, $event1, $event2, $attr1) {
-                return match ($matcher->getInvocationCount()) {
-                    1 => $event1,
-                    2 => $event2,
-                    3 => $attr1,
-                };
-            });
+        $event1Name = 'onclick';
+        $event1Value = 'some javascript';
 
-        $this->tag->setAttribute($event1Name, $event1Script);
-        $this->tag->setAttribute($event2Name, $event2Script);
-        $this->tag->setAttribute($attr1Name, $attr1Value);
+        $event1 = $this->getMockBuilder(AttributeInterface::class)
+                       ->getMockForAbstractClass();
+        $event1->method('getName')->willReturn($event1Name);
+        $event1->method('getValue')->willReturn($event1Value);
+        $event1->method('render')->willReturn($event1Name . '=\'' . $event1Value . '\'');
 
-        $expectedResult = "<a onclick='some script' onchange='more javascript' href='bar'>";
+
+        $this->tag->setName($this->tagName);
+        $this->tag->setAttribute($attr1);
+        $this->tag->setAttribute($event1);
+
+        $expectedResult = "<a href='bar' onclick='some javascript'>";
         self::assertEquals($expectedResult, $this->tag->generateOpeningTag());
     }
 }

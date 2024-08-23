@@ -12,11 +12,11 @@ use pvc\html\attribute\val_tester\regex\RegexAccessKey;
 
 class RegexAccessKeyTest extends TestCase
 {
-    protected RegexAccessKey $tester;
+    protected RegexAccessKey $regex;
 
     public function setUp(): void
     {
-        $this->tester = new \pvc\html\attribute\val_tester\regex\RegexAccessKey();
+        $this->regex = new \pvc\html\attribute\val_tester\regex\RegexAccessKey();
     }
 
     /**
@@ -25,7 +25,7 @@ class RegexAccessKeyTest extends TestCase
      */
     public function testLabel(): void
     {
-        self::assertNotEmpty($this->tester->getLabel());
+        self::assertNotEmpty($this->regex->getLabel());
     }
 
     /**
@@ -37,7 +37,7 @@ class RegexAccessKeyTest extends TestCase
      */
     public function testAccessKey(string $value, bool $expectedResult): void
     {
-        self::assertEquals($expectedResult, $this->tester->match($value));
+        self::assertEquals($expectedResult, $this->regex->match($value));
     }
 
     public function accesskeyDataProvider(): array

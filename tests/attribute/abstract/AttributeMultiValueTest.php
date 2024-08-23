@@ -31,12 +31,70 @@ class AttributeMultiValueTest extends TestCase
     }
 
     /**
-     * testSetValues
+     * testSetValueFailsIfArgumentIsNotAnArray
+     * @throws InvalidAttributeValueException
+     * @covers \pvc\html\attribute\abstract\AttributeMultiValue::setValue
+     */
+    public function testSetValueFailsIfArgumentIsNotAnArray(): void
+    {
+        $values = new \stdClass();
+        self::expectException(InvalidAttributeValueException::class);
+        $this->attribute->setValue($values);
+    }
+
+    /**
+     * testSetValueFailsWhenValueIsEmpty
+     * @throws InvalidAttributeValueException
+     * @covers \pvc\html\attribute\abstract\AttributeMultiValue::setValue
+     */
+    public function testSetValueFailsWhenValueIsEmpty(): void
+    {
+        $values = [];
+        self::expectException(InvalidAttributeValueException::class);
+        $this->attribute->setValue($values);
+    }
+
+    /**
+     * testSetValueFailsWhenNotAllArrayElementsAreStrings
+     * @throws InvalidAttributeValueException
+     * @covers \pvc\html\attribute\abstract\AttributeMultiValue::setValue
+     */
+    public function testSetValueFailsWhenNotAllArrayElementsAreStrings(): void
+    {
+        $values = ['foo', 5];
+        $this->tester->method('testValue')->willReturn(true);
+        self::expectException(InvalidAttributeValueException::class);
+        $this->attribute->setValue($values);
+    }
+
+    /**
+     * testSetValueConvertsValuesToLowerCaseIfCaseSensitive
+     * @throws InvalidAttributeValueException
+     * @covers \pvc\html\attribute\abstract\AttributeMultiValue::setValue
+     */
+    public function testSetValueConvertsValuesToLowerCaseIfCaseSensitive(): void
+    {
+        $values = ['FOO', 'BAR'];
+        $this->attribute->setCaseSensitive(true);
+        $this->tester->method('testValue')->willReturn(true);
+        $this->attribute->setValue($values);
+        self::assertEquals($values, $this->attribute->getValue());
+
+        $values = ['FOO', 'BAR'];
+        $this->attribute->setCaseSensitive(false);
+        $this->tester->method('testValue')->willReturn(true);
+        $this->attribute->setValue($values);
+        $expectedResult = array_map('strtolower', $values);
+        self::assertEquals($expectedResult, $this->attribute->getValue());
+    }
+
+    /**
+     * testSetGetValue
      * @throws \pvc\html\err\InvalidAttributeValueException
      * @covers \pvc\html\attribute\abstract\AttributeMultiValue::setValue
      * @covers \pvc\html\attribute\abstract\AttributeMultiValue::getValue
      */
-    public function testSetValuesWithTesterSet(): void
+    public function testSetGetValue(): void
     {
         $this->tester->method('testValue')->willReturn(true);
         $testValues = ['bar', 'baz', 'quux'];
