@@ -15,16 +15,13 @@
 	"autoload": {
 		"psr-4": {
 			"pvc\\html\\": "src/",
-			"pvcTests\\html\\": "tests/",
-			"pvcExamples\\html\\": "examples/"
+			"pvcTests\\html\\": "tests/"
 		}
 	},
 	"minimum-stability": "dev",
 	"require": {
 		"pvc/interfaces": "*",
-		"pvc/err": "*",
-		"psr/container": "*"
-
+		"pvc/err": "*"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^9",
