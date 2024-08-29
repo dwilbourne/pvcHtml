@@ -67,13 +67,13 @@ class AttributeSingleValueTest extends TestCase
     public function testSetValueConvertsCaseIfNotCaseSensitive(): void
     {
         $value = 'FOO';
-        $this->attribute->setCaseSensitive(true);
+        $this->attribute->setValueIsCaseSensitive(true);
         $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue($value);
         self::assertEquals($value, $this->attribute->getValue());
 
         $value = 'FOO';
-        $this->attribute->setCaseSensitive(false);
+        $this->attribute->setValueIsCaseSensitive(false);
         $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue($value);
         self::assertEquals(strtolower($value), $this->attribute->getValue());

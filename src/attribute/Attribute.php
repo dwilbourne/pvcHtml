@@ -93,10 +93,10 @@ abstract class Attribute implements AttributeInterface
     }
 
     /**
-     * setCaseSensitive
+     * setValueIsCaseSensitive
      * @param bool $caseSensitive
      */
-    public function setCaseSensitive(bool $caseSensitive): void
+    public function setValueIsCaseSensitive(bool $caseSensitive): void
     {
         $this->valueIsCaseSensitive = $caseSensitive;
     }

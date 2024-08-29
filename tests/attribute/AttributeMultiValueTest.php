@@ -80,13 +80,13 @@ class AttributeMultiValueTest extends TestCase
     public function testSetValueConvertsValuesToLowerCaseIfCaseSensitive(): void
     {
         $values = ['FOO', 'BAR'];
-        $this->attribute->setCaseSensitive(true);
+        $this->attribute->setValueIsCaseSensitive(true);
         $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue($values);
         self::assertEquals($values, $this->attribute->getValue());
 
         $values = ['FOO', 'BAR'];
-        $this->attribute->setCaseSensitive(false);
+        $this->attribute->setValueIsCaseSensitive(false);
         $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue($values);
         $expectedResult = array_map('strtolower', $values);

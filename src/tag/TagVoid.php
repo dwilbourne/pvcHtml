@@ -41,6 +41,11 @@ class TagVoid implements TagVoidInterface
     protected string $name;
 
     /**
+     * @var array<string>
+     */
+    protected array $allowedAttributes = [];
+
+    /**
      * @var array<string, AttributeInterface<ValueType, ValTesterType>>
      */
     protected array $attributes = [];
@@ -124,6 +129,33 @@ class TagVoid implements TagVoidInterface
         }
         $this->name = $name;
         $this->attributes = [];
+    }
+
+    /**
+     * getAllowedAttributes
+     * @return array<string>
+     */
+    public function getAllowedAttributes(): array
+    {
+        return $this->allowedAttributes;
+    }
+
+    /**
+     * setAllowedAttributes
+     * @param array<string> $allowedAttributes
+     */
+    public function setAllowedAttributes(array $allowedAttributes): void
+    {
+        foreach($allowedAttributes as $attribute) {
+            /**
+             * not testing for "validity" per se, but allowed attributes are typed as strings and the
+             * keys to the actual attributes array are strings.  So we will just enforce type consistency here.
+             */
+            if (!is_string($attribute)) {
+                throw new InvalidAttributeNameException((string) $attribute);
+            }
+        }
+        $this->allowedAttributes = $allowedAttributes;
     }
 
     /**

@@ -72,16 +72,16 @@ class AttributeTest extends TestCase
     }
 
     /**
-     * testSetIsCaseSensitive
-     * @covers \pvc\html\attribute\Attribute::setCaseSensitive
+     * testSetValueIsCaseSensitive
+     * @covers \pvc\html\attribute\Attribute::setValueIsCaseSensitive
      * @covers \pvc\html\attribute\Attribute::valueIsCaseSensitive
      */
-    public function testSetIsCaseSensitive(): void
+    public function testSetValueIsCaseSensitive(): void
     {
         self::assertFalse($this->attribute->valueIsCaseSensitive());
-        $this->attribute->setCaseSensitive(true);
+        $this->attribute->setValueIsCaseSensitive(true);
         self::assertTrue($this->attribute->valueIsCaseSensitive());
-        $this->attribute->setCaseSensitive(false);
+        $this->attribute->setValueIsCaseSensitive(false);
         self::assertFalse($this->attribute->valueIsCaseSensitive());
     }
 

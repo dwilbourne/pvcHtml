@@ -95,6 +95,36 @@ class TagVoidTest extends TestCase
     }
 
     /**
+     * testSetAllowedAttributesThrowsExceptionWithNonStringAttributeName
+     * @throws InvalidAttributeNameException
+     * @covers \pvc\html\tag\TagVoid::setAllowedAttributes
+     */
+    public function testSetAllowedAttributesThrowsExceptionWithNonStringAttributeName(): void
+    {
+        $allowedAttributes = ['foo', 'bar', 9];
+        self::expectException(InvalidAttributeNameException::class);
+        $this->tag->setAllowedAttributes($allowedAttributes);
+    }
+
+    /**
+     * testSetGetAllowedAttributes
+     * @covers \pvc\html\tag\TagVoid::setAllowedAttributes
+     * @covers \pvc\html\tag\TagVoid::getAllowedAttributes
+     */
+    public function testSetGetAllowedAttributes(): void
+    {
+        /**
+         * default is an empty array
+         */
+        self::assertIsArray($this->tag->getAllowedAttributes());
+        self::assertEmpty($this->tag->getAllowedAttributes());
+
+        $allowedAttributes = ['foo', 'bar', 'baz'];
+        $this->tag->setAllowedAttributes($allowedAttributes);
+        self::assertEqualsCanonicalizing($allowedAttributes, $this->tag->getAllowedAttributes());
+    }
+
+    /**
      * testGetAttributeReturnsNullWhenAttributeDoesNotExist
      * @covers \pvc\html\tag\TagVoid::getAttribute
      */
