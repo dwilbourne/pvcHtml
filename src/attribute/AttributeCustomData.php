@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace pvc\html\attribute;
 
 use pvc\html\err\InvalidCustomDataNameException;
-use pvc\interfaces\html\config\HtmlConfigInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
 /**
@@ -17,19 +16,12 @@ use pvc\interfaces\validator\ValTesterInterface;
 class AttributeCustomData extends AttributeSingleValue
 {
     /**
-     * @var ValTesterInterface<string>
-     */
-    protected ValTesterInterface $customDataNameTester;
-
-    /**
      * @param ValTesterInterface<string> $valTester
-     * @param HtmlConfigInterface $htmlConfig
      */
     public function __construct(
-        ValTesterInterface $valTester,
-        HtmlConfigInterface $htmlConfig
+        ValTesterInterface $valTester
     ) {
-        parent::__construct($valTester, $htmlConfig);
+        parent::__construct($valTester);
     }
 
     /**

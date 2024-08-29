@@ -20,7 +20,7 @@ use pvc\interfaces\html\tag\TagVoidInterface;
 use pvc\interfaces\msg\MsgInterface;
 
 /**
- * @covers Tag
+ * @covers \pvc\html\tag\Tag
  */
 class TagTest extends TestCase
 {
@@ -60,7 +60,7 @@ class TagTest extends TestCase
     /**
      * testTagThrowsExceptionWhenAddingInnerTextWhereNotAllowed
      * @throws InvalidSubTagException
-     * @covers Tag::addInnerHTML
+     * @covers \pvc\html\tag\Tag::addInnerHTML
      */
     public function testTagThrowsExceptionWhenAddingInnerTextWhereNotAllowed(): void
     {
@@ -73,8 +73,8 @@ class TagTest extends TestCase
     /**
      * testAddSubTagThrowsExceptionWhenSubTagNotAllowed
      * @throws InvalidSubTagException
-     * @covers Tag::addSubtag
-     * @covers Tag::canAddSubTag
+     * @covers \pvc\html\tag\Tag::addSubtag
+     * @covers \pvc\html\tag\Tag::canAddSubTag
      */
     public function testAddSubTagThrowsExceptionWhenSubTagNotAllowed(): void
     {
@@ -94,7 +94,7 @@ class TagTest extends TestCase
     /**
      * testCannotAddBlockTagAsSubTagOfInlineTag
      * @throws InvalidSubTagException
-     * @covers Tag::canAddSubTag
+     * @covers \pvc\html\tag\Tag::canAddSubTag
      */
     public function testCannotAddBlockTagAsSubTagOfInlineTag(): void
     {
@@ -113,7 +113,7 @@ class TagTest extends TestCase
 
     /**
      * testGetSubTagReturnsNullIfSubtagDoesNotExist
-     * @covers Tag::getSubTag
+     * @covers \pvc\html\tag\Tag::getSubTag
      */
     public function testGetSubTagReturnsNullIfSubtagDoesNotExist(): void
     {
@@ -123,7 +123,7 @@ class TagTest extends TestCase
     /**
      * testGetSubTagReturnsFirstInstanceOfSubtag
      * @throws InvalidSubTagException
-     * @covers Tag::getSubTag
+     * @covers \pvc\html\tag\Tag::getSubTag
      */
     public function testGetSubTagReturnsFirstInstanceOfSubtag(): void
     {
@@ -147,8 +147,8 @@ class TagTest extends TestCase
     /**
      * testAddGetInnerHtml
      * @returns Tag
-     * @covers Tag::addInnerHTML
-     * @covers Tag::getInnerHtml
+     * @covers \pvc\html\tag\Tag::addInnerHTML
+     * @covers \pvc\html\tag\Tag::getInnerHtml
      */
     public function testAddGetInnerHtml(): void
     {
@@ -171,7 +171,7 @@ class TagTest extends TestCase
 
     /**
      * testGenerateClosingTag
-     * @covers Tag::generateClosingTag
+     * @covers \pvc\html\tag\Tag::generateClosingTag
      */
     public function testGenerateClosingTag(): void
     {

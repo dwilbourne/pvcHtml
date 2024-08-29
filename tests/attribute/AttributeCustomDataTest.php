@@ -19,17 +19,13 @@ class AttributeCustomDataTest extends TestCase
 {
     protected AttributeCustomData $attribute;
 
-    protected HtmlConfigInterface|MockObject $htmlConfig;
-
     protected ValTesterInterface|MockObject $valTester;
 
     public function setUp(): void
     {
         $this->valTester = $this->createMock(ValTesterInterface::class);
-        $this->htmlConfig = $this->createMock(HtmlConfigInterface::class);
         $this->attribute = new AttributeCustomData(
-            $this->valTester,
-            $this->htmlConfig
+            $this->valTester
         );
     }
 
@@ -70,6 +66,4 @@ class AttributeCustomDataTest extends TestCase
         $expectedResult = 'data-' . $customDataName;
         self::assertEquals($expectedResult, $this->attribute->getName());
     }
-
-
 }

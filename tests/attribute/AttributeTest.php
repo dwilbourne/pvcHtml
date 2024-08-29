@@ -11,29 +11,25 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\Attribute;
 use pvc\html\err\InvalidAttributeNameException;
-use pvc\interfaces\html\config\HtmlConfigInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeTest extends TestCase
 {
-    protected HtmlConfigInterface $htmlConfig;
-
     protected ValTesterInterface|MockObject $tester;
 
     protected Attribute $attribute;
 
     public function setUp(): void
     {
-        $this->htmlConfig = $this->createMock(HtmlConfigInterface::class);
         $this->tester = $this->createMock(ValTesterInterface::class);
         $this->attribute = $this->getMockBuilder(Attribute::class)
-            ->setConstructorArgs([$this->tester, $this->htmlConfig])
+            ->setConstructorArgs([$this->tester])
             ->getMockForAbstractClass();
     }
 
     /**
      * testConstruct
-     * @covers Attribute::__construct
+     * @covers \pvc\html\attribute\Attribute::__construct
      */
     public function testConstruct(): void
     {
@@ -41,32 +37,8 @@ class AttributeTest extends TestCase
     }
 
     /**
-     * testSetGetHtmlConfig
-     * @covers Attribute::getHtmlConfig
-     * @covers Attribute::setHtmlConfig
-     */
-    public function testSetGetHtmlConfig(): void
-    {
-        $config = $this->createMock(HtmlConfigInterface::class);
-        $this->attribute->setHtmlConfig($config);
-        self::assertEquals($config, $this->attribute->getHtmlConfig());
-    }
-
-    /**
-     * testSetInvalidNameThrowsException
-     * @covers Attribute::setName
-     */
-    public function testSetInvalidNameThrowsException(): void
-    {
-        $testName = 'foo';
-        $this->htmlConfig->method('isValidAttributeName')->with($testName)->willReturn(false);
-        self::expectException(InvalidAttributeNameException::class);
-        $this->attribute->setName($testName);
-    }
-
-    /**
      * testGetNameReturnsEmptyStringWhenNameIsNotSet
-     * @covers Attribute::getName
+     * @covers \pvc\html\attribute\Attribute::getName
      */
     public function testgetNameReturnsEmptyStringWhenNameIsNotSet(): void
     {
@@ -77,21 +49,20 @@ class AttributeTest extends TestCase
     /**
      * testSetGetName
      * @throws InvalidAttributeNameException
-     * @covers Attribute::setName
-     * @covers Attribute::getName
+     * @covers \pvc\html\attribute\Attribute::setName
+     * @covers \pvc\html\attribute\Attribute::getName
      */
     public function testSetGetName(): void
     {
         $testName = 'target';
-        $this->htmlConfig->method('isValidAttributeName')->with($testName)->willReturn(true);
         $this->attribute->setName($testName);
         self::assertEquals($testName, $this->attribute->getName());
     }
 
     /**
      * testSetGetTester
-     * @covers Attribute::setTester
-     * @covers Attribute::getTester
+     * @covers \pvc\html\attribute\Attribute::setTester
+     * @covers \pvc\html\attribute\Attribute::getTester
      */
     public function testSetGetTester(): void
     {
@@ -102,8 +73,8 @@ class AttributeTest extends TestCase
 
     /**
      * testSetIsCaseSensitive
-     * @covers Attribute::setCaseSensitive
-     * @covers Attribute::valueIsCaseSensitive
+     * @covers \pvc\html\attribute\Attribute::setCaseSensitive
+     * @covers \pvc\html\attribute\Attribute::valueIsCaseSensitive
      */
     public function testSetIsCaseSensitive(): void
     {
@@ -112,6 +83,33 @@ class AttributeTest extends TestCase
         self::assertTrue($this->attribute->valueIsCaseSensitive());
         $this->attribute->setCaseSensitive(false);
         self::assertFalse($this->attribute->valueIsCaseSensitive());
+    }
+
+    /**
+     * testSetGlobalIsGlobal
+     * @covers \pvc\html\attribute\Attribute::setGlobalYn
+     * @covers \pvc\html\attribute\Attribute::isGlobalYn
+     */
+    public function testSetGlobalIsGlobal(): void
+    {
+        /**
+         * default should be faLse
+         */
+        self::assertFalse($this->attribute->isGlobalYn());
+
+        /**
+         * test setting to true
+         */
+        $newValue = true;
+        $this->attribute->setGlobalYn($newValue);
+        self::assertEquals($newValue, $this->attribute->isGlobalYn());
+
+        /**
+         * test setting back to false
+         */
+        $newValue = false;
+        $this->attribute->setGlobalYn($newValue);
+        self::assertEquals($newValue, $this->attribute->isGlobalYn());
     }
 
 }

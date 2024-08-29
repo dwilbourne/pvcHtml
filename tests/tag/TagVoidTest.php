@@ -53,11 +53,11 @@ class TagVoidTest extends TestCase
 
     /**
      * testConstruct
-     * @covers TagVoid::__construct
-     * @covers TagVoid::setHtmlConfig
-     * @covers TagVoid::getHtmlConfig
-     * @covers TagVoid::setAttributeFactory
-     * @covers TagVoid::getAttributeFactory
+     * @covers \pvc\html\tag\TagVoid::__construct
+     * @covers \pvc\html\tag\TagVoid::setHtmlConfig
+     * @covers \pvc\html\tag\TagVoid::getHtmlConfig
+     * @covers \pvc\html\tag\TagVoid::setAttributeFactory
+     * @covers \pvc\html\tag\TagVoid::getAttributeFactory
      */
     public function testConstruct(): void
     {
@@ -68,7 +68,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testSetTagNameThrowsExceptionWithInvalidTagName
-     * @covers TagVoid::setName
+     * @covers \pvc\html\tag\TagVoid::setName
      */
     public function testSetTagNameThrowsExceptionWithInvalidTagName(): void
     {
@@ -80,8 +80,8 @@ class TagVoidTest extends TestCase
 
     /**
      * testSetGetTagName
-     * @covers TagVoid::getName
-     * @covers TagVoid::setName
+     * @covers \pvc\html\tag\TagVoid::getName
+     * @covers \pvc\html\tag\TagVoid::setName
      */
     public function testSetGetTagName(): void
     {
@@ -96,7 +96,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testGetAttributeReturnsNullWhenAttributeDoesNotExist
-     * @covers TagVoid::getAttribute
+     * @covers \pvc\html\tag\TagVoid::getAttribute
      */
     public function testGetAttributeReturnsNullWhenAttributeDoesNotExist(): void
     {
@@ -105,7 +105,7 @@ class TagVoidTest extends TestCase
 
     /**
      * setGetAttributesReturnsEmptyArrayWhenTagHasNoAttributes
-     * @covers TagVoid::getAttributes
+     * @covers \pvc\html\tag\TagVoid::getAttributes
      */
     public function testSetGetAttributesReturnsEmptyArrayWhenTagHasNoAttributes(): void
     {
@@ -116,7 +116,7 @@ class TagVoidTest extends TestCase
     /**
      * testSetAttributeThrowsExceptionWhenAttributeNameNotSet
      * @throws UnsetAttributeNameException
-     * @covers TagVoid::setAttribute
+     * @covers \pvc\html\tag\TagVoid::setAttribute
      */
     public function testSetAttributeThrowsExceptionWhenAttributeNameNotSet(): void
     {
@@ -128,9 +128,9 @@ class TagVoidTest extends TestCase
 
     /**
      * testSetGetRemoveAttribute
-     * @covers TagVoid::setAttribute
-     * @covers TagVoid::getAttribute
-     * @covers TagVoid::removeAttribute
+     * @covers \pvc\html\tag\TagVoid::setAttribute
+     * @covers \pvc\html\tag\TagVoid::getAttribute
+     * @covers \pvc\html\tag\TagVoid::removeAttribute
      */
     public function testSetGetRemoveAttribute(): void
     {
@@ -166,7 +166,7 @@ class TagVoidTest extends TestCase
     /**
      * testSetGetCustomDataAttribute
      * @throws InvalidAttributeNameException
-     * @covers TagVoid::setCustomData
+     * @covers \pvc\html\tag\TagVoid::setCustomData
      */
     public function testSetGetCustomDataAttribute(): void
     {
@@ -203,7 +203,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testSetGetRemoveEvent
-     * @covers TagVoid::getAttributes
+     * @covers \pvc\html\tag\TagVoid::getAttributes
      */
     public function testGetAttributes(): void
     {
@@ -243,7 +243,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testMagicSetterThrowsExceptionWithInvalidAttributeEventName
-     * @covers TagVoid::__set
+     * @covers \pvc\html\tag\TagVoid::__set
      */
     public function testMagicSetterThrowsExceptionWithInvalidAttributeEventName(): void
     {
@@ -253,8 +253,8 @@ class TagVoidTest extends TestCase
 
     /**
      * testMagicSetterGetter
-     * @covers TagVoid::__get
-     * @covers TagVoid::__set
+     * @covers \pvc\html\tag\TagVoid::__get
+     * @covers \pvc\html\tag\TagVoid::__set
      */
     public function testMagicSetterGetter(): void
     {
@@ -287,7 +287,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testMagicGetterReturnsNullWithUnsetAttributeName
-     * @covers TagVoid::__get
+     * @covers \pvc\html\tag\TagVoid::__get
      */
     public function testMagicGetterThrowsExceptionWithUnsetAttributeName(): void
     {
@@ -297,7 +297,7 @@ class TagVoidTest extends TestCase
     /**
      * testGenerateOpeningTagWithNoTagName
      * @throws UnsetTagNameException
-     * @covers TagVoid::generateOpeningTag
+     * @covers \pvc\html\tag\TagVoid::generateOpeningTag
      */
     public function testGenerateOpeningTagWithNoTagName(): void
     {
@@ -307,7 +307,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testGenerateOpeningTagWithNoAttributes
-     * @covers TagVoid::generateOpeningTag
+     * @covers \pvc\html\tag\TagVoid::generateOpeningTag
      */
     public function testGenerateOpeningTagWithNoAttributes(): void
     {
@@ -319,7 +319,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testGenerateOpeningTagWithAttributes
-     * @covers TagVoid::generateOpeningTag
+     * @covers \pvc\html\tag\TagVoid::generateOpeningTag
      */
     public function testGenerateOpeningTagWithAttributes(): void
     {

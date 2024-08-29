@@ -38,7 +38,7 @@ class AttributeVoidTest extends TestCase
     /**
      * testSetAttributeThrowsExceptionWithVoidAttributeNameAndNonBooleanValue
      * @throws InvalidAttributeValueException
-     * @covers AttributeVoid::setValue
+     * @covers \pvc\html\attribute\AttributeVoid::setValue
      */
     public function testSetAttributeThrowsExceptionWithVoidAttributeNameAndNonBooleanValue(): void
     {
@@ -50,8 +50,8 @@ class AttributeVoidTest extends TestCase
 
     /**
      * testSetGetValue
-     * @covers AttributeVoid::setValue
-     * @covers AttributeVoid::getValue
+     * @covers \pvc\html\attribute\AttributeVoid::setValue
+     * @covers \pvc\html\attribute\AttributeVoid::getValue
      */
     public function testSetGetValue(): void
     {
@@ -63,7 +63,7 @@ class AttributeVoidTest extends TestCase
 
     /**
      * testRenderReturnsAttributeNameWhenUsageValueToTrue
-     * @covers AttributeVoid::render
+     * @covers \pvc\html\attribute\AttributeVoid::render
      */
     public function testRenderReturnsAttributeNameWhenUsageValueToTrue(): void
     {
@@ -76,7 +76,7 @@ class AttributeVoidTest extends TestCase
      * testRenderReturnsEmptyStringWhenValueSetToFalse
      * @throws UnsetAttributeNameException
      * @throws InvalidAttributeNameException
-     * @covers AttributeVoid::render
+     * @covers \pvc\html\attribute\AttributeVoid::render
      */
     public function testRenderReturnsEmptyStringWhenValueSetToFalse(): void
     {
@@ -90,7 +90,7 @@ class AttributeVoidTest extends TestCase
     /**
      * setRenderThrowsExceptionWhenNameNotSet
      * @throws UnsetAttributeNameException
-     * @covers AttributeVoid::render
+     * @covers \pvc\html\attribute\AttributeVoid::render
      */
     public function testSetRenderThrowsExceptionWhenNameNotSet(): void
     {

@@ -9,7 +9,6 @@ namespace pvc\html\attribute;
 
 use pvc\html\err\InvalidAttributeNameException;
 use pvc\interfaces\html\attribute\AttributeInterface;
-use pvc\interfaces\html\config\HtmlConfigInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
 /**
@@ -27,11 +26,6 @@ abstract class Attribute implements AttributeInterface
     protected string $name;
 
     /**
-     * @var HtmlConfigInterface
-     */
-    protected HtmlConfigInterface $htmlConfig;
-
-    /**
      * @var ValTesterInterface<ValTesterType>
      */
     protected ValTesterInterface $tester;
@@ -43,6 +37,10 @@ abstract class Attribute implements AttributeInterface
      */
     protected bool $valueIsCaseSensitive = false;
 
+    /**
+     * @var bool
+     */
+    protected bool $globalYn = false;
 
     /**
      * @var ValueType
@@ -52,28 +50,9 @@ abstract class Attribute implements AttributeInterface
     /**
      * @param ValTesterInterface<ValTesterType> $tester
      */
-    public function __construct(ValTesterInterface $tester, HtmlConfigInterface $htmlConfig)
+    public function __construct(ValTesterInterface $tester)
     {
         $this->setTester($tester);
-        $this->setHtmlConfig($htmlConfig);
-    }
-
-    /**
-     * getHtmlConfig
-     * @return HtmlConfigInterface
-     */
-    public function getHtmlConfig(): HtmlConfigInterface
-    {
-        return $this->htmlConfig;
-    }
-
-    /**
-     * setHtmlConfig
-     * @param HtmlConfigInterface $htmlConfig
-     */
-    public function setHtmlConfig(HtmlConfigInterface $htmlConfig): void
-    {
-        $this->htmlConfig = $htmlConfig;
     }
 
     /**
@@ -92,9 +71,6 @@ abstract class Attribute implements AttributeInterface
      */
     public function setName(string $name): void
     {
-        if (!$this->getHtmlConfig()->isValidAttributeName($name)) {
-            throw new InvalidAttributeNameException($name);
-        }
         $this->name = $name;
     }
 
@@ -134,4 +110,21 @@ abstract class Attribute implements AttributeInterface
         return $this->valueIsCaseSensitive;
     }
 
+    /**
+     * isGlobalYn
+     * @return bool
+     */
+    public function isGlobalYn(): bool
+    {
+        return $this->globalYn;
+    }
+
+    /**
+     * setGlobalYn
+     * @param bool $globalYn
+     */
+    public function setGlobalYn(bool $globalYn): void
+    {
+        $this->globalYn = $globalYn;
+    }
 }

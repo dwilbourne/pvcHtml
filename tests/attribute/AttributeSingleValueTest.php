@@ -38,7 +38,7 @@ class AttributeSingleValueTest extends TestCase
     /**
      * testSetValueFailsIfNotAString
      * @throws InvalidAttributeValueException
-     * @covers AttributeSingleValue::setValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
      */
     public function testSetValueFailsIfNotAString(): void
     {
@@ -50,7 +50,7 @@ class AttributeSingleValueTest extends TestCase
     /**
      * testSetValueFailsIfValueIsEmpty
      * @throws InvalidAttributeValueException
-     * @covers AttributeSingleValue::setValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
      */
     public function testSetValueFailsIfValueIsEmpty(): void
     {
@@ -62,7 +62,7 @@ class AttributeSingleValueTest extends TestCase
     /**
      * testSetValueConvertsCaseIfNotCaseSensitive
      * @throws InvalidAttributeValueException
-     * @covers AttributeSingleValue::setValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
      */
     public function testSetValueConvertsCaseIfNotCaseSensitive(): void
     {
@@ -82,7 +82,7 @@ class AttributeSingleValueTest extends TestCase
     /**
      * testSetValueThrowsExceptionWhenTesterFails
      * @throws InvalidAttributeValueException
-     * @covers AttributeSingleValue::setValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
      */
     public function testSetValueThrowsExceptionWhenTesterFails(): void
     {
@@ -95,8 +95,8 @@ class AttributeSingleValueTest extends TestCase
     /**
      * testSetGetValue
      * @throws InvalidAttributeValueException
-     * @covers AttributeSingleValue::setValue
-     * @covers AttributeSingleValue::getValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::getValue
      */
     public function testSetGetValue(): void
     {
@@ -109,7 +109,7 @@ class AttributeSingleValueTest extends TestCase
     /**
      * testRenderWithNoNameSet
      * @throws UnsetAttributeNameException
-     * @covers AttributeSingleValue::render
+     * @covers \pvc\html\attribute\AttributeSingleValue::render
      */
     public function testRenderWithNoNameSet(): void
     {
@@ -119,7 +119,7 @@ class AttributeSingleValueTest extends TestCase
 
     /**
      * testRenderWithNoValueSet
-     * @covers AttributeSingleValue::render
+     * @covers \pvc\html\attribute\AttributeSingleValue::render
      */
     public function testRenderWithNoValueSet(): void
     {
@@ -130,7 +130,7 @@ class AttributeSingleValueTest extends TestCase
     /**
      * testRenderWithValueSet
      * @throws InvalidAttributeValueException
-     * @covers AttributeSingleValue::render
+     * @covers \pvc\html\attribute\AttributeSingleValue::render
      */
     public function testRenderWithValueSet(): void
     {

@@ -9,7 +9,6 @@ namespace pvc\html\attribute;
 
 use pvc\html\err\InvalidAttributeValueException;
 use pvc\html\err\UnsetAttributeNameException;
-use pvc\interfaces\validator\ValTesterInterface;
 
 /**
  * Class AttributeSingleValue

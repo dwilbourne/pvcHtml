@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace pvc\html\attribute;
 
 use pvc\html\err\InvalidAttributeValueException;
-use pvc\interfaces\validator\ValTesterInterface;
 
 /**
  * Class AttributeMultiValue
