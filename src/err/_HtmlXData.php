@@ -7,7 +7,7 @@
 
 declare (strict_types=1);
 
-namespace pvc\html\err;
+namespace pvc\html\abstract\err;
 
 use pvc\err\XDataAbstract;
 
@@ -25,7 +25,6 @@ class _HtmlXData extends XDataAbstract
             InvalidCustomDataNameException::class => 1002,
             InvalidInnerTextException::class => 1003,
             InvalidSubTagException::class => 1004,
-            InvalidTagException::class => 1005,
             UnsetAttributeNameException::class => 1006,
             UnsetTagNameException::class => 1007,
         ];
@@ -34,12 +33,11 @@ class _HtmlXData extends XDataAbstract
     public function getXMessageTemplates(): array
     {
         return [
-            InvalidAttributeNameException::class => '${name} is not a valid attribute or event name',
+            InvalidAttributeNameException::class => 'Invalid attribute or event name',
             InvalidAttributeValueException::class => 'Error trying to set attribute ${attributeName} to invalid value.',
             InvalidCustomDataNameException::class => 'Invalid custom data name - must be only lower case letters.',
             InvalidInnerTextException::class =>'Inner text or Msg objects not allowed within tag ${tagName}.',
             InvalidSubTagException::class => 'Invalid subtag - either the subtag is invalid or it is a duplicate of a required subtag (see HtmlConfig).',
-            InvalidTagException::class => 'Cannot set tag ${tagName}.  There is no entry in HtmlConfig for that tag.',
             UnsetAttributeNameException::class => 'attribute name must be set before rendering.',
             UnsetTagNameException::class => 'tag name must be set before rendering',
         ];

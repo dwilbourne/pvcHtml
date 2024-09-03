@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace pvc\html\attribute;
+namespace pvc\html\abstract\attribute;
 
 /**
  * Class Event

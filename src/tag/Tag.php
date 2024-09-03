@@ -6,10 +6,11 @@
 
 declare(strict_types=1);
 
-namespace pvc\html\tag;
+namespace pvc\html\abstract\tag;
 
-use pvc\html\err\InvalidInnerTextException;
-use pvc\html\err\InvalidSubTagException;
+use pvc\html\abstract\err\InvalidInnerTextException;
+use pvc\html\abstract\err\InvalidSubTagException;
+use pvc\interfaces\html\tag\TagInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
 use pvc\interfaces\msg\MsgInterface;
 
@@ -19,13 +20,46 @@ use pvc\interfaces\msg\MsgInterface;
  * @template ValueType
  * @template ValTesterType
  * @extends TagVoid<ValueType, ValTesterType>
+ * @implements TagInterface<ValueType, ValTesterType>
  */
-class Tag extends TagVoid
+class Tag extends TagVoid implements TagInterface
 {
+    /**
+     * @var array<string>
+     * an empty array means that any tag is allowed as a subtag
+     */
+    protected array $allowedSubTags = [];
+
     /**
      * @var array<TagVoidInterface<ValueType, ValTesterType>|MsgInterface|string>
      */
     protected array $innerHtml = [];
+
+    /**
+     * getAllowedSubTags
+     * @return array<string>
+     */
+    public function getAllowedSubTags(): array
+    {
+        return $this->allowedSubTags;
+    }
+
+    /**
+     * setAllowedSubTags
+     * @param array<string> $subTagNames
+     */
+    public function setAllowedSubTags(array $subTagNames): void
+    {
+        /**
+         * just enforce type consistency.  "Validity" handled by the factory / container.
+         */
+        foreach($subTagNames as $subTag) {
+            if (!is_string($subTag)) {
+                throw new InvalidSubTagException();
+            }
+        }
+        $this->allowedSubTags = $subTagNames;
+    }
 
     /**
      * addInnerHTML
@@ -54,9 +88,6 @@ class Tag extends TagVoid
      */
     protected function addInnerText(MsgInterface|string $innerText): void
     {
-        if ($this->htmlConfig->innerTextNotAllowed($this->getName())) {
-            throw new InvalidInnerTextException($this->getName());
-        }
         $this->innerHtml[] = $innerText;
     }
 
@@ -80,20 +111,16 @@ class Tag extends TagVoid
      */
     protected function canAddSubTag(TagVoidInterface $subTag): bool
     {
-        $parentTagName = $this->getName();
+        if (empty($this->getAllowedSubTags())) {
+            return true;
+        }
+
         $subTagName = $subTag->getName();
 
         /**
          * The subtag must be valid.
          */
-        if (!$this->getHtmlConfig()->isValidSubTag($subTagName, $parentTagName)) {
-            return false;
-        }
-
-        /**
-         * cannot add a block element inside an inline element
-         */
-        if ($this->getHtmlConfig()->isInlineTag($parentTagName) && $this->getHtmlConfig()->isBlockTag($subTagName)) {
+        if (!in_array($subTagName, $this->getAllowedSubTags())) {
             return false;
         }
 

@@ -6,16 +6,14 @@
 
 declare(strict_types=1);
 
-namespace pvc\html\tag;
+namespace pvc\html\abstract\tag;
 
-use pvc\html\attribute\Event;
-use pvc\html\err\InvalidAttributeNameException;
-use pvc\html\err\InvalidTagException;
-use pvc\html\err\UnsetAttributeNameException;
-use pvc\html\err\UnsetTagNameException;
+use pvc\html\abstract\attribute\Event;
+use pvc\html\abstract\err\InvalidAttributeNameException;
+use pvc\html\abstract\err\UnsetAttributeNameException;
+use pvc\html\abstract\err\UnsetTagNameException;
 use pvc\interfaces\html\attribute\AttributeFactoryInterface;
 use pvc\interfaces\html\attribute\AttributeInterface;
-use pvc\interfaces\html\config\HtmlConfigInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
@@ -51,42 +49,17 @@ class TagVoid implements TagVoidInterface
     protected array $attributes = [];
 
     /**
-     * @var HtmlConfigInterface
-     */
-    protected HtmlConfigInterface $htmlConfig;
-
-    /**
      * @var AttributeFactoryInterface<ValueType, ValTesterType>
      */
     protected AttributeFactoryInterface $attributeFactory;
 
 
     /**
-     * @param HtmlConfigInterface $htmlConfig
      * @param AttributeFactoryInterface<ValueType, ValTesterType> $attributeFactory
      */
-    public function __construct(HtmlConfigInterface $htmlConfig, AttributeFactoryInterface $attributeFactory)
+    public function __construct(AttributeFactoryInterface $attributeFactory)
     {
-        $this->setHtmlConfig($htmlConfig);
         $this->setAttributeFactory($attributeFactory);
-    }
-
-    /**
-     * getHtmlConfig
-     * @return HtmlConfigInterface
-     */
-    public function getHtmlConfig(): HtmlConfigInterface
-    {
-        return $this->htmlConfig;
-    }
-
-    /**
-     * setHtmlConfig
-     * @param HtmlConfigInterface $htmlConfig
-     */
-    public function setHtmlConfig(HtmlConfigInterface $htmlConfig): void
-    {
-        $this->htmlConfig = $htmlConfig;
     }
 
     /**
@@ -124,9 +97,6 @@ class TagVoid implements TagVoidInterface
      */
     public function setName(string $name): void
     {
-        if ($this->getHtmlConfig()->isValidTagName($name) === false) {
-            throw new InvalidTagException($name);
-        }
         $this->name = $name;
         $this->attributes = [];
     }
@@ -264,9 +234,6 @@ class TagVoid implements TagVoidInterface
      */
     public function __set(string $name, mixed $value): void
     {
-        if (!$this->getHtmlConfig()->isValidAttributeName($name)) {
-            throw new InvalidAttributeNameException($name);
-        }
         $attribute = $this->attributes[$name] ?? $this->attributeFactory->makeAttribute($name);
         $attribute->setValue($value);
         $this->attributes[$name] = $attribute;

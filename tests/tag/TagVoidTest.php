@@ -6,22 +6,19 @@
 
 declare(strict_types=1);
 
-namespace pvcTests\html\tag;
-
+namespace pvcTests\html\abstract\tag;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\attribute\AttributeCustomData;
-use pvc\html\attribute\AttributeVoid;
-use pvc\html\attribute\Event;
-use pvc\html\err\InvalidAttributeNameException;
-use pvc\html\err\InvalidTagException;
-use pvc\html\err\UnsetAttributeNameException;
-use pvc\html\err\UnsetTagNameException;
-use pvc\html\tag\TagVoid;
+use pvc\html\abstract\attribute\AttributeCustomData;
+use pvc\html\abstract\attribute\AttributeVoid;
+use pvc\html\abstract\attribute\Event;
+use pvc\html\abstract\err\InvalidAttributeNameException;
+use pvc\html\abstract\err\UnsetAttributeNameException;
+use pvc\html\abstract\err\UnsetTagNameException;
+use pvc\html\abstract\tag\TagVoid;
 use pvc\interfaces\html\attribute\AttributeFactoryInterface;
 use pvc\interfaces\html\attribute\AttributeInterface;
-use pvc\interfaces\html\config\HtmlConfigInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class TagVoidTest extends TestCase
@@ -36,8 +33,6 @@ class TagVoidTest extends TestCase
      */
     protected TagVoid $tag;
 
-    protected HtmlConfigInterface|MockObject $htmlConfig;
-
     protected AttributeFactoryInterface|MockObject $attributeFactory;
 
     /**
@@ -46,42 +41,26 @@ class TagVoidTest extends TestCase
     public function setUp(): void
     {
         $this->tagName = 'a';
-        $this->htmlConfig = $this->createMock(HtmlConfigInterface::class);
         $this->attributeFactory = $this->createMock(AttributeFactoryInterface::class);
-        $this->tag = new TagVoid($this->htmlConfig, $this->attributeFactory);
+        $this->tag = new TagVoid($this->attributeFactory);
     }
 
     /**
      * testConstruct
-     * @covers \pvc\html\tag\TagVoid::__construct
-     * @covers \pvc\html\tag\TagVoid::setHtmlConfig
-     * @covers \pvc\html\tag\TagVoid::getHtmlConfig
-     * @covers \pvc\html\tag\TagVoid::setAttributeFactory
-     * @covers \pvc\html\tag\TagVoid::getAttributeFactory
+     * @covers \pvc\html\abstract\tag\TagVoid::__construct
+     * @covers \pvc\html\abstract\tag\TagVoid::setAttributeFactory
+     * @covers \pvc\html\abstract\tag\TagVoid::getAttributeFactory
      */
     public function testConstruct(): void
     {
         self::assertInstanceOf(TagVoid::class, $this->tag);
-        self::assertEquals($this->htmlConfig, $this->tag->getHtmlConfig());
         self::assertEquals($this->attributeFactory, $this->tag->getAttributeFactory());
     }
 
     /**
-     * testSetTagNameThrowsExceptionWithInvalidTagName
-     * @covers \pvc\html\tag\TagVoid::setName
-     */
-    public function testSetTagNameThrowsExceptionWithInvalidTagName(): void
-    {
-        $badTagName = 'foo';
-        $this->htmlConfig->method('isValidTagName')->with($badTagName)->willReturn(false);
-        self::expectException(InvalidTagException::class);
-        $this->tag->setName($badTagName);
-    }
-
-    /**
      * testSetGetTagName
-     * @covers \pvc\html\tag\TagVoid::getName
-     * @covers \pvc\html\tag\TagVoid::setName
+     * @covers \pvc\html\abstract\tag\TagVoid::getName
+     * @covers \pvc\html\abstract\tag\TagVoid::setName
      */
     public function testSetGetTagName(): void
     {
@@ -89,7 +68,6 @@ class TagVoidTest extends TestCase
          * default behavior returns an empty string if name has not been sedt
          */
         self::assertEquals('', $this->tag->getName());
-        $this->htmlConfig->method('isValidTagName')->with($this->tagName)->willReturn(true);
         $this->tag->setName($this->tagName);
         self::assertEquals($this->tagName, $this->tag->getName());
     }
@@ -97,7 +75,7 @@ class TagVoidTest extends TestCase
     /**
      * testSetAllowedAttributesThrowsExceptionWithNonStringAttributeName
      * @throws InvalidAttributeNameException
-     * @covers \pvc\html\tag\TagVoid::setAllowedAttributes
+     * @covers \pvc\html\abstract\tag\TagVoid::setAllowedAttributes
      */
     public function testSetAllowedAttributesThrowsExceptionWithNonStringAttributeName(): void
     {
@@ -108,8 +86,8 @@ class TagVoidTest extends TestCase
 
     /**
      * testSetGetAllowedAttributes
-     * @covers \pvc\html\tag\TagVoid::setAllowedAttributes
-     * @covers \pvc\html\tag\TagVoid::getAllowedAttributes
+     * @covers \pvc\html\abstract\tag\TagVoid::setAllowedAttributes
+     * @covers \pvc\html\abstract\tag\TagVoid::getAllowedAttributes
      */
     public function testSetGetAllowedAttributes(): void
     {
@@ -126,7 +104,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testGetAttributeReturnsNullWhenAttributeDoesNotExist
-     * @covers \pvc\html\tag\TagVoid::getAttribute
+     * @covers \pvc\html\abstract\tag\TagVoid::getAttribute
      */
     public function testGetAttributeReturnsNullWhenAttributeDoesNotExist(): void
     {
@@ -135,7 +113,7 @@ class TagVoidTest extends TestCase
 
     /**
      * setGetAttributesReturnsEmptyArrayWhenTagHasNoAttributes
-     * @covers \pvc\html\tag\TagVoid::getAttributes
+     * @covers \pvc\html\abstract\tag\TagVoid::getAttributes
      */
     public function testSetGetAttributesReturnsEmptyArrayWhenTagHasNoAttributes(): void
     {
@@ -146,7 +124,7 @@ class TagVoidTest extends TestCase
     /**
      * testSetAttributeThrowsExceptionWhenAttributeNameNotSet
      * @throws UnsetAttributeNameException
-     * @covers \pvc\html\tag\TagVoid::setAttribute
+     * @covers \pvc\html\abstract\tag\TagVoid::setAttribute
      */
     public function testSetAttributeThrowsExceptionWhenAttributeNameNotSet(): void
     {
@@ -158,9 +136,9 @@ class TagVoidTest extends TestCase
 
     /**
      * testSetGetRemoveAttribute
-     * @covers \pvc\html\tag\TagVoid::setAttribute
-     * @covers \pvc\html\tag\TagVoid::getAttribute
-     * @covers \pvc\html\tag\TagVoid::removeAttribute
+     * @covers \pvc\html\abstract\tag\TagVoid::setAttribute
+     * @covers \pvc\html\abstract\tag\TagVoid::getAttribute
+     * @covers \pvc\html\abstract\tag\TagVoid::removeAttribute
      */
     public function testSetGetRemoveAttribute(): void
     {
@@ -196,7 +174,7 @@ class TagVoidTest extends TestCase
     /**
      * testSetGetCustomDataAttribute
      * @throws InvalidAttributeNameException
-     * @covers \pvc\html\tag\TagVoid::setCustomData
+     * @covers \pvc\html\abstract\tag\TagVoid::setCustomData
      */
     public function testSetGetCustomDataAttribute(): void
     {
@@ -233,7 +211,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testSetGetRemoveEvent
-     * @covers \pvc\html\tag\TagVoid::getAttributes
+     * @covers \pvc\html\abstract\tag\TagVoid::getAttributes
      */
     public function testGetAttributes(): void
     {
@@ -272,19 +250,9 @@ class TagVoidTest extends TestCase
     }
 
     /**
-     * testMagicSetterThrowsExceptionWithInvalidAttributeEventName
-     * @covers \pvc\html\tag\TagVoid::__set
-     */
-    public function testMagicSetterThrowsExceptionWithInvalidAttributeEventName(): void
-    {
-        self::expectException(InvalidAttributeNameException::class);
-        $this->tag->foo = 'bar';
-    }
-
-    /**
      * testMagicSetterGetter
-     * @covers \pvc\html\tag\TagVoid::__get
-     * @covers \pvc\html\tag\TagVoid::__set
+     * @covers \pvc\html\abstract\tag\TagVoid::__get
+     * @covers \pvc\html\abstract\tag\TagVoid::__set
      */
     public function testMagicSetterGetter(): void
     {
@@ -298,7 +266,6 @@ class TagVoidTest extends TestCase
          * first time is when the attribute is set, the second is when it is updated, showing that a
          * new one is not created.
          */
-        $this->htmlConfig->method('isValidAttributeName')->with($name)->willReturn(true);
         $this->attributeFactory->expects($this->once())->method('makeAttribute')->willReturn($attribute);
         $attribute->expects($this->exactly(2))->method('setValue');
 
@@ -317,7 +284,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testMagicGetterReturnsNullWithUnsetAttributeName
-     * @covers \pvc\html\tag\TagVoid::__get
+     * @covers \pvc\html\abstract\tag\TagVoid::__get
      */
     public function testMagicGetterThrowsExceptionWithUnsetAttributeName(): void
     {
@@ -327,7 +294,7 @@ class TagVoidTest extends TestCase
     /**
      * testGenerateOpeningTagWithNoTagName
      * @throws UnsetTagNameException
-     * @covers \pvc\html\tag\TagVoid::generateOpeningTag
+     * @covers \pvc\html\abstract\tag\TagVoid::generateOpeningTag
      */
     public function testGenerateOpeningTagWithNoTagName(): void
     {
@@ -337,19 +304,18 @@ class TagVoidTest extends TestCase
 
     /**
      * testGenerateOpeningTagWithNoAttributes
-     * @covers \pvc\html\tag\TagVoid::generateOpeningTag
+     * @covers \pvc\html\abstract\tag\TagVoid::generateOpeningTag
      */
     public function testGenerateOpeningTagWithNoAttributes(): void
     {
         $expectedResult = '<a>';
-        $this->htmlConfig->method('isValidTagName')->with($this->tagName)->willReturn(true);
         $this->tag->setName($this->tagName);
         self::assertEquals($expectedResult, $this->tag->generateOpeningTag());
     }
 
     /**
      * testGenerateOpeningTagWithAttributes
-     * @covers \pvc\html\tag\TagVoid::generateOpeningTag
+     * @covers \pvc\html\abstract\tag\TagVoid::generateOpeningTag
      */
     public function testGenerateOpeningTagWithAttributes(): void
     {
@@ -371,7 +337,6 @@ class TagVoidTest extends TestCase
         $event1->method('getValue')->willReturn($event1Value);
         $event1->method('render')->willReturn($event1Name . '=\'' . $event1Value . '\'');
 
-        $this->htmlConfig->method('isValidTagName')->with($this->tagName)->willReturn(true);
         $this->tag->setName($this->tagName);
         $this->tag->setAttribute($attr1);
         $this->tag->setAttribute($event1);

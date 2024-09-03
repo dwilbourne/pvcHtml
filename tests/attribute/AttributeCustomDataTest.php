@@ -6,13 +6,12 @@
 
 declare (strict_types=1);
 
-namespace pvcTests\html\attribute;
+namespace pvcTests\html\abstract\attribute;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\attribute\AttributeCustomData;
-use pvc\html\err\InvalidCustomDataNameException;
-use pvc\interfaces\html\config\HtmlConfigInterface;
+use pvc\html\abstract\attribute\AttributeCustomData;
+use pvc\html\abstract\err\InvalidCustomDataNameException;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeCustomDataTest extends TestCase
@@ -31,7 +30,7 @@ class AttributeCustomDataTest extends TestCase
 
     /**
      * testConstruct
-     * @covers \pvc\html\attribute\AttributeCustomData::__construct
+     * @covers \pvc\html\abstract\attribute\AttributeCustomData::__construct
      */
     public function testConstruct(): void
     {
@@ -41,7 +40,7 @@ class AttributeCustomDataTest extends TestCase
     /**
      * testSetNameFailsWithInvalidCustomDataName
      * @throws InvalidCustomDataNameException
-     * @covers \pvc\html\attribute\AttributeCustomData::setName
+     * @covers \pvc\html\abstract\attribute\AttributeCustomData::setName
      */
     public function testSetNameFailsWithInvalidCustomDataName(): void
     {
@@ -56,8 +55,8 @@ class AttributeCustomDataTest extends TestCase
     /**
      * testSetNameSucceeds
      * @throws InvalidCustomDataNameException
-     * @covers \pvc\html\attribute\AttributeCustomData::setName
-     * @covers \pvc\html\attribute\AttributeCustomData::getName
+     * @covers \pvc\html\abstract\attribute\AttributeCustomData::setName
+     * @covers \pvc\html\abstract\attribute\AttributeCustomData::getName
      */
     public function testSetNameSucceeds(): void
     {

@@ -1,5 +1,5 @@
 {
-	"name": "pvc/html",
+	"name": "pvc/html_abstract",
 	"description": "Code that creates html controls and groups of controls",
 	"type": "project",
 	"authors": [
@@ -14,8 +14,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"pvc\\html\\": "src/",
-			"pvcTests\\html\\": "tests/"
+			"pvc\\html\\abstract\\": "src/",
+			"pvcTests\\html\\abstract\\": "tests/"
 		}
 	},
 	"minimum-stability": "dev",

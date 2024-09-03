@@ -5,18 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace pvc\html\err;
+namespace pvc\html\abstract\err;
 
 use pvc\err\stock\LogicException;
-use Throwable;
 
 /**
  * Class InvalidAttributeNameException
  */
 class InvalidAttributeNameException extends LogicException
 {
-    public function __construct(string $name, Throwable $prev = null)
-    {
-        parent::__construct($name, $prev);
-    }
 }

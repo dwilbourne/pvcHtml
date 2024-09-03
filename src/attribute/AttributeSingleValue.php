@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace pvc\html\attribute;
+namespace pvc\html\abstract\attribute;
 
-use pvc\html\err\InvalidAttributeValueException;
-use pvc\html\err\UnsetAttributeNameException;
+use pvc\html\abstract\err\InvalidAttributeValueException;
+use pvc\html\abstract\err\UnsetAttributeNameException;
 
 /**
  * Class AttributeSingleValue
@@ -38,7 +38,7 @@ class AttributeSingleValue extends Attribute
         /**
          * adjust to lower case if it is not case-sensitive
          */
-        if (!$this->valueIsCaseSensitive()) {
+        if (!$this->isCaseSensitive()) {
             $value = strtolower($value);
         }
 

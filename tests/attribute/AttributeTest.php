@@ -5,12 +5,12 @@
  */
 declare (strict_types=1);
 
-namespace pvcTests\html\attribute;
+namespace pvcTests\html\abstract\attribute;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\attribute\Attribute;
-use pvc\html\err\InvalidAttributeNameException;
+use pvc\html\abstract\attribute\Attribute;
+use pvc\html\abstract\err\InvalidAttributeNameException;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeTest extends TestCase
@@ -29,7 +29,7 @@ class AttributeTest extends TestCase
 
     /**
      * testConstruct
-     * @covers \pvc\html\attribute\Attribute::__construct
+     * @covers \pvc\html\abstract\attribute\Attribute::__construct
      */
     public function testConstruct(): void
     {
@@ -38,7 +38,7 @@ class AttributeTest extends TestCase
 
     /**
      * testGetNameReturnsEmptyStringWhenNameIsNotSet
-     * @covers \pvc\html\attribute\Attribute::getName
+     * @covers \pvc\html\abstract\attribute\Attribute::getName
      */
     public function testgetNameReturnsEmptyStringWhenNameIsNotSet(): void
     {
@@ -49,8 +49,8 @@ class AttributeTest extends TestCase
     /**
      * testSetGetName
      * @throws InvalidAttributeNameException
-     * @covers \pvc\html\attribute\Attribute::setName
-     * @covers \pvc\html\attribute\Attribute::getName
+     * @covers \pvc\html\abstract\attribute\Attribute::setName
+     * @covers \pvc\html\abstract\attribute\Attribute::getName
      */
     public function testSetGetName(): void
     {
@@ -61,8 +61,8 @@ class AttributeTest extends TestCase
 
     /**
      * testSetGetTester
-     * @covers \pvc\html\attribute\Attribute::setTester
-     * @covers \pvc\html\attribute\Attribute::getTester
+     * @covers \pvc\html\abstract\attribute\Attribute::setTester
+     * @covers \pvc\html\abstract\attribute\Attribute::getTester
      */
     public function testSetGetTester(): void
     {
@@ -73,22 +73,22 @@ class AttributeTest extends TestCase
 
     /**
      * testSetValueIsCaseSensitive
-     * @covers \pvc\html\attribute\Attribute::setValueIsCaseSensitive
-     * @covers \pvc\html\attribute\Attribute::valueIsCaseSensitive
+     * @covers \pvc\html\abstract\attribute\Attribute::setCaseSensitive
+     * @covers \pvc\html\abstract\attribute\Attribute::isCaseSensitive
      */
     public function testSetValueIsCaseSensitive(): void
     {
-        self::assertFalse($this->attribute->valueIsCaseSensitive());
-        $this->attribute->setValueIsCaseSensitive(true);
-        self::assertTrue($this->attribute->valueIsCaseSensitive());
-        $this->attribute->setValueIsCaseSensitive(false);
-        self::assertFalse($this->attribute->valueIsCaseSensitive());
+        self::assertFalse($this->attribute->isCaseSensitive());
+        $this->attribute->setCaseSensitive(true);
+        self::assertTrue($this->attribute->isCaseSensitive());
+        $this->attribute->setCaseSensitive(false);
+        self::assertFalse($this->attribute->isCaseSensitive());
     }
 
     /**
      * testSetGlobalIsGlobal
-     * @covers \pvc\html\attribute\Attribute::setGlobalYn
-     * @covers \pvc\html\attribute\Attribute::isGlobalYn
+     * @covers \pvc\html\abstract\attribute\Attribute::setGlobalYn
+     * @covers \pvc\html\abstract\attribute\Attribute::isGlobalYn
      */
     public function testSetGlobalIsGlobal(): void
     {

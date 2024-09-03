@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace pvc\html\attribute;
+namespace pvc\html\abstract\attribute;
 
-use pvc\html\err\InvalidCustomDataNameException;
+use pvc\html\abstract\err\InvalidCustomDataNameException;
 use pvc\interfaces\validator\ValTesterInterface;
 
 /**

@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace pvc\html\attribute;
+namespace pvc\html\abstract\attribute;
 
-use pvc\html\err\InvalidAttributeValueException;
+use pvc\html\abstract\err\InvalidAttributeValueException;
 
 /**
  * Class AttributeMultiValue
@@ -47,7 +47,7 @@ class AttributeMultiValue extends Attribute
             /**
              * convert to lower case if not case-sensitive
              */
-            if (!$this->valueIsCaseSensitive()) {
+            if (!$this->isCaseSensitive()) {
                 $arrayItem = strtolower($arrayItem);
             }
             /**

@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace pvc\html\attribute;
+namespace pvc\html\abstract\attribute;
 
-use pvc\html\err\InvalidAttributeNameException;
+use pvc\html\abstract\err\InvalidAttributeNameException;
 use pvc\interfaces\html\attribute\AttributeInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
@@ -27,6 +27,11 @@ abstract class Attribute implements AttributeInterface
 
     /**
      * @var ValTesterInterface<ValTesterType>
+     *
+     * Attributes usually accept values whose validity can be determined in a context free manner.  But there
+     * are a few values which are context-sensitive.  For example, the 'for' attribute has value(s) which are id(s)
+     * of other elements within the same structural block.  The ValTester object is a context free tester, because
+     * it knows nothing about other attributes and elements which are outside its own scope.
      */
     protected ValTesterInterface $tester;
 
@@ -35,7 +40,7 @@ abstract class Attribute implements AttributeInterface
      * many (most?) attributes values are not case-sensitive, but some are.  A good example is the 'id'
      * attribute
      */
-    protected bool $valueIsCaseSensitive = false;
+    protected bool $isCaseSensitive = false;
 
     /**
      * @var bool
@@ -94,20 +99,20 @@ abstract class Attribute implements AttributeInterface
 
     /**
      * setValueIsCaseSensitive
-     * @param bool $caseSensitive
+     * @param bool $isCaseSensitive
      */
-    public function setValueIsCaseSensitive(bool $caseSensitive): void
+    public function setCaseSensitive(bool $isCaseSensitive): void
     {
-        $this->valueIsCaseSensitive = $caseSensitive;
+        $this->isCaseSensitive = $isCaseSensitive;
     }
 
     /**
-     * valueIsCaseSensitive
+     * isCaseSensitive
      * @return bool
      */
-    public function valueIsCaseSensitive(): bool
+    public function isCaseSensitive(): bool
     {
-        return $this->valueIsCaseSensitive;
+        return $this->isCaseSensitive;
     }
 
     /**

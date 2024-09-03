@@ -6,19 +6,17 @@
 
 declare (strict_types=1);
 
-namespace pvcTests\html\attribute;
+namespace pvcTests\html\abstract\attribute;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\attribute\AttributeMultiValue;
-use pvc\html\err\InvalidAttributeValueException;
-use pvc\interfaces\html\config\HtmlConfigInterface;
+use pvc\html\abstract\attribute\AttributeMultiValue;
+use pvc\html\abstract\err\InvalidAttributeValueException;
 use pvc\interfaces\validator\ValTesterInterface;
 use stdClass;
 
 class AttributeMultiValueTest extends TestCase
 {
-    protected HtmlConfigInterface $htmlConfig;
     protected ValTesterInterface|MockObject $tester;
 
     protected AttributeMultiValue $attribute;
@@ -28,17 +26,15 @@ class AttributeMultiValueTest extends TestCase
     public function setUp(): void
     {
         $this->attributeName = 'class';
-        $this->htmlConfig = $this->createMock(HtmlConfigInterface::class);
         $this->tester = $this->createMock(ValTesterInterface::class);
-        $this->attribute = new AttributeMultiValue($this->tester, $this->htmlConfig);
-        $this->htmlConfig->method('isValidAttributeName')->with($this->attributeName)->willReturn(true);
+        $this->attribute = new AttributeMultiValue($this->tester);
         $this->attribute->setName($this->attributeName);
     }
 
     /**
      * testSetValueFailsIfArgumentIsNotAnArray
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeMultiValue::setValue
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::setValue
      */
     public function testSetValueFailsIfArgumentIsNotAnArray(): void
     {
@@ -50,7 +46,7 @@ class AttributeMultiValueTest extends TestCase
     /**
      * testSetValueFailsWhenValueIsEmpty
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeMultiValue::setValue
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::setValue
      */
     public function testSetValueFailsWhenValueIsEmpty(): void
     {
@@ -62,7 +58,7 @@ class AttributeMultiValueTest extends TestCase
     /**
      * testSetValueFailsWhenNotAllArrayElementsAreStrings
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeMultiValue::setValue
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::setValue
      */
     public function testSetValueFailsWhenNotAllArrayElementsAreStrings(): void
     {
@@ -75,18 +71,18 @@ class AttributeMultiValueTest extends TestCase
     /**
      * testSetValueConvertsValuesToLowerCaseIfCaseSensitive
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeMultiValue::setValue
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::setValue
      */
     public function testSetValueConvertsValuesToLowerCaseIfCaseSensitive(): void
     {
         $values = ['FOO', 'BAR'];
-        $this->attribute->setValueIsCaseSensitive(true);
+        $this->attribute->setCaseSensitive(true);
         $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue($values);
         self::assertEquals($values, $this->attribute->getValue());
 
         $values = ['FOO', 'BAR'];
-        $this->attribute->setValueIsCaseSensitive(false);
+        $this->attribute->setCaseSensitive(false);
         $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue($values);
         $expectedResult = array_map('strtolower', $values);
@@ -96,8 +92,8 @@ class AttributeMultiValueTest extends TestCase
     /**
      * testSetGetValue
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeMultiValue::setValue
-     * @covers \pvc\html\attribute\AttributeMultiValue::getValue
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::setValue
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::getValue
      */
     public function testSetGetValue(): void
     {
@@ -110,8 +106,8 @@ class AttributeMultiValueTest extends TestCase
     /**
      * testSetValuesThrowsExceptionWhenTesterFails
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeMultiValue::setValue
-     * @covers \pvc\html\attribute\AttributeMultiValue::getValue
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::setValue
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::getValue
      */
     public function testSetValuesThrowsExceptionWhenTesterFails(): void
     {
@@ -123,7 +119,7 @@ class AttributeMultiValueTest extends TestCase
 
     /**
      * testRenderWithNoValueSet
-     * @covers \pvc\html\attribute\AttributeMultiValue::render
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::render
      */
     public function testRenderWithNoValueSet(): void
     {
@@ -133,7 +129,7 @@ class AttributeMultiValueTest extends TestCase
     /**
      * testRenderWithValuesSet
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeMultiValue::render
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::render
      */
     public function testRenderWithOneValueSet(): void
     {
@@ -147,7 +143,7 @@ class AttributeMultiValueTest extends TestCase
     /**
      * testRenderWithValuesSet
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeMultiValue::render
+     * @covers \pvc\html\abstract\attribute\AttributeMultiValue::render
      */
     public function testRenderWithMultipleValuesSet(): void
     {

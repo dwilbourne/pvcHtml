@@ -6,22 +6,20 @@
 
 declare (strict_types=1);
 
-namespace pvcTests\html\attribute;
+namespace pvcTests\html\abstract\attribute;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\attribute\AttributeVoid;
-use pvc\html\err\InvalidAttributeNameException;
-use pvc\html\err\InvalidAttributeValueException;
-use pvc\html\err\UnsetAttributeNameException;
-use pvc\interfaces\html\config\HtmlConfigInterface;
+use pvc\html\abstract\attribute\AttributeVoid;
+use pvc\html\abstract\err\InvalidAttributeNameException;
+use pvc\html\abstract\err\InvalidAttributeValueException;
+use pvc\html\abstract\err\UnsetAttributeNameException;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeVoidTest extends TestCase
 {
     protected string $name;
 
-    protected HtmlConfigInterface $htmlConfig;
     protected ValTesterInterface|MockObject $tester;
 
     protected AttributeVoid $attribute;
@@ -29,16 +27,14 @@ class AttributeVoidTest extends TestCase
     public function setUp(): void
     {
         $this->name = 'hidden';
-        $this->htmlConfig = $this->createMock(HtmlConfigInterface::class);
-        $this->htmlConfig->method('isValidAttributeName')->with($this->name)->willReturn(true);
         $this->tester = $this->createMock(ValTesterInterface::class);
-        $this->attribute = new AttributeVoid($this->tester, $this->htmlConfig);
+        $this->attribute = new AttributeVoid($this->tester);
     }
 
     /**
      * testSetAttributeThrowsExceptionWithVoidAttributeNameAndNonBooleanValue
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeVoid::setValue
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::setValue
      */
     public function testSetAttributeThrowsExceptionWithVoidAttributeNameAndNonBooleanValue(): void
     {
@@ -50,8 +46,8 @@ class AttributeVoidTest extends TestCase
 
     /**
      * testSetGetValue
-     * @covers \pvc\html\attribute\AttributeVoid::setValue
-     * @covers \pvc\html\attribute\AttributeVoid::getValue
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::setValue
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::getValue
      */
     public function testSetGetValue(): void
     {
@@ -63,7 +59,7 @@ class AttributeVoidTest extends TestCase
 
     /**
      * testRenderReturnsAttributeNameWhenUsageValueToTrue
-     * @covers \pvc\html\attribute\AttributeVoid::render
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::render
      */
     public function testRenderReturnsAttributeNameWhenUsageValueToTrue(): void
     {
@@ -76,7 +72,7 @@ class AttributeVoidTest extends TestCase
      * testRenderReturnsEmptyStringWhenValueSetToFalse
      * @throws UnsetAttributeNameException
      * @throws InvalidAttributeNameException
-     * @covers \pvc\html\attribute\AttributeVoid::render
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::render
      */
     public function testRenderReturnsEmptyStringWhenValueSetToFalse(): void
     {
@@ -90,7 +86,7 @@ class AttributeVoidTest extends TestCase
     /**
      * setRenderThrowsExceptionWhenNameNotSet
      * @throws UnsetAttributeNameException
-     * @covers \pvc\html\attribute\AttributeVoid::render
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::render
      */
     public function testSetRenderThrowsExceptionWhenNameNotSet(): void
     {

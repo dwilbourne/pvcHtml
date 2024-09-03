@@ -5,11 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace pvc\html\attribute;
+namespace pvc\html\abstract\attribute;
 
-use pvc\html\err\InvalidAttributeValueException;
-use pvc\html\err\UnsetAttributeNameException;
-use pvc\interfaces\html\attribute\AttributeInterface;
+use pvc\html\abstract\err\InvalidAttributeValueException;
+use pvc\html\abstract\err\UnsetAttributeNameException;
 
 /**
  * Class AttributeVoid
