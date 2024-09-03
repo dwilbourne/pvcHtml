@@ -1,6 +1,6 @@
 {
 	"name": "pvc/html_abstract",
-	"description": "Code that creates html controls and groups of controls",
+	"description": "the basic structure of html elements and attributes",
 	"type": "project",
 	"authors": [
 		{
