@@ -4,5 +4,3 @@
 composer.lock
 vendor
 coverage
-src
-tests
