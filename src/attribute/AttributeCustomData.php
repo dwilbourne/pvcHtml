@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace pvc\html\abstract\attribute;
 
 use pvc\html\abstract\err\InvalidCustomDataNameException;
-use pvc\interfaces\validator\ValTesterInterface;
 
 /**
  * Class AttributeCustomData
@@ -16,34 +15,20 @@ use pvc\interfaces\validator\ValTesterInterface;
 class AttributeCustomData extends AttributeSingleValue
 {
     /**
-     * @param ValTesterInterface<string> $valTester
-     */
-    public function __construct(
-        ValTesterInterface $valTester
-    ) {
-        parent::__construct($valTester);
-    }
-
-    /**
      * setName
      * @param string $name
      * @throws InvalidCustomDataNameException
-     *
-     * override parent class because parent class tests to make sure that the attribute name appears in the
-     * configuration file so that it is a valid attribute and so that we have a value valTester.
-     * Obviously, a custom attribute is not 'known' and the value valTester injection
-     * is part of the tagFactory.  html requires the 'data-' prefix for rendering.  It is stored with the prefix so
+     * Custom attributes are stored in the attributes array of a tag with the prefix so
      * that we can allow a tag to have an 'href' attribute and a 'data-href' attribute.
      */
-    public function setName(string $name): void
+    protected function setName(string $name): void
     {
         /**
          * according to various online sources, the data attribute name must be at least one character long and must
          * be prefixed with 'data-'. It should not contain any uppercase letters.  This regex restricts it to lower
          * case letters and numbers
          */
-        $pattern = '/^[a-z0-9]*$/';
-        if (!preg_match($pattern, $name)) {
+        if (!$this->isValidAttributeName($name)) {
             throw new InvalidCustomDataNameException();
         }
         $this->name = 'data-' . $name;

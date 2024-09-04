@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace pvc\html\abstract\attribute;
 
 use pvc\html\abstract\err\InvalidAttributeValueException;
-use pvc\html\abstract\err\UnsetAttributeNameException;
 
 /**
  * Class AttributeSingleValue
@@ -54,9 +53,9 @@ class AttributeSingleValue extends Attribute
 
     /**
      * getValue
-     * @return string|null
+     * @return string
      */
-    public function getValue(): string|null
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -67,14 +66,9 @@ class AttributeSingleValue extends Attribute
      */
     public function render(): string
     {
-        if (empty($this->getName())) {
-            throw new UnsetAttributeNameException();
+        if (empty($this->getValue())) {
+            throw new InvalidAttributeValueException($this->getName());
         }
-
-        if (empty($this->value)) {
-            return '';
-        }
-
-        return $this->name . "='" . $this->value . "'";
+        return empty($this->value) ? '' : $this->getName() . "='" . $this->getValue() . "'";
     }
 }

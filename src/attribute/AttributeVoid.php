@@ -27,10 +27,6 @@ class AttributeVoid extends Attribute
      */
     public function render(): string
     {
-        if (empty($this->getName())) {
-            throw new UnsetAttributeNameException();
-        }
-
         return $this->getValue() ? $this->getName() : '';
     }
 

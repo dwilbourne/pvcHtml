@@ -28,7 +28,7 @@ class AttributeVoidTest extends TestCase
     {
         $this->name = 'hidden';
         $this->tester = $this->createMock(ValTesterInterface::class);
-        $this->attribute = new AttributeVoid($this->tester);
+        $this->attribute = new AttributeVoid($this->name, $this->tester);
     }
 
     /**
@@ -64,7 +64,7 @@ class AttributeVoidTest extends TestCase
     public function testRenderReturnsAttributeNameWhenUsageValueToTrue(): void
     {
         $expectedOutput = $this->name;
-        $this->attribute->setName($this->name);
+        self::assertTrue($this->attribute->getValue());
         self::assertEquals($expectedOutput, $this->attribute->render());
     }
 
@@ -77,20 +77,8 @@ class AttributeVoidTest extends TestCase
     public function testRenderReturnsEmptyStringWhenValueSetToFalse(): void
     {
         $expectedOutput = '';
-        $this->attribute->setName($this->name);
         $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue(false);
         self::assertEquals($expectedOutput, $this->attribute->render());
-    }
-
-    /**
-     * setRenderThrowsExceptionWhenNameNotSet
-     * @throws UnsetAttributeNameException
-     * @covers \pvc\html\abstract\attribute\AttributeVoid::render
-     */
-    public function testSetRenderThrowsExceptionWhenNameNotSet(): void
-    {
-        self::expectException(UnsetAttributeNameException::class);
-        $this->attribute->render();
     }
 }

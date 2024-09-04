@@ -27,8 +27,7 @@ class AttributeMultiValueTest extends TestCase
     {
         $this->attributeName = 'class';
         $this->tester = $this->createMock(ValTesterInterface::class);
-        $this->attribute = new AttributeMultiValue($this->tester);
-        $this->attribute->setName($this->attributeName);
+        $this->attribute = new AttributeMultiValue($this->attributeName, $this->tester);
     }
 
     /**

@@ -16,25 +16,27 @@ use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeCustomDataTest extends TestCase
 {
-    protected AttributeCustomData $attribute;
-
     protected ValTesterInterface|MockObject $valTester;
 
     public function setUp(): void
     {
         $this->valTester = $this->createMock(ValTesterInterface::class);
-        $this->attribute = new AttributeCustomData(
-            $this->valTester
-        );
     }
 
     /**
      * testConstruct
      * @covers \pvc\html\abstract\attribute\AttributeCustomData::__construct
+     * @throws InvalidCustomDataNameException
+     * @covers \pvc\html\abstract\attribute\AttributeCustomData::setName
+     * @covers \pvc\html\abstract\attribute\AttributeCustomData::getName
      */
     public function testConstruct(): void
     {
-        self::assertInstanceOf(AttributeCustomData::class, $this->attribute);
+        $customDataName = 'foo';
+        $attribute = new AttributeCustomData($customDataName, $this->valTester);
+        self::assertInstanceOf(AttributeCustomData::class, $attribute);
+        $expectedResult = 'data-' . $customDataName;
+        self::assertEquals($expectedResult, $attribute->getName());
     }
 
     /**
@@ -49,20 +51,6 @@ class AttributeCustomDataTest extends TestCase
          */
         $customDataName = 'HOB!@';
         self::expectException(InvalidCustomDataNameException::class);
-        $this->attribute->setName($customDataName);
-    }
-
-    /**
-     * testSetNameSucceeds
-     * @throws InvalidCustomDataNameException
-     * @covers \pvc\html\abstract\attribute\AttributeCustomData::setName
-     * @covers \pvc\html\abstract\attribute\AttributeCustomData::getName
-     */
-    public function testSetNameSucceeds(): void
-    {
-        $customDataName = 'foo';
-        $this->attribute->setName($customDataName);
-        $expectedResult = 'data-' . $customDataName;
-        self::assertEquals($expectedResult, $this->attribute->getName());
+        $attribute = new AttributeCustomData($customDataName, $this->valTester);
     }
 }

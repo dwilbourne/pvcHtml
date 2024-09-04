@@ -15,48 +15,43 @@ use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeTest extends TestCase
 {
+    protected string $testName;
     protected ValTesterInterface|MockObject $tester;
 
     protected Attribute $attribute;
 
     public function setUp(): void
     {
+        $this->testName = 'target';
         $this->tester = $this->createMock(ValTesterInterface::class);
         $this->attribute = $this->getMockBuilder(Attribute::class)
-            ->setConstructorArgs([$this->tester])
+            ->setConstructorArgs([$this->testName, $this->tester])
             ->getMockForAbstractClass();
     }
 
     /**
-     * testConstruct
-     * @covers \pvc\html\abstract\attribute\Attribute::__construct
+     * testSetNameThrowsExceptionWithInvalidName
+     * @covers \pvc\html\abstract\attribute\Attribute::setName
+     * @covers \pvc\html\abstract\attribute\Attribute::isValidAttributeName
      */
-    public function testConstruct(): void
+    public function testSetNameThrowsExceptionWithInvalidName(): void
     {
-        self::assertInstanceOf(Attribute::class, $this->attribute);
+        $testName = '%7g(';
+        self::expectException(InvalidAttributeNameException::class);
+        $attribute = $this->getMockBuilder(Attribute::class)
+                                ->setConstructorArgs([$testName, $this->tester])
+                                ->getMockForAbstractClass();
     }
 
     /**
-     * testGetNameReturnsEmptyStringWhenNameIsNotSet
-     * @covers \pvc\html\abstract\attribute\Attribute::getName
-     */
-    public function testgetNameReturnsEmptyStringWhenNameIsNotSet(): void
-    {
-        $expectedName = '';
-        self::assertEquals($expectedName, $this->attribute->getName());
-    }
-
-    /**
-     * testSetGetName
+     * testGetName
      * @throws InvalidAttributeNameException
      * @covers \pvc\html\abstract\attribute\Attribute::setName
      * @covers \pvc\html\abstract\attribute\Attribute::getName
      */
     public function testSetGetName(): void
     {
-        $testName = 'target';
-        $this->attribute->setName($testName);
-        self::assertEquals($testName, $this->attribute->getName());
+        self::assertEquals($this->testName, $this->attribute->getName());
     }
 
     /**
@@ -66,9 +61,7 @@ class AttributeTest extends TestCase
      */
     public function testSetGetTester(): void
     {
-        $tester = $this->createMock(ValTesterInterface::class);
-        $this->attribute->setTester($tester);
-        self::assertEquals($tester, $this->attribute->getTester());
+        self::assertEquals($this->tester, $this->attribute->getTester());
     }
 
     /**

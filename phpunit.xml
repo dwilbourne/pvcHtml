@@ -9,9 +9,6 @@
         <include>
             <directory>src*/</directory>
         </include>
-        <exclude>
-            <file>src/attribute/val_tester/factory/ValTesterDiConfig.php</file>
-        </exclude>
         <report>
             <html outputDirectory="coverage"/>
         </report>
