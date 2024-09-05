@@ -49,38 +49,6 @@ class TagVoid implements TagVoidInterface
     protected array $attributes = [];
 
     /**
-     * @var AttributeFactoryInterface<ValueType, ValTesterType>
-     */
-    protected AttributeFactoryInterface $attributeFactory;
-
-
-    /**
-     * @param AttributeFactoryInterface<ValueType, ValTesterType> $attributeFactory
-     */
-    public function __construct(AttributeFactoryInterface $attributeFactory)
-    {
-        $this->setAttributeFactory($attributeFactory);
-    }
-
-    /**
-     * getAttributeFactory
-     * @return AttributeFactoryInterface<ValueType, ValTesterType>
-     */
-    public function getAttributeFactory(): AttributeFactoryInterface
-    {
-        return $this->attributeFactory;
-    }
-
-    /**
-     * setAttributeFactory
-     * @param AttributeFactoryInterface<ValueType, ValTesterType> $attributeFactory
-     */
-    public function setAttributeFactory(AttributeFactoryInterface $attributeFactory): void
-    {
-        $this->attributeFactory = $attributeFactory;
-    }
-
-    /**
      * getName
      * @return string
      */
@@ -142,29 +110,6 @@ class TagVoid implements TagVoidInterface
     }
 
     /**
-     * setCustomData
-     * @param string $name
-     * @param ValueType $value
-     * @param ValTesterInterface<ValTesterType>|null $tester
-     *
-     * It was tempting to eliminate this method and allow set to make custom data attributes as well.  But
-     * because the $name argument to set is a string, the logic would be to create a custom attribute
-     * if there is no such standard attribute.  Thus, there would be no way to catch a typo in the call to
-     * set.
-     */
-    public function setCustomData(string $name, $value, ValTesterInterface $tester = null): void
-    {
-        /**
-         * $dataName is just the name prefixed with 'data-'.  It is actually stored with the 'data-' prefix so
-         * that it can differentiate, for example, between 'href' and 'data-href'.
-         */
-        $dataName = 'data-' . $name;
-        $attribute = $this->attributes[$dataName] ?? $this->attributeFactory->makeCustomData($name, $tester);
-        $attribute->setValue($value);
-        $this->attributes[$dataName] = $attribute;
-    }
-
-    /**
      * getAttribute
      * @param string $name
      * @return AttributeInterface<ValueType, ValTesterType>|null
@@ -207,36 +152,6 @@ class TagVoid implements TagVoidInterface
     public function removeAttribute(string $name): void
     {
         unset($this->attributes[$name]);
-    }
-
-    /**
-     * __get
-     * @param string $name
-     * @return ValueType|null
-     *
-     * this magic getter returns attribute values and event scripts, not with the objects themselves.
-     * If you want to get the attribute/event object, use getAttribute explicitly.
-     *
-     * In terms of return values, one typically thinks that attribute/event values are all strings (which is true
-     * when they are rendered). But AttributeVoid has boolean values and AttributeMultiValue has an
-     * array of values.
-     */
-    public function __get(string $name): mixed
-    {
-        $attribute = $this->attributes[$name] ?? null;
-        return $attribute?->getValue();
-    }
-
-    /**
-     * __set
-     * @param string $name
-     * @param ValueType $value
-     */
-    public function __set(string $name, mixed $value): void
-    {
-        $attribute = $this->attributes[$name] ?? $this->attributeFactory->makeAttribute($name);
-        $attribute->setValue($value);
-        $this->attributes[$name] = $attribute;
     }
 
     /**

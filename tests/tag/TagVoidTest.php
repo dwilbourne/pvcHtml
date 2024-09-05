@@ -33,28 +33,22 @@ class TagVoidTest extends TestCase
      */
     protected TagVoid $tag;
 
-    protected AttributeFactoryInterface|MockObject $attributeFactory;
-
     /**
      * setUp
      */
     public function setUp(): void
     {
         $this->tagName = 'a';
-        $this->attributeFactory = $this->createMock(AttributeFactoryInterface::class);
-        $this->tag = new TagVoid($this->attributeFactory);
+        $this->tag = new TagVoid();
     }
 
     /**
      * testConstruct
      * @covers \pvc\html\abstract\tag\TagVoid::__construct
-     * @covers \pvc\html\abstract\tag\TagVoid::setAttributeFactory
-     * @covers \pvc\html\abstract\tag\TagVoid::getAttributeFactory
      */
     public function testConstruct(): void
     {
         self::assertInstanceOf(TagVoid::class, $this->tag);
-        self::assertEquals($this->attributeFactory, $this->tag->getAttributeFactory());
     }
 
     /**
@@ -171,46 +165,9 @@ class TagVoidTest extends TestCase
         $this->assertEquals(0, count($this->tag->getAttributes()));
     }
 
-    /**
-     * testSetGetCustomDataAttribute
-     * @throws InvalidAttributeNameException
-     * @covers \pvc\html\abstract\tag\TagVoid::setCustomData
-     */
-    public function testSetGetCustomDataAttribute(): void
-    {
-        $name = 'foo';
-        $dataName = 'data-' . $name;
-        $value = 'bar';
-
-        $valTester = $this->createMock(ValTesterInterface::class);
-        $valTester->method('testValue')->willReturn(true);
-
-        $attribute = $this->createMock(AttributeCustomData::class);
-
-        $attribute->expects($this->exactly(2))->method('setValue')->with($value);
-        $attribute->method('getName')->willReturn($dataName);
-        $attribute->method('getTester')->willReturn($valTester);
-
-        /**
-         * illustrates that a new attribute is created
-         */
-        self::assertEmpty($this->tag->getAttributes());
-        $this->attributeFactory->expects($this->once())->method('makeCustomData')->willReturn($attribute);
-        $this->tag->setCustomData($name, $value, $valTester);
-        self::assertEquals(1, count($this->tag->getAttributes()));
-        self::assertEquals($valTester, $this->tag->getAttribute($dataName)->getTester());
-
-        /**
-         * illustrates that an existing attribute is updated because the tagFactory is only called once and setValue
-         * is called twice and the count of attributes remains at 1
-         */
-        $this->tag->setCustomData($name, $value, $valTester);
-        self::assertEquals(1, count($this->tag->getAttributes()));
-        self::assertEquals($attribute, $this->tag->getAttribute($dataName));
-    }
 
     /**
-     * testSetGetRemoveEvent
+     * testGetAttributes
      * @covers \pvc\html\abstract\tag\TagVoid::getAttributes
      */
     public function testGetAttributes(): void
@@ -249,47 +206,6 @@ class TagVoidTest extends TestCase
         self::assertEquals(1, count($this->tag->getAttributes(TagVoid::EVENTS)));
     }
 
-    /**
-     * testMagicSetterGetter
-     * @covers \pvc\html\abstract\tag\TagVoid::__get
-     * @covers \pvc\html\abstract\tag\TagVoid::__set
-     */
-    public function testMagicSetterGetter(): void
-    {
-        $name = 'hidden';
-        $value = true;
-        $attribute = $this->createMock(AttributeVoid::class);
-        $attribute->method('getName')->willReturn($name);
-        $attribute->method('getValue')->willReturn($value);
-
-        /**
-         * first time is when the attribute is set, the second is when it is updated, showing that a
-         * new one is not created.
-         */
-        $this->attributeFactory->expects($this->once())->method('makeAttribute')->willReturn($attribute);
-        $attribute->expects($this->exactly(2))->method('setValue');
-
-        /**
-         * makes the attribute and sets the value
-         */
-        $this->tag->$name = $value;
-        self::assertEquals($value, $this->tag->$name);
-
-        /**
-         * updates the value of an existing attribute
-         */
-        $newValue = false;
-        $this->tag->$name = $newValue;
-    }
-
-    /**
-     * testMagicGetterReturnsNullWithUnsetAttributeName
-     * @covers \pvc\html\abstract\tag\TagVoid::__get
-     */
-    public function testMagicGetterThrowsExceptionWithUnsetAttributeName(): void
-    {
-        self::assertNull($this->tag->foo);
-    }
 
     /**
      * testGenerateOpeningTagWithNoTagName
