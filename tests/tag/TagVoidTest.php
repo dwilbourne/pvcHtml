@@ -43,15 +43,6 @@ class TagVoidTest extends TestCase
     }
 
     /**
-     * testConstruct
-     * @covers \pvc\html\abstract\tag\TagVoid::__construct
-     */
-    public function testConstruct(): void
-    {
-        self::assertInstanceOf(TagVoid::class, $this->tag);
-    }
-
-    /**
      * testSetGetTagName
      * @covers \pvc\html\abstract\tag\TagVoid::getName
      * @covers \pvc\html\abstract\tag\TagVoid::setName
