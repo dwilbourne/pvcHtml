@@ -17,7 +17,7 @@ use pvc\html\abstract\err\UnsetAttributeNameException;
 class AttributeVoid extends Attribute
 {
     /**
-     * set default value to true so that if name is set, attribute is rendered by default
+     * set value to true so that attribute is rendered by default
      */
     protected mixed $value = true;
 
@@ -36,7 +36,7 @@ class AttributeVoid extends Attribute
      */
     public function setValue(mixed $value): void
     {
-        if (!is_bool($value)) {
+        if (!$this->getTester()->testValue($value)) {
             throw new InvalidAttributeValueException($this->getName());
         }
         $this->value = $value;

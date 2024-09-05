@@ -97,11 +97,13 @@ abstract class Attribute implements AttributeInterface
      * @param string $name
      * @return bool
      *
-     * This regex restricts the name to lower case letters and numbers.
+     * This regex restricts the name to start with a lower case letter and then can be followed by lower case letters
+     * and numbers and hyphens.
      *
-     *  As a practical matter, pre-defined html attribute names are purely alphabetic.  And since the usual manner of
+     *  As a practical matter, pre-defined html attribute names are purely alphabetic with a couple that are
+     *  hyphenated.  And since the usual manner of
      *  creating an attribute is in a factory / container, most times the attribute names come right from the
-     *  html specification.  Also, you can create an attribute using an arbitrary name and at least in some browsers,
+     *  html specification.  However, you can create an attribute using an arbitrary name and at least in some browsers,
      *  you can get at the value using javascript even if the name is not prefixed with 'data-'.  So this
      *  validation tries to find the middle ground between what the language spec says and how browsers
      *  actually work.
@@ -113,7 +115,7 @@ abstract class Attribute implements AttributeInterface
      */
     protected function isValidAttributeName(string $name): bool
     {
-        $pattern = '/^[a-z0-9]+$/';
+        $pattern = '/^[a-z]+[a-z0-9\-]*$/';
         return (bool) preg_match($pattern, $name);
     }
 
