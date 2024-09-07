@@ -12,7 +12,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\abstract\err\InvalidSubTagException;
 use pvc\html\abstract\tag\Tag;
-use pvc\interfaces\html\attribute\AttributeFactoryInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
 use pvc\interfaces\html\tag\TagInterface;
 use pvc\interfaces\msg\MsgInterface;
@@ -22,7 +21,6 @@ use pvc\interfaces\msg\MsgInterface;
  */
 class TagTest extends TestCase
 {
-    protected AttributeFactoryInterface|MockObject $attributeFactory;
     /**
      * @var Tag
      */
@@ -43,9 +41,8 @@ class TagTest extends TestCase
 
     public function setUp(): void
     {
-        $this->attributeFactory = $this->createMock(AttributeFactoryInterface::class);
         $this->tagName = 'foo';
-        $this->tag = new Tag($this->attributeFactory);
+        $this->tag = new Tag();
         $this->tag->setName($this->tagName);
         $this->testMsg = $this->createMock(MsgInterface::class);
         $this->mockInnerTagVoid = $this->createMock(TagVoidInterface::class);
