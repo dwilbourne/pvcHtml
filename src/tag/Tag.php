@@ -16,11 +16,9 @@ use pvc\interfaces\msg\MsgInterface;
 
 /**
  *
- * class Tag.  Handles all tags which have a closing tag
- * @template ValueType
- * @template ValTesterType
- * @extends TagVoid<ValueType, ValTesterType>
- * @implements TagInterface<ValueType, ValTesterType>
+ * class Tag
+ *
+ * Handles all tags which have a closing tag
  */
 class Tag extends TagVoid implements TagInterface
 {
@@ -31,7 +29,7 @@ class Tag extends TagVoid implements TagInterface
     protected array $allowedSubTags = [];
 
     /**
-     * @var array<TagVoidInterface<ValueType, ValTesterType>|MsgInterface|string>
+     * @var array<TagVoidInterface|MsgInterface|string>
      */
     protected array $innerHtml = [];
 
@@ -50,20 +48,12 @@ class Tag extends TagVoid implements TagInterface
      */
     public function setAllowedSubTags(array $subTagNames): void
     {
-        /**
-         * just enforce type consistency.  "Validity" handled by the factory / container.
-         */
-        foreach($subTagNames as $subTag) {
-            if (!is_string($subTag)) {
-                throw new InvalidSubTagException();
-            }
-        }
         $this->allowedSubTags = $subTagNames;
     }
 
     /**
      * addInnerHTML
-     * @param TagVoidInterface<ValueType, ValTesterType>|MsgInterface|string $innerHtml
+     * @param TagVoidInterface|MsgInterface|string $innerHtml
      * @throws InvalidSubTagException
      */
     public function addInnerHTML(TagVoidInterface|MsgInterface|string $innerHtml): void
@@ -84,7 +74,6 @@ class Tag extends TagVoid implements TagInterface
     /**
      * addInnerText
      * @param MsgInterface|string $innerText
-     * @throws InvalidInnerTextException
      */
     protected function addInnerText(MsgInterface|string $innerText): void
     {
@@ -93,7 +82,7 @@ class Tag extends TagVoid implements TagInterface
 
     /**
      * addSubtag
-     * @param TagVoidInterface<ValueType, ValTesterType> $tag
+     * @param TagVoidInterface $tag
      * @throws InvalidSubTagException
      */
     protected function addSubtag(TagVoidInterface $tag): void
@@ -106,7 +95,7 @@ class Tag extends TagVoid implements TagInterface
 
     /**
      * canAddSubTag
-     * @param TagVoidInterface<ValueType, ValTesterType> $subTag
+     * @param TagVoidInterface $subTag
      * @return bool
      */
     protected function canAddSubTag(TagVoidInterface $subTag): bool
@@ -129,7 +118,7 @@ class Tag extends TagVoid implements TagInterface
 
     /**
      * getSubTags
-     * @return array<TagVoidInterface<ValueType, ValTesterType>>
+     * @return array<TagVoidInterface>
      */
     public function getSubTags(): array
     {
@@ -141,7 +130,7 @@ class Tag extends TagVoid implements TagInterface
     /**
      * getSubTag
      * @param string $subTagName
-     * @return TagVoidInterface<ValueType, ValTesterType>|null
+     * @return TagVoidInterface|null
      * returns the first subtag whose tag name equals the supplied argument
      */
     public function getSubTag(string $subTagName): TagVoidInterface|null
@@ -157,7 +146,7 @@ class Tag extends TagVoid implements TagInterface
 
     /**
      * getInnerHtml
-     * @return array<TagVoidInterface<ValueType, ValTesterType>|MsgInterface|string>
+     * @return array<TagVoidInterface|MsgInterface|string>
      */
     public function getInnerHtml(): array
     {

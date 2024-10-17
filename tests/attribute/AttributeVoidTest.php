@@ -8,77 +8,66 @@ declare (strict_types=1);
 
 namespace pvcTests\html\abstract\attribute;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\abstract\attribute\AttributeVoid;
 use pvc\html\abstract\err\InvalidAttributeNameException;
-use pvc\html\abstract\err\InvalidAttributeValueException;
-use pvc\html\abstract\err\UnsetAttributeNameException;
-use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeVoidTest extends TestCase
 {
     protected string $name;
 
-    protected ValTesterInterface|MockObject $tester;
-
     protected AttributeVoid $attribute;
 
+    /**
+     * @throws InvalidAttributeNameException
+     */
     public function setUp(): void
     {
         $this->name = 'hidden';
-        $this->tester = $this->createMock(ValTesterInterface::class);
-        $this->attribute = new AttributeVoid($this->name, $this->tester);
+        $this->attribute = new AttributeVoid($this->name);
     }
 
     /**
-     * testSetAttributeThrowsExceptionWithVoidAttributeNameAndNonBooleanValue
-     * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\AttributeVoid::setValue
+     * testConstruct
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::__construct
      */
-    public function testSetAttributeThrowsExceptionWithVoidAttributeNameAndNonBooleanValue(): void
+    public function testConstruct(): void
     {
-        self::expectException(InvalidAttributeValueException::class);
-        $value = 'foobar';
-        $this->attribute->setValue($value);
+        self::assertInstanceOf(AttributeVoid::class, $this->attribute);
     }
 
-
     /**
-     * testSetGetValue
-     * @covers \pvc\html\abstract\attribute\AttributeVoid::setValue
-     * @covers \pvc\html\abstract\attribute\AttributeVoid::getValue
+     * testSetNameThrowsExceptionWithInvalidName
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::setName
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::isValidAttributeName
      */
-    public function testSetGetValue(): void
+    public function testSetNameThrowsExceptionWithInvalidName(): void
     {
-        $this->tester->method('testValue')->willReturn(true);
-        self::assertTrue($this->attribute->getValue());
-        $this->attribute->setValue(false);
-        self::assertFalse($this->attribute->getValue());
+        $testName = '%7g(';
+        self::expectException(InvalidAttributeNameException::class);
+        $attribute = new AttributeVoid($testName);
+        unset($attribute);
     }
 
     /**
-     * testRenderReturnsAttributeNameWhenUsageValueToTrue
+     * testGetName
+     * @throws InvalidAttributeNameException
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::setName
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::getName
+     */
+    public function testSetGetName(): void
+    {
+        self::assertEquals($this->name, $this->attribute->getName());
+    }
+
+
+    /**
+     * testRenderReturnsAttributeName
      * @covers \pvc\html\abstract\attribute\AttributeVoid::render
      */
     public function testRenderReturnsAttributeNameWhenUsageValueToTrue(): void
     {
         $expectedOutput = $this->name;
-        self::assertTrue($this->attribute->getValue());
-        self::assertEquals($expectedOutput, $this->attribute->render());
-    }
-
-    /**
-     * testRenderReturnsEmptyStringWhenValueSetToFalse
-     * @throws UnsetAttributeNameException
-     * @throws InvalidAttributeNameException
-     * @covers \pvc\html\abstract\attribute\AttributeVoid::render
-     */
-    public function testRenderReturnsEmptyStringWhenValueSetToFalse(): void
-    {
-        $expectedOutput = '';
-        $this->tester->method('testValue')->willReturn(true);
-        $this->attribute->setValue(false);
         self::assertEquals($expectedOutput, $this->attribute->render());
     }
 }

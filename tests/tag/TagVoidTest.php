@@ -8,18 +8,15 @@ declare(strict_types=1);
 
 namespace pvcTests\html\abstract\tag;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\abstract\attribute\AttributeCustomData;
-use pvc\html\abstract\attribute\AttributeVoid;
 use pvc\html\abstract\attribute\Event;
 use pvc\html\abstract\err\InvalidAttributeNameException;
 use pvc\html\abstract\err\UnsetAttributeNameException;
 use pvc\html\abstract\err\UnsetTagNameException;
 use pvc\html\abstract\tag\TagVoid;
-use pvc\interfaces\html\attribute\AttributeFactoryInterface;
-use pvc\interfaces\html\attribute\AttributeInterface;
-use pvc\interfaces\validator\ValTesterInterface;
+use pvc\interfaces\html\attribute\AttributeSingleValueInterface;
+use pvc\interfaces\html\attribute\AttributeVoidInterface;
+use pvc\interfaces\html\attribute\EventInterface;
 
 class TagVoidTest extends TestCase
 {
@@ -55,18 +52,6 @@ class TagVoidTest extends TestCase
         self::assertEquals('', $this->tag->getName());
         $this->tag->setName($this->tagName);
         self::assertEquals($this->tagName, $this->tag->getName());
-    }
-
-    /**
-     * testSetAllowedAttributesThrowsExceptionWithNonStringAttributeName
-     * @throws InvalidAttributeNameException
-     * @covers \pvc\html\abstract\tag\TagVoid::setAllowedAttributes
-     */
-    public function testSetAllowedAttributesThrowsExceptionWithNonStringAttributeName(): void
-    {
-        $allowedAttributes = ['foo', 'bar', 9];
-        self::expectException(InvalidAttributeNameException::class);
-        $this->tag->setAllowedAttributes($allowedAttributes);
     }
 
     /**
@@ -113,7 +98,7 @@ class TagVoidTest extends TestCase
      */
     public function testSetAttributeThrowsExceptionWhenAttributeNameNotSet(): void
     {
-        $attribute1 = $this->createMock(AttributeInterface::class);
+        $attribute1 = $this->createMock(AttributeVoidInterface::class);
         $attribute1->method('getName')->willReturn('');
         self::expectException(UnsetAttributeNameException::class);
         $this->tag->setAttribute($attribute1);
@@ -129,14 +114,18 @@ class TagVoidTest extends TestCase
     {
         $attrName = 'href';
 
-        $attribute1 = $this->createMock(AttributeInterface::class);
+        $attribute1 = $this->createMock(AttributeVoidInterface::class);
         $attribute1->method('getName')->willReturn($attrName);
 
-        $attribute2 = $this->createMock(AttributeInterface::class);
+        $attribute2 = $this->createMock(AttributeVoidInterface::class);
         $attribute2->method('getName')->willReturn($attrName);
 
         self::assertNull($this->tag->getAttribute($attrName));
-        $this->tag->setAttribute($attribute1);
+
+        /**
+         * demonstrate fluent setter and getter
+         */
+        self::assertEquals($this->tag, $this->tag->setAttribute($attribute1));
         self::assertEquals($attribute1, $this->tag->getAttribute($attrName));
 
         /**
@@ -156,7 +145,6 @@ class TagVoidTest extends TestCase
         $this->assertEquals(0, count($this->tag->getAttributes()));
     }
 
-
     /**
      * testGetAttributes
      * @covers \pvc\html\abstract\tag\TagVoid::getAttributes
@@ -164,11 +152,11 @@ class TagVoidTest extends TestCase
     public function testGetAttributes(): void
     {
         $attr1Name = 'href';
-        $attr1 = $this->createStub(AttributeInterface::class);
+        $attr1 = $this->createStub(AttributeVoidInterface::class);
         $attr1->method('getName')->willReturn($attr1Name);
 
         $attr2Name = 'hidden';
-        $attr2 = $this->createStub(AttributeInterface::class);
+        $attr2 = $this->createStub(AttributeVoidInterface::class);
         $attr2->method('getName')->willReturn($attr2Name);
 
         $event1Name = 'onclick';
@@ -229,7 +217,7 @@ class TagVoidTest extends TestCase
         $attr1Name = 'href';
         $attr1Value = 'bar';
 
-        $attr1 = $this->getMockBuilder(AttributeInterface::class)
+        $attr1 = $this->getMockBuilder(AttributeSingleValueInterface::class)
                       ->getMockForAbstractClass();
         $attr1->method('getName')->willReturn($attr1Name);
         $attr1->method('getValue')->willReturn($attr1Value);
@@ -238,10 +226,10 @@ class TagVoidTest extends TestCase
         $event1Name = 'onclick';
         $event1Value = 'some javascript';
 
-        $event1 = $this->getMockBuilder(AttributeInterface::class)
+        $event1 = $this->getMockBuilder(EventInterface::class)
                        ->getMockForAbstractClass();
         $event1->method('getName')->willReturn($event1Name);
-        $event1->method('getValue')->willReturn($event1Value);
+        $event1->method('getScript')->willReturn($event1Value);
         $event1->method('render')->willReturn($event1Name . '=\'' . $event1Value . '\'');
 
         $this->tag->setName($this->tagName);

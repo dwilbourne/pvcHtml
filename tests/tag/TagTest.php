@@ -50,18 +50,6 @@ class TagTest extends TestCase
     }
 
     /**
-     * testSetAllowedSubtagsThrowsExceptionWhenSubTagIsnotAString
-     * @throws InvalidSubTagException
-     * @covers \pvc\html\abstract\tag\Tag::setAllowedSubTags
-     */
-    public function testSetAllowedSubtagsThrowsExceptionWhenSubTagIsnotAString(): void
-    {
-        $sampleAllowedSubtags = ['foo', 'bar', 9];
-        self::expectException(InvalidSubTagException::class);
-        $this->tag->setAllowedSubTags($sampleAllowedSubtags);
-    }
-
-    /**
      * testSetGetAllowedSubtags
      * @throws InvalidSubTagException
      * @covers \pvc\html\abstract\tag\Tag::setAllowedSubTags

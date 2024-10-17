@@ -12,20 +12,16 @@ use pvc\html\abstract\attribute\Event;
 use pvc\html\abstract\err\InvalidAttributeNameException;
 use pvc\html\abstract\err\UnsetAttributeNameException;
 use pvc\html\abstract\err\UnsetTagNameException;
-use pvc\interfaces\html\attribute\AttributeFactoryInterface;
-use pvc\interfaces\html\attribute\AttributeInterface;
+use pvc\interfaces\html\attribute\AttributeVoidInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
-use pvc\interfaces\validator\ValTesterInterface;
 
 /**
- * class TagVoid.  Base class for all html output in the pvc framework.  This class produces and
+ * class TagVoid
+ *
+ * Base class for all html elements in the pvc framework.  This class produces and
  * handles html5 compliant tags / code.
  *
  * This class is for "voidTags" or "empty" tags, which are tags that do not have closing tags (e.g. "<br>" or "<col>")
- *
- * @template ValueType
- * @template ValTesterType
- * @implements TagVoidInterface<ValueType, ValTesterType>
  */
 class TagVoid implements TagVoidInterface
 {
@@ -44,7 +40,7 @@ class TagVoid implements TagVoidInterface
     protected array $allowedAttributes = [];
 
     /**
-     * @var array<string, AttributeInterface<ValueType, ValTesterType>>
+     * @var array<string, AttributeVoidInterface>
      */
     protected array $attributes = [];
 
@@ -84,37 +80,30 @@ class TagVoid implements TagVoidInterface
      */
     public function setAllowedAttributes(array $allowedAttributes): void
     {
-        foreach($allowedAttributes as $attribute) {
-            /**
-             * not testing for "validity" per se, but allowed attributes are typed as strings and the
-             * keys to the actual attributes array are strings.  So we will just enforce type consistency here.
-             */
-            if (!is_string($attribute)) {
-                throw new InvalidAttributeNameException((string) $attribute);
-            }
-        }
         $this->allowedAttributes = $allowedAttributes;
     }
 
     /**
      * setAttribute
-     * @param AttributeInterface<ValueType, ValTesterType> $attribute
+     * @param AttributeVoidInterface $attribute
      * @throws UnsetAttributeNameException
+     * @return TagVoidInterface
      */
-    public function setAttribute(AttributeInterface $attribute): void
+    public function setAttribute(AttributeVoidInterface $attribute): TagVoidInterface
     {
         if (empty($name = $attribute->getName())) {
             throw new UnsetAttributeNameException();
         }
         $this->attributes[$name] = $attribute;
+        return $this;
     }
 
     /**
      * getAttribute
      * @param string $name
-     * @return AttributeInterface<ValueType, ValTesterType>|null
+     * @return AttributeVoidInterface|null
      */
-    public function getAttribute(string $name): AttributeInterface|null
+    public function getAttribute(string $name): AttributeVoidInterface|null
     {
         return $this->attributes[$name] ?? null;
     }
@@ -122,7 +111,7 @@ class TagVoid implements TagVoidInterface
     /**
      * getAttributes
      * @param int $attributeTypes
-     * @return array<AttributeInterface<ValueType, ValTesterType>>
+     * @return array<AttributeVoidInterface>
      */
     public function getAttributes(int $attributeTypes = self::ATTRIBUTES | self::EVENTS): array
     {
@@ -164,7 +153,7 @@ class TagVoid implements TagVoidInterface
             throw new UnsetTagNameException();
         }
         $z = '<' . $this->name;
-        $callback = function (AttributeInterface $attribute): string {
+        $callback = function (AttributeVoidInterface $attribute): string {
             return $attribute->render();
         };
         $attributes = implode(' ', array_map($callback, $this->getAttributes()));

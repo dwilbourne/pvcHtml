@@ -8,12 +8,12 @@ declare(strict_types=1);
 namespace pvc\html\abstract\attribute;
 
 use pvc\html\abstract\err\InvalidAttributeValueException;
+use pvc\interfaces\html\attribute\AttributeMultiValueInterface;
 
 /**
  * Class AttributeMultiValue
- * @extends Attribute<array<string>, string>
  */
-class AttributeMultiValue extends Attribute
+class AttributeMultiValue extends AttributeWithValue implements AttributeMultiValueInterface
 {
     /**
      * @var array<string>
@@ -23,52 +23,47 @@ class AttributeMultiValue extends Attribute
 
     /**
      * setValues
-     * @param array<string> $value
+     * @param array<string> $values
      * @throws InvalidAttributeValueException
      */
-    public function setValue($value): void
+    public function setValues(array $values): void
     {
-        $values = [];
-
         /**
-         * make sure it is an array and is not empty
+         * test to make sure $values is not empty
          */
-        if (!is_array($value) || empty($value)) {
+        if (empty($values)) {
             throw new InvalidAttributeValueException($this->getName());
         }
 
-        foreach ($value as $arrayItem) {
+        $newValues = [];
+        foreach ($values as $value) {
             /**
-             * each element must be a string
-             */
-            if (!is_string($arrayItem)) {
-                throw new InvalidAttributeValueException($this->getName());
-            }
-            /**
-             * convert to lower case if not case-sensitive
+             * set to lower case if not case-sensitive
              */
             if (!$this->isCaseSensitive()) {
-                $arrayItem = strtolower($arrayItem);
+                $value = strtolower($value);
             }
+
             /**
              * test the array element
              */
-            if (!$this->getTester()->testValue(($arrayItem))) {
+            if (!$this->getTester()->testValue(($value))) {
                 throw new InvalidAttributeValueException($this->getName());
             }
-            $values[] = $arrayItem;
+            $newValues[] = $value;
         }
+
         /**
          * set the values
          */
-        $this->values = $values;
+        $this->values = $newValues;
     }
 
     /**
      * getValues
      * @return array<string>
      */
-    public function getValue(): array
+    public function getValues(): array
     {
         return $this->values;
     }
@@ -79,10 +74,9 @@ class AttributeMultiValue extends Attribute
      */
     public function render(): string
     {
-        if (!empty($this->getValue())) {
-            return $this->name . "='" . implode(' ', $this->values) . "'";
-        } else {
-            return '';
+        if (empty($this->getValues())) {
+            throw new InvalidAttributeValueException($this->getName());
         }
+        return $this->name . "='" . implode(' ', $this->values) . "'";
     }
 }

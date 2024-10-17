@@ -29,29 +29,6 @@ class AttributeSingleValueTest extends TestCase
         $this->attribute = new AttributeSingleValue($this->name, $this->tester);
     }
 
-    /**
-     * testSetValueFailsIfNotAString
-     * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\AttributeSingleValue::setValue
-     */
-    public function testSetValueFailsIfNotAString(): void
-    {
-        $value = 5;
-        self::expectException(InvalidAttributeValueException::class);
-        $this->attribute->setValue($value);
-    }
-
-    /**
-     * testSetValueFailsIfValueIsEmpty
-     * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\AttributeSingleValue::setValue
-     */
-    public function testSetValueFailsIfValueIsEmpty(): void
-    {
-        $value = '';
-        self::expectException(InvalidAttributeValueException::class);
-        $this->attribute->setValue($value);
-    }
 
     /**
      * testSetValueConvertsCaseIfNotCaseSensitive
@@ -123,5 +100,4 @@ class AttributeSingleValueTest extends TestCase
         $expectedRendering = $this->name . '=\'bar\'s\'';
         self::assertEquals($expectedRendering, $this->attribute->render());
     }
-
 }

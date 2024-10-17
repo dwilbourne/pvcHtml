@@ -8,34 +8,27 @@ declare(strict_types=1);
 namespace pvc\html\abstract\attribute;
 
 use pvc\html\abstract\err\InvalidAttributeValueException;
+use pvc\interfaces\html\attribute\AttributeSingleValueInterface;
 
 /**
  * Class AttributeSingleValue
- * @extends Attribute<string, string>
  */
-class AttributeSingleValue extends Attribute
+class AttributeSingleValue extends AttributeWithValue implements AttributeSingleValueInterface
 {
     /**
      * @var string
      */
-    protected mixed $value = '';
+    protected string $value = '';
 
     /**
      * setValue
      * @param string $value
      * @throws InvalidAttributeValueException
      */
-    public function setValue($value): void
+    public function setValue(string $value): void
     {
         /**
-         * make sure it is a string and is not empty
-         */
-        if (!is_string($value) || empty($value)) {
-            throw new InvalidAttributeValueException($this->getName());
-        }
-
-        /**
-         * adjust to lower case if it is not case-sensitive
+         * if the value is not case-sensitive, set it to lower case
          */
         if (!$this->isCaseSensitive()) {
             $value = strtolower($value);
@@ -69,6 +62,6 @@ class AttributeSingleValue extends Attribute
         if (empty($this->getValue())) {
             throw new InvalidAttributeValueException($this->getName());
         }
-        return empty($this->value) ? '' : $this->getName() . "='" . $this->getValue() . "'";
+        return $this->getName() . "='" . $this->getValue() . "'";
     }
 }
