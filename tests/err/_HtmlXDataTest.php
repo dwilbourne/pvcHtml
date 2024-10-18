@@ -21,6 +21,7 @@ class _HtmlXDataTest extends XDataTestMaster
      * @throws ReflectionException
      * @covers \pvc\html\abstract\err\_HtmlXData::getLocalXCodes
      * @covers \pvc\html\abstract\err\_HtmlXData::getXMessageTemplates
+     * @covers \pvc\html\abstract\err\AttributeNotAllowedException
      * @covers \pvc\html\abstract\err\InvalidAttributeNameException
      * @covers \pvc\html\abstract\err\InvalidAttributeValueException
      * @covers \pvc\html\abstract\err\InvalidCustomDataNameException

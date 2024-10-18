@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace pvc\html\abstract\tag;
 
 use pvc\html\abstract\attribute\Event;
-use pvc\html\abstract\err\InvalidAttributeNameException;
+use pvc\html\abstract\err\AttributeNotAllowedException;
 use pvc\html\abstract\err\UnsetAttributeNameException;
 use pvc\html\abstract\err\UnsetTagNameException;
 use pvc\interfaces\html\attribute\AttributeVoidInterface;
+use pvc\interfaces\html\attribute\EventInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
 
 /**
@@ -83,6 +84,19 @@ class TagVoid implements TagVoidInterface
         $this->allowedAttributes = $allowedAttributes;
     }
 
+    protected function isAllowedAttribute(AttributeVoidInterface $attribute): bool
+    {
+        /**
+         * as far as I know it is not "illegal" to put any event into any tag, although there are some form-based
+         * events that are typically used in forms.  See https://www.w3schools.com/tags/ref_eventattributes.asp
+         * for a place to start
+         */
+        if ($attribute instanceof EventInterface) {
+            return true;
+        }
+        return ($attribute->isGlobal() || in_array($attribute->getName(), $this->getAllowedAttributes()));
+    }
+
     /**
      * setAttribute
      * @param AttributeVoidInterface $attribute
@@ -91,10 +105,10 @@ class TagVoid implements TagVoidInterface
      */
     public function setAttribute(AttributeVoidInterface $attribute): TagVoidInterface
     {
-        if (empty($name = $attribute->getName())) {
-            throw new UnsetAttributeNameException();
+        if (!$this->isAllowedAttribute($attribute)) {
+            throw new AttributeNotAllowedException($attribute->getName(), $this->getName());
         }
-        $this->attributes[$name] = $attribute;
+        $this->attributes[$attribute->getName()] = $attribute;
         return $this;
     }
 

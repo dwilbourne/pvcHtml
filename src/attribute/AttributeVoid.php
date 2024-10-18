@@ -22,6 +22,12 @@ class AttributeVoid implements AttributeVoidInterface
     protected string $name;
 
     /**
+     * @var bool
+     * set to true if attribute is a global attribute
+     */
+    protected bool $global = false;
+
+    /**
      * @param string $name
      * @throws InvalidAttributeNameException
      */
@@ -80,6 +86,23 @@ class AttributeVoid implements AttributeVoidInterface
         return (bool) preg_match($pattern, $name);
     }
 
+    /**
+     * isGlobal
+     * @return bool
+     */
+    public function isGlobal(): bool
+    {
+        return $this->global;
+    }
+
+    /**
+     * setGlobal
+     * @param bool $global
+     */
+    public function setGlobal(bool $global): void
+    {
+        $this->global = $global;
+    }
 
     /**
      * render

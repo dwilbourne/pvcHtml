@@ -60,6 +60,20 @@ class AttributeVoidTest extends TestCase
         self::assertEquals($this->name, $this->attribute->getName());
     }
 
+    /**
+     * testGlobal
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::setGlobal
+     * @covers \pvc\html\abstract\attribute\AttributeVoid::isGlobal
+     */
+    public function testGlobal(): void
+    {
+        /**
+         * default value is false
+         */
+        self::assertFalse($this->attribute->isGlobal());
+        $this->attribute->setGlobal(true);
+        self::assertTrue($this->attribute->isGlobal());
+    }
 
     /**
      * testRenderReturnsAttributeName

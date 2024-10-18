@@ -20,6 +20,7 @@ class _HtmlXData extends XDataAbstract
     public function getLocalXCodes(): array
     {
         return [
+            AttributeNotAllowedException::class => 1008,
             InvalidAttributeNameException::class => 1000,
             InvalidAttributeValueException::class => 1001,
             InvalidCustomDataNameException::class => 1002,
@@ -33,6 +34,7 @@ class _HtmlXData extends XDataAbstract
     public function getXMessageTemplates(): array
     {
         return [
+            AttributeNotAllowedException::class => 'Attribute ${attributeName} is not permitted inside a(n) ${tagName} tag.',
             InvalidAttributeNameException::class => 'Invalid attribute or event name',
             InvalidAttributeValueException::class => 'Error trying to set attribute ${attributeName} to invalid value.',
             InvalidCustomDataNameException::class => 'Invalid custom data name - must be only lower case letters.',

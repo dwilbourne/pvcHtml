@@ -10,6 +10,7 @@ namespace pvcTests\html\abstract\tag;
 
 use PHPUnit\Framework\TestCase;
 use pvc\html\abstract\attribute\Event;
+use pvc\html\abstract\err\AttributeNotAllowedException;
 use pvc\html\abstract\err\InvalidAttributeNameException;
 use pvc\html\abstract\err\UnsetAttributeNameException;
 use pvc\html\abstract\err\UnsetTagNameException;
@@ -37,6 +38,7 @@ class TagVoidTest extends TestCase
     {
         $this->tagName = 'a';
         $this->tag = new TagVoid();
+        $this->tag->setName($this->tagName);
     }
 
     /**
@@ -47,10 +49,8 @@ class TagVoidTest extends TestCase
     public function testSetGetTagName(): void
     {
         /**
-         * default behavior returns an empty string if name has not been sedt
+         * default behavior returns an empty string if name has not been set
          */
-        self::assertEquals('', $this->tag->getName());
-        $this->tag->setName($this->tagName);
         self::assertEquals($this->tagName, $this->tag->getName());
     }
 
@@ -92,21 +92,9 @@ class TagVoidTest extends TestCase
     }
 
     /**
-     * testSetAttributeThrowsExceptionWhenAttributeNameNotSet
-     * @throws UnsetAttributeNameException
-     * @covers \pvc\html\abstract\tag\TagVoid::setAttribute
-     */
-    public function testSetAttributeThrowsExceptionWhenAttributeNameNotSet(): void
-    {
-        $attribute1 = $this->createMock(AttributeVoidInterface::class);
-        $attribute1->method('getName')->willReturn('');
-        self::expectException(UnsetAttributeNameException::class);
-        $this->tag->setAttribute($attribute1);
-    }
-
-    /**
      * testSetGetRemoveAttribute
      * @covers \pvc\html\abstract\tag\TagVoid::setAttribute
+     * @covers \pvc\html\abstract\tag\TagVoid::isAllowedAttribute
      * @covers \pvc\html\abstract\tag\TagVoid::getAttribute
      * @covers \pvc\html\abstract\tag\TagVoid::removeAttribute
      */
@@ -125,6 +113,7 @@ class TagVoidTest extends TestCase
         /**
          * demonstrate fluent setter and getter
          */
+        $this->tag->setAllowedAttributes(['href']);
         self::assertEquals($this->tag, $this->tag->setAttribute($attribute1));
         self::assertEquals($attribute1, $this->tag->getAttribute($attrName));
 
@@ -143,6 +132,26 @@ class TagVoidTest extends TestCase
         $this->tag->removeAttribute($attrName);
         self::assertNull($this->tag->getAttribute($attrName));
         $this->assertEquals(0, count($this->tag->getAttributes()));
+
+        $event = $this->createMock(EventInterface::class);
+        $event->method('getName')->willReturn('onchange');
+        $this->tag->setAttribute($event);
+        self::assertEquals($event, $this->tag->getAttribute($event->getName()));
+    }
+
+    /**
+     * testSetAttributeFailsWithDisallowedAttributeName
+     * @throws UnsetAttributeNameException
+     * @covers \pvc\html\abstract\tag\TagVoid::setAttribute
+     */
+    public function testSetAttributeFailsWithDisallowedAttributeName(): void
+    {
+        $attrName = 'shape';
+        $attribute = $this->createMock(AttributeVoidInterface::class);
+        $attribute->method('getName')->willReturn($attrName);
+        $attribute->method('isGlobal')->willReturn(false);
+        self::expectException(AttributeNotAllowedException::class);
+        $this->tag->setAttribute($attribute);
     }
 
     /**
@@ -167,6 +176,7 @@ class TagVoidTest extends TestCase
         $event2 = $this->createStub(Event::class);
         $event2->method('getName')->willReturn($event2Name);
 
+        $this->tag->setAllowedAttributes(['href', 'hidden']);
         $this->tag->setAttribute($attr1);
         $this->tag->setAttribute($attr2);
         $this->tag->setAttribute($event1);
@@ -193,6 +203,7 @@ class TagVoidTest extends TestCase
      */
     public function testGenerateOpeningTagWithNoTagName(): void
     {
+        $this->tag->setName('');
         self::expectException(UnsetTagNameException::class);
         $this->tag->generateOpeningTag();
     }
@@ -233,6 +244,8 @@ class TagVoidTest extends TestCase
         $event1->method('render')->willReturn($event1Name . '=\'' . $event1Value . '\'');
 
         $this->tag->setName($this->tagName);
+
+        $this->tag->setAllowedAttributes(['href']);
         $this->tag->setAttribute($attr1);
         $this->tag->setAttribute($event1);
 
