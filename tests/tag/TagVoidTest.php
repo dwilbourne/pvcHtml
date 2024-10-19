@@ -93,7 +93,7 @@ class TagVoidTest extends TestCase
 
     /**
      * testSetGetRemoveAttribute
-     * @covers \pvc\html\abstract\tag\TagVoid::setAttribute
+     * @covers \pvc\html\abstract\tag\TagVoid::setAttributeObject
      * @covers \pvc\html\abstract\tag\TagVoid::isAllowedAttribute
      * @covers \pvc\html\abstract\tag\TagVoid::getAttribute
      * @covers \pvc\html\abstract\tag\TagVoid::removeAttribute
@@ -114,7 +114,7 @@ class TagVoidTest extends TestCase
          * demonstrate fluent setter and getter
          */
         $this->tag->setAllowedAttributes(['href']);
-        self::assertEquals($this->tag, $this->tag->setAttribute($attribute1));
+        self::assertEquals($this->tag, $this->tag->setAttributeObject($attribute1));
         self::assertEquals($attribute1, $this->tag->getAttribute($attrName));
 
         /**
@@ -122,7 +122,7 @@ class TagVoidTest extends TestCase
          * the first
          */
 
-        $this->tag->setAttribute($attribute2);
+        $this->tag->setAttributeObject($attribute2);
         $this->assertEquals(1, count($this->tag->getAttributes()));
         self::assertEquals($attribute2, $this->tag->getAttribute($attrName));
 
@@ -135,14 +135,14 @@ class TagVoidTest extends TestCase
 
         $event = $this->createMock(EventInterface::class);
         $event->method('getName')->willReturn('onchange');
-        $this->tag->setAttribute($event);
+        $this->tag->setAttributeObject($event);
         self::assertEquals($event, $this->tag->getAttribute($event->getName()));
     }
 
     /**
      * testSetAttributeFailsWithDisallowedAttributeName
      * @throws UnsetAttributeNameException
-     * @covers \pvc\html\abstract\tag\TagVoid::setAttribute
+     * @covers \pvc\html\abstract\tag\TagVoid::setAttributeObject
      */
     public function testSetAttributeFailsWithDisallowedAttributeName(): void
     {
@@ -151,7 +151,7 @@ class TagVoidTest extends TestCase
         $attribute->method('getName')->willReturn($attrName);
         $attribute->method('isGlobal')->willReturn(false);
         self::expectException(AttributeNotAllowedException::class);
-        $this->tag->setAttribute($attribute);
+        $this->tag->setAttributeObject($attribute);
     }
 
     /**
@@ -177,10 +177,10 @@ class TagVoidTest extends TestCase
         $event2->method('getName')->willReturn($event2Name);
 
         $this->tag->setAllowedAttributes(['href', 'hidden']);
-        $this->tag->setAttribute($attr1);
-        $this->tag->setAttribute($attr2);
-        $this->tag->setAttribute($event1);
-        $this->tag->setAttribute($event2);
+        $this->tag->setAttributeObject($attr1);
+        $this->tag->setAttributeObject($attr2);
+        $this->tag->setAttributeObject($event1);
+        $this->tag->setAttributeObject($event2);
 
         /**
          * default behavior is to return both attributes and events
@@ -246,8 +246,8 @@ class TagVoidTest extends TestCase
         $this->tag->setName($this->tagName);
 
         $this->tag->setAllowedAttributes(['href']);
-        $this->tag->setAttribute($attr1);
-        $this->tag->setAttribute($event1);
+        $this->tag->setAttributeObject($attr1);
+        $this->tag->setAttributeObject($event1);
 
         $expectedResult = "<a href='bar' onclick='some javascript'>";
         self::assertEquals($expectedResult, $this->tag->generateOpeningTag());

@@ -98,12 +98,12 @@ class TagVoid implements TagVoidInterface
     }
 
     /**
-     * setAttribute
+     * setAttributeObject
      * @param AttributeVoidInterface $attribute
      * @throws UnsetAttributeNameException
      * @return TagVoidInterface
      */
-    public function setAttribute(AttributeVoidInterface $attribute): TagVoidInterface
+    public function setAttributeObject(AttributeVoidInterface $attribute): TagVoidInterface
     {
         if (!$this->isAllowedAttribute($attribute)) {
             throw new AttributeNotAllowedException($attribute->getName(), $this->getName());

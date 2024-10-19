@@ -77,11 +77,11 @@ class Tag extends TagVoid implements TagInterface
     }
 
     /**
-     * addSubtag
+     * addSubTagObject
      * @param TagVoidInterface $tag
      * @throws InvalidSubTagException
      */
-    public function addSubtag(TagVoidInterface $tag): void
+    public function addSubTagObject(TagVoidInterface $tag): void
     {
         if (!$this->canAddSubTag($tag)) {
             throw new InvalidSubTagException($tag->getName());

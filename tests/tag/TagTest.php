@@ -64,7 +64,7 @@ class TagTest extends TestCase
     /**
      * testAddSubTagThrowsExceptionWhenSubTagNotAllowed
      * @throws InvalidSubTagException
-     * @covers \pvc\html\abstract\tag\Tag::addSubtag
+     * @covers \pvc\html\abstract\tag\Tag::addSubTagObject
      * @covers \pvc\html\abstract\tag\Tag::canAddSubTag
      */
     public function testAddSubTagThrowsExceptionWhenSubTagNotAllowed(): void
@@ -75,13 +75,13 @@ class TagTest extends TestCase
 
         self::expectException(InvalidSubTagException::class);
 
-        $this->tag->addInnerHTML($subtag);
+        $this->tag->addSubTagObject($subtag);
     }
 
     /**
      * testAddSubTag
      * @throws InvalidSubTagException
-     * @covers \pvc\html\abstract\tag\Tag::addSubtag
+     * @covers \pvc\html\abstract\tag\Tag::addSubTagObject
      * @covers \pvc\html\abstract\tag\Tag::canAddSubTag
      */
     public function testAddSubTag(): void
@@ -89,7 +89,7 @@ class TagTest extends TestCase
         $subtag = $this->createMock(TagInterface::class);
         $subtag->method('getName')->willReturn('foo');
         $this->tag->setAllowedSubTags($this->sampleAllowedSubtags);
-        $this->tag->addInnerHTML($subtag);
+        $this->tag->addSubTagObject($subtag);
         self::assertEquals($subtag, $this->tag->getSubTag($subtag->getName()));
     }
 
@@ -117,8 +117,8 @@ class TagTest extends TestCase
         $subtag2 = $this->createMock(TagInterface::class);
         $subtag2->method('getName')->willReturn($tagName);
 
-        $this->tag->addInnerHTML($subtag1);
-        $this->tag->addInnerHTML($subtag2);
+        $this->tag->addSubTagObject($subtag1);
+        $this->tag->addSubTagObject($subtag2);
 
         self::assertEquals($subtag1, $this->tag->getSubTag($tagName));
     }
@@ -135,15 +135,15 @@ class TagTest extends TestCase
         self::assertEmpty($this->tag->getInnerHtml());
 
         $expectedResult = [$this->testMsg];
-        $this->tag->addInnerHTML($this->testMsg);
+        $this->tag->addMsg($this->testMsg);
         self::assertEquals($expectedResult, $this->tag->getInnerHtml());
 
         $expectedResult = [$this->testMsg, $this->mockInnerTagVoid];
-        $this->tag->addInnerHTML($this->mockInnerTagVoid);
+        $this->tag->addSubTagObject($this->mockInnerTagVoid);
         self::assertEqualsCanonicalizing($expectedResult, $this->tag->getInnerHtml());
 
         $expectedResult = [$this->testMsg, $this->mockInnerTagVoid, $this->mockInnerTag];
-        $this->tag->addInnerHTML($this->mockInnerTag);
+        $this->tag->addSubTagObject($this->mockInnerTag);
         self::assertEqualsCanonicalizing($expectedResult, $this->tag->getInnerHtml());
     }
 
