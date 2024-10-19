@@ -52,64 +52,24 @@ class Tag extends TagVoid implements TagInterface
     }
 
     /**
-     * addInnerHTML
-     * @param TagVoidInterface|MsgInterface|string $innerHtml
-     * @throws InvalidSubTagException
-     */
-    public function addInnerHTML(TagVoidInterface|MsgInterface|string $innerHtml): void
-    {
-        /**
-         * It is possible to embed html into a text string and add that as innerHtml.  For example, you can add
-         * something like '<div>I am a cow</div><div>I am a horse</div>'.
-         *
-         * This code does *not* check for the potential presence of tags embedded in text
-         */
-        if ($innerHtml instanceof MsgInterface || is_string($innerHtml)) {
-            $this->addInnerText($innerHtml);
-        } else {
-            $this->addSubtag($innerHtml);
-        }
-    }
-
-    /**
-     * addInnerText
-     * @param MsgInterface|string $innerText
-     */
-    protected function addInnerText(MsgInterface|string $innerText): void
-    {
-        $this->innerHtml[] = $innerText;
-    }
-
-    /**
-     * addSubtag
-     * @param TagVoidInterface $tag
-     * @throws InvalidSubTagException
-     */
-    protected function addSubtag(TagVoidInterface $tag): void
-    {
-        if (!$this->canAddSubTag($tag)) {
-            throw new InvalidSubTagException($tag->getName());
-        }
-        $this->innerHtml[] = $tag;
-    }
-
-    /**
      * canAddSubTag
      * @param TagVoidInterface $subTag
      * @return bool
      */
     protected function canAddSubTag(TagVoidInterface $subTag): bool
     {
+        /**
+         * empty allowedSubTag array means you can put any tag in there, which is wrong, but gives us some slack
+         * for the moment in determining what subtags are allowed inside each tag.
+         */
         if (empty($this->getAllowedSubTags())) {
             return true;
         }
 
-        $subTagName = $subTag->getName();
-
         /**
          * The subtag must be valid.
          */
-        if (!in_array($subTagName, $this->getAllowedSubTags())) {
+        if (!in_array($subTag->getName(), $this->getAllowedSubTags())) {
             return false;
         }
 
@@ -117,14 +77,16 @@ class Tag extends TagVoid implements TagInterface
     }
 
     /**
-     * getSubTags
-     * @return array<TagVoidInterface>
+     * addSubtag
+     * @param TagVoidInterface $tag
+     * @throws InvalidSubTagException
      */
-    public function getSubTags(): array
+    public function addSubtag(TagVoidInterface $tag): void
     {
-        return array_filter($this->getInnerHtml(), function ($x) {
-            return $x instanceof TagVoidInterface;
-        });
+        if (!$this->canAddSubTag($tag)) {
+            throw new InvalidSubTagException($tag->getName());
+        }
+        $this->innerHtml[] = $tag;
     }
 
     /**
@@ -142,6 +104,35 @@ class Tag extends TagVoid implements TagInterface
             }
         }
         return null;
+    }
+
+    /**
+     * getSubTags
+     * @return array<TagVoidInterface>
+     */
+    public function getSubTags(): array
+    {
+        return array_filter($this->getInnerHtml(), function ($x) {
+            return $x instanceof TagVoidInterface;
+        });
+    }
+
+    /**
+     * addMsg
+     * @param MsgInterface $msg
+     */
+    public function addMsg(MsgInterface $msg): void
+    {
+        $this->innerHtml[] = $msg;
+    }
+
+    /**
+     * addText
+     * @param string $text
+     */
+    public function addText(string $text): void
+    {
+        $this->innerHtml[] = $text;
     }
 
     /**

@@ -62,12 +62,6 @@ class TagTest extends TestCase
     }
 
     /**
-     * testTagThrowsExceptionWhenAddingInnerTextWhereNotAllowed
-     * @throws InvalidSubTagException
-     * @covers \pvc\html\abstract\tag\Tag::addInnerHTML
-     */
-
-    /**
      * testAddSubTagThrowsExceptionWhenSubTagNotAllowed
      * @throws InvalidSubTagException
      * @covers \pvc\html\abstract\tag\Tag::addSubtag
