@@ -6,9 +6,9 @@
 
 declare(strict_types=1);
 
-namespace pvc\html\abstract\attribute;
+namespace pvc\html\attribute;
 
-use pvc\html\abstract\err\InvalidAttributeNameException;
+use pvc\html\err\UnsetValueTesterException;
 use pvc\interfaces\html\attribute\AttributeWithValueInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
@@ -38,25 +38,12 @@ abstract class AttributeWithValue extends AttributeVoid implements AttributeWith
     protected bool $isCaseSensitive = false;
 
     /**
-     * @var bool
+     * I would normally put in a constructor with the ValueTester object as an argument since it's a dependency.  But
+     * ContainerFactory makes void attributes as well as attributes that have values within the same method and void
+     * attributes obviously do not have value testers.  The Containerfactory checks to see if there is a value tester
+     * in the definition and then sets it if there is one using a method call.  So do not put the dependency into the
+     * constructor here.
      */
-    protected bool $globalYn = false;
-
-    /**
-     * @param string $name
-     * @param ValTesterInterface<string> $tester
-     * @throws InvalidAttributeNameException
-     *
-     * the name of the attribute and the value tester are tightly coupled by design so both are set at construction.
-     * Further, once instantiated, you cannot change the name of the attribute or change the value tester because
-     * changing one without the other could put the object in an invalid state.
-     */
-    public function __construct(string $name, ValTesterInterface $tester)
-    {
-        parent::__construct($name);
-        $this->setTester($tester);
-    }
-
     /**
      * getTester
      * @return ValTesterInterface<string>
@@ -70,7 +57,7 @@ abstract class AttributeWithValue extends AttributeVoid implements AttributeWith
      * setTester
      * @param ValTesterInterface<string> $tester
      */
-    protected function setTester(ValTesterInterface $tester): void
+    public function setTester(ValTesterInterface $tester): void
     {
         $this->tester = $tester;
     }
@@ -91,23 +78,5 @@ abstract class AttributeWithValue extends AttributeVoid implements AttributeWith
     public function isCaseSensitive(): bool
     {
         return $this->isCaseSensitive;
-    }
-
-    /**
-     * isGlobalYn
-     * @return bool
-     */
-    public function isGlobalYn(): bool
-    {
-        return $this->globalYn;
-    }
-
-    /**
-     * setGlobalYn
-     * @param bool $globalYn
-     */
-    public function setGlobalYn(bool $globalYn): void
-    {
-        $this->globalYn = $globalYn;
     }
 }

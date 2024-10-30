@@ -5,78 +5,70 @@
  */
 declare (strict_types=1);
 
-namespace pvcTests\html\abstract\attribute;
+namespace pvcTests\html\unit_tests\attribute;
 
-use pvc\html\abstract\attribute\Event;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\abstract\err\InvalidAttributeNameException;
-use pvc\html\abstract\err\InvalidAttributeValueException;
+use pvc\html\attribute\Event;
+use pvc\html\err\InvalidAttributeIdNameException;
+use pvc\html\err\InvalidAttributeValueException;
+
+use pvc\interfaces\validator\ValTesterInterface;
 
 use function PHPUnit\Framework\assertEquals;
 
 class EventTest extends TestCase
 {
-    protected string $eventName;
-
+    protected ValTesterInterface|MockObject $scriptTester;
     protected Event $event;
 
     public function setUp(): void
     {
-        $this->eventName = 'onchange';
-        $this->event = new Event($this->eventName);
+        $this->scriptTester = $this->createMock(ValTesterInterface::class);
+        $this->event = new Event($this->scriptTester);
     }
 
     /**
-     * testConstructAndSetName
-     * @covers \pvc\html\abstract\attribute\Event::isValidAttributeName
+     * testConstruct
+     * @covers \pvc\html\attribute\Event::__construct
      */
     public function testConstructAndSetName(): void
     {
         self::assertInstanceOf(Event::class, $this->event);
-        self::assertEquals($this->eventName, $this->event->getName());
     }
 
     /**
      * testConstructFailsWithMixedCase
-     * @covers \pvc\html\abstract\attribute\Event::isValidAttributeName
+     * @covers \pvc\html\attribute\Event::isValidAttributeIdName
      */
     public function testConstructFailsWithMixedCase(): void
     {
-        self::expectException(InvalidAttributeNameException::class);
-        $event = new Event('onChange');
+        self::expectException(InvalidAttributeIdNameException::class);
+        $this->event->setName('onChange');
     }
 
     /**
      * testSetScriptThrowsExceptionWithEmptyScript
-     * @covers \pvc\html\abstract\attribute\Event::setScript
+     * @covers \pvc\html\attribute\Event::setScript
      */
     public function testSetScriptThrowsExceptionWithEmptyScript(): void
     {
         $script = '';
+        $this->scriptTester->method('testValue')->willReturn(false);
         self::expectException(InvalidAttributeValueException::class);
         $this->event->setScript($script);
     }
 
     /**
-     * testRenderThrowsExceptionWithEmptyScript
-     * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\Event::render
-     */
-    public function testRenderThrowsExceptionWithEmptyScript(): void
-    {
-        self::expectException(InvalidAttributeValueException::class);
-        $this->event->render();
-    }
-
-    /**
      * testSetGetScript
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\Event::setScript
-     * @covers \pvc\html\abstract\attribute\Event::getScript
+     * @covers \pvc\html\attribute\Event::setScript
+     * @covers \pvc\html\attribute\Event::getScript
      */
     public function testSetGetScript(): void
     {
         $script = 'some javascript';
+        $this->scriptTester->method('testValue')->willReturn(true);
         $this->event->setScript($script);
         self:;assertEquals($script, $this->event->getScript());
     }
@@ -84,13 +76,16 @@ class EventTest extends TestCase
     /**
      * testRender
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\Event::render
+     * @covers \pvc\html\attribute\Event::render
      */
     public function testRender(): void
     {
+        $name = 'onchange';
         $value = 'bar\'s';
+        $this->scriptTester->method('testValue')->willReturn(true);
+        $this->event->setName($name);
         $this->event->setScript($value);
-        $expectedRendering = $this->eventName . '=\'bar\'s\'';
+        $expectedRendering = $name . '=\'bar\'s\'';
         self::assertEquals($expectedRendering, $this->event->render());
     }
 }

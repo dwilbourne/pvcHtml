@@ -6,10 +6,12 @@
 
 declare(strict_types=1);
 
-namespace pvc\html\abstract\tag;
+namespace pvc\html\tag;
 
-use pvc\html\abstract\err\InvalidInnerTextException;
-use pvc\html\abstract\err\InvalidSubTagException;
+use pvc\html\err\AmbiguousMethodCallException;
+use pvc\html\err\InvalidInnerTextException;
+use pvc\html\err\InvalidMethodCallException;
+use pvc\html\err\InvalidSubTagException;
 use pvc\interfaces\html\tag\TagInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
 use pvc\interfaces\msg\MsgInterface;
@@ -81,23 +83,70 @@ class Tag extends TagVoid implements TagInterface
      * @param TagVoidInterface $tag
      * @throws InvalidSubTagException
      */
-    public function addSubTagObject(TagVoidInterface $tag): void
+    public function addSubTagObject(TagVoidInterface $tag): TagVoidInterface
     {
         if (!$this->canAddSubTag($tag)) {
             throw new InvalidSubTagException($tag->getName());
         }
         $this->innerHtml[] = $tag;
+        return $tag;
     }
+
+    /**
+     * addSubTag
+     * @param string $tagName
+     * @return TagVoidInterface
+     * @throws InvalidSubTagException
+     */
+    public function addSubTag(string $tagName): TagVoidInterface
+    {
+        $newTag = $this->factory->makeElement($tagName);
+        $this->addSubTagObject($newTag);
+        return $newTag;
+    }
+
+    /**
+     * __call
+     * @param string $name
+     * @param array<string> $arguments
+     * @return mixed
+     * @throws AmbiguousMethodCallException
+     * @throws InvalidMethodCallException
+     * @throws InvalidSubTagException
+     * @throws \pvc\html\err\UnsetAttributeNameException
+     * @throws \pvc\html\err\InvalidAttributeIdNameException
+     */
+    public function __call(string $name, array $arguments): mixed
+    {
+        if ($this->factory->isAmbiguousName($name)) {
+            throw new AmbiguousMethodCallException($name);
+        }
+
+        if ($this->factory->canMakeElement($name)) {
+            $subtagObject = $this->factory->makeElement($name);
+            return $this->addSubTagObject($subtagObject);
+        }
+
+        if ($this->factory->canMakeAttribute($name)) {
+            return $this->setAttribute($name, ...$arguments);
+        }
+        /**
+         * not a method and not something we know how to make....
+         */
+        throw new InvalidMethodCallException($name);
+    }
+
 
     /**
      * getSubTag
      * @param string $subTagName
      * @return TagVoidInterface|null
-     * returns the first subtag whose tag name equals the supplied argument
+     * returns the first subtag whose tag id equals the supplied argument
      */
     public function getSubTag(string $subTagName): TagVoidInterface|null
     {
-        $subTags = $this->getSubTags();
+        $filter = function($x) { return $x instanceOf TagVoidInterface; };
+        $subTags = array_filter($this->getSubTags(), $filter);
         foreach ($subTags as $subTag) {
             if ($subTagName == $subTag->getName()) {
                 return $subTag;

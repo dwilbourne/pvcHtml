@@ -1,0 +1,1058 @@
+[
+	{
+		"Name": "a",
+		"Comment": "anchor tag, creates a hyperlink",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"download",
+			"href",
+			"hreflang",
+			"media",
+			"ping",
+			"referrerpolicy",
+			"rel",
+			"target",
+			"type"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "abbr",
+		"Comment": "defines an abbreviation or an acronym.  Use the global title attribute to show the description for the abbreviation\/acronym when you mouse over the element.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "address",
+		"Comment": "The <address> tag defines the contact information for the author\/owner of a document or an article.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "area",
+		"Comment": "defines an area inside an image map",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [
+			"alt",
+			"coords",
+			"download",
+			"href",
+			"hreflang",
+			"media",
+			"referrerpolicy",
+			"rel",
+			"shape",
+			"target",
+			"type"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "article",
+		"Comment": "specifies independent, self-contained content. An article should make sense on its own, and it should be possible to distribute it independently of the rest of the site.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "aside",
+		"Comment": "The <aside> tag defines some content aside from the content it is placed in. The <aside> content is often placed as a sidebar in a document.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "audio",
+		"Comment": "used to embed sound content in a document",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"autoplay",
+			"controls",
+			"loop",
+			"muted",
+			"preload",
+			"src"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "b",
+		"Comment": "makes the contained content bold.  Better to use css",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "base",
+		"Comment": "Specify a default URL and a default target for all links on a page",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"href",
+			"target"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "bdi",
+		"Comment": "BDI stands for Bi-Directional Isolation.  The <bdi> tag isolates a part of text that might be formatted in a different direction from other text outside it. This element is useful when embedding user-generated content with an unknown text direction.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "bdo",
+		"Comment": "bi directional override",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "blockquote",
+		"Comment": "A section that is quoted from another source",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"cite"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "body",
+		"Comment": "defines the document body.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "br",
+		"Comment": "inserts a single line break",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "button",
+		"Comment": "defines a clickable button.",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"autofocus",
+			"disabled",
+			"form",
+			"formaction",
+			"formenctype",
+			"formmethod",
+			"formnovalidate",
+			"formtarget",
+			"popovertarget",
+			"popovertargetaction",
+			"name",
+			"buttontype",
+			"value"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "canvas",
+		"Comment": "used to draw graphics, on the fly, via scripting (usually JavaScript",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"height",
+			"width"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "caption",
+		"Comment": "used inside a table element, defines a table caption.  Must immediately follow the opening table tag",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "cite",
+		"Comment": "defines the title of a creative work",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "code",
+		"Comment": "Define some text as computer code",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "col",
+		"Comment": "specifies column properties for each column within a <colgroup> element.  useful for applying styles to entire columns, instead of repeating the styles for each cell, for each row",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "colgroup",
+		"Comment": "specifies a group of one or more columns in a table for formatting",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "data",
+		"Comment": "used to add a machine-readable translation of a given content",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "datalist",
+		"Comment": "specifies a list of pre-defined options for an <input> element",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "dd",
+		"Comment": "used to describe a term\/name in a description list (see dl and dt)",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "embed",
+		"Comment": "defines text that has been deleted from a document. Browsers will usually strike a line through deleted text.",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [
+			"cite",
+			"datetime"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "details",
+		"Comment": "creates a widget that can open\/close to provide a summary or detailed set of information",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"open"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "dfn",
+		"Comment": "stands for the definition element and it specifies a term that is going to be defined within the content",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "dialog",
+		"Comment": "defines a dialog box or subwindow, making it easy to create popup dialogs and modals on a web page",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"open"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "div",
+		"Comment": "section in a document (the classic containing element",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "dl",
+		"Comment": "defines a description list",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "dt",
+		"Comment": "defines a term\/name in a description list",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "em",
+		"Comment": "define emphasized text. The content inside is typically displayed in italic",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "del",
+		"Comment": "defines a container for an external resource, such as a web page, a picture, a media player",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"height",
+			"src",
+			"type",
+			"width"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "fieldset",
+		"Comment": "used to group related elements in a form",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"disabled",
+			"form",
+			"name"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "figcaption",
+		"Comment": "defines a caption for a <figure> element",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "figure",
+		"Comment": "specifies self-contained content, like illustrations, diagrams, photos, code listings, etc",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "form",
+		"Comment": "used to create an HTML form for user input",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"accept-charset",
+			"action",
+			"autocomplete",
+			"enctype",
+			"method",
+			"name",
+			"novalidate",
+			"rel",
+			"target"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "h1",
+		"Comment": "heading levels",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "h2",
+		"Comment": "",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "h3",
+		"Comment": "",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "h4",
+		"Comment": "",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "h5",
+		"Comment": "",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "h6",
+		"Comment": "",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "head",
+		"Comment": "a container for metadata (data about data and is placed between the <html> tag and the <body> tag",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"none"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "header",
+		"Comment": "represents a container for introductory content or a set of navigational links.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "hgroup",
+		"Comment": "used to surround a heading and one or more <p> elements.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "hr",
+		"Comment": "defines a thematic break in an HTML page (e.g. a shift of topic. Most often displayed as a horizontal rule that is used to separate content",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "html",
+		"Comment": "represents the root of an HTML document",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "i",
+		"Comment": "defines a part of text in an alternate voice or mood. The content inside is typically displayed in italic",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "iframe",
+		"Comment": "specifies an inline frame",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"allow",
+			"height",
+			"loading",
+			"name",
+			"referrerpolicy",
+			"sandbox",
+			"src",
+			"srcdoc",
+			"width"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "img",
+		"Comment": "used to embed an image in an HTML page",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [
+			"alt",
+			"crossorigin",
+			"height",
+			"ismap",
+			"loading",
+			"longdesc",
+			"referrerpolicy",
+			"sizes",
+			"src",
+			"srcset",
+			"usemap",
+			"width"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "input",
+		"Comment": "specifies an input field where the user can enter data",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [
+			"accept",
+			"alt",
+			"autocomplete",
+			"autofocus",
+			"checked",
+			"dirname",
+			"disabled",
+			"form",
+			"formaction",
+			"formenctype",
+			"formmethod",
+			"formnovalidate",
+			"formtarget",
+			"height",
+			"list",
+			"max",
+			"maxlength",
+			"min",
+			"minlength",
+			"multiple",
+			"name",
+			"pattern",
+			"placeholder",
+			"popovertarget",
+			"popovertargetaction",
+			"readonly",
+			"required",
+			"size",
+			"src",
+			"step",
+			"inputtype",
+			"value",
+			"width"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "ins",
+		"Comment": "defines a text that has been inserted into a document. Browsers will usually underline inserted text",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"cite",
+			"datetime"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "kbd",
+		"Comment": "used to define keyboard input. The content inside is displayed in the browser's default monospace font. This tag is not deprecated. However, it is possible to achieve richer effect by using CSS.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "label",
+		"Comment": "defines a label for an element",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"for",
+			"form"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "legend",
+		"Comment": "defines a caption for the <fieldset> element",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "li",
+		"Comment": "defines a list item",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"value"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "link",
+		"Comment": "defines the relationship between the current document and an external resource",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"crossorigin",
+			"href",
+			"hreflang",
+			"media",
+			"referrerpolicy",
+			"rel",
+			"sizes",
+			"title",
+			"type"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "main",
+		"Comment": "Specify the main content of the document",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "map",
+		"Comment": "image map",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"charset",
+			"content",
+			"http-equiv",
+			"name"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "mark",
+		"Comment": "defines text that should be marked or highlighted",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "menu",
+		"Comment": "defines an unordered list of content.  It is an alternative to the <ul> tag and browsers will treat these two lists equally.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "meta",
+		"Comment": "describes metadata within an HTML document",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [
+			"charset",
+			"content",
+			"http-equiv",
+			"name"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "meter",
+		"Comment": "defines a scalar measurement within a known range, or a fractional value. This is also known as a gauge",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"form",
+			"high",
+			"low",
+			"max",
+			"min",
+			"optimum",
+			"value"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "nav",
+		"Comment": "A set of navigation links",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "noscript",
+		"Comment": "defines an alternate content to be displayed to users that have disabled scripts in their browser",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "object",
+		"Comment": "defines a container for an external resource",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"data",
+			"form",
+			"height",
+			"name",
+			"type",
+			"typemustmatch",
+			"usemap",
+			"width"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "ol",
+		"Comment": "defines an ordered list",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"reversed",
+			"start",
+			"type"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "optgroup",
+		"Comment": "used to group related options in a <select> element (drop-down list)",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"disabled",
+			"label"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "option",
+		"Comment": "defines an option in a select list",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"disabled",
+			"label",
+			"selected",
+			"value"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "output",
+		"Comment": "used to represent the result of a calculation (like one performed by a script)",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"for",
+			"form",
+			"name"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "p",
+		"Comment": "defines a paragraph",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "param",
+		"Comment": "define parameters for an <object> element",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [
+			"name",
+			"value"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "picture",
+		"Comment": "gives web developers more flexibility in specifying image resources",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "pre",
+		"Comment": "defines preformatted text.  element is displayed in a fixed-width font, and the text preserves both spaces and line breaks. The text will be displayed exactly as written in the HTML source code.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "progress",
+		"Comment": "Use the <progress> tag in conjunction with JavaScript to display the progress of a task.",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"max",
+			"value"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "q",
+		"Comment": "defines a short quotation",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"cite"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "rp",
+		"Comment": "used to provide parentheses around a ruby text, to be shown by browsers that do not support ruby annotations",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "rt",
+		"Comment": "defines an explanation or pronunciation of characters (for East Asian typography in a ruby annotation",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "ruby",
+		"Comment": "specifies a ruby annotation. A ruby annotation is a small extra text, attached to the main text to indicate the pronunciation or meaning of the corresponding characters. This kind of annotation is often used in Japanese publications",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "s",
+		"Comment": "specifies text that is no longer correct, accurate or relevant. The text will be displayed with a line through it",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "sample",
+		"Comment": "define sample output from a computer program",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "script",
+		"Comment": "used to embed a client-side script (JavaScript)",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"async",
+			"crossorigin",
+			"defer",
+			"integrity",
+			"nomodule",
+			"referrerpolicy",
+			"src",
+			"type"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "search",
+		"Comment": "Elements inside a <search> element are typically form elements used to perform a search",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "section",
+		"Comment": "defines a section in a document",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "select",
+		"Comment": "creates a drop-down list",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"autofocus",
+			"disabled",
+			"form",
+			"multiple",
+			"name",
+			"required",
+			"size"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "small",
+		"Comment": "defines smaller text (like copyright and other side-comments",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "source",
+		"Comment": "used to specify multiple media resources for media elements, such as <video>, <audio>, and <picture>",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"media",
+			"sizes",
+			"src",
+			"srcset",
+			"type"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "span",
+		"Comment": "an inline container used to mark up a part of a text; the inline version of div",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "strong",
+		"Comment": "used to define text with strong importance. The content inside is typically displayed in bold",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "style",
+		"Comment": "",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"media",
+			"type"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "sub",
+		"Comment": "defines subscript text. Subscript text appears half a character below the normal line, and is sometimes rendered in a smaller font",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "summary",
+		"Comment": "defines a visible heading for the <details> element. The heading can be clicked to view\/hide the details. The <summary> element should be the first child element of the <details> element.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "sup",
+		"Comment": "defines superscript text",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "svg",
+		"Comment": "defines a container for SVG graphics",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "table",
+		"Comment": "defines an HTML table",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "tbody",
+		"Comment": "used to group the body content in an HTML table",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "td",
+		"Comment": "defines a standard data cell in an HTML table (table detail)",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"colspan",
+			"headers",
+			"rowspan"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "template",
+		"Comment": "used as a container to hold some HTML content hidden from the user when the page loads. You can use the <template> tag if you have some HTML code you want to use over and over again, but not until you ask for it. To do this without the <template> tag, you have to create the HTML code with JavaScript to prevent the browser from rendering the code.",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "textarea",
+		"Comment": "defines a multi-line text input control",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"autofocus",
+			"cols",
+			"dirname",
+			"disabled",
+			"form",
+			"maxlength",
+			"name",
+			"placeholder",
+			"readonly",
+			"required",
+			"rows",
+			"wrap"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "tfoot",
+		"Comment": "used to group footer content in an HTML table The <tfoot> element must have one or more <tr> tags inside",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "th",
+		"Comment": "defines a header cell in an HTML table",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"abbr",
+			"colspan",
+			"headers",
+			"rowspan",
+			"scope"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "thead",
+		"Comment": "used to group header content in an HTML table must have one or more <tr> tags inside",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "time",
+		"Comment": "defines a specific time (or datetime)",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"datetime"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "title",
+		"Comment": "defines the title of the document",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "tr",
+		"Comment": "defines a row in an HTML table. contains one or more <th> or <td> elements",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "track",
+		"Comment": "specifies text tracks for <audio> or <video> elements",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [
+			"default",
+			"kind",
+			"label",
+			"src",
+			"srclang"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "u",
+		"Comment": "represents some text that is unarticulated and styled differently from normal text, such as misspelled words",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "ul",
+		"Comment": "defines an unordered (bulleted list)",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "var",
+		"Comment": "used to defines a variable in programming or in a mathematical expression. This tag is not deprecated. However, it is possible to achieve richer effect by using CSS",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "video",
+		"Comment": "used to embed video content in a document",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"autoplay",
+			"controls",
+			"height",
+			"loop",
+			"muted",
+			"poster",
+			"preload",
+			"src",
+			"width"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "wbr",
+		"Comment": "(Word Break Opportunity tag specifies where in a text it would be ok to add a line-break. When a word is too long, the browser might break it at the wrong place. You can use the <wbr> element to add word break \topportunities. ",
+		"TagType": "Tag",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	}
+]

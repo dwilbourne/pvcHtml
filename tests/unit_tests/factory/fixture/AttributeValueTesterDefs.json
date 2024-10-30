@@ -1,0 +1,12 @@
+[
+	{
+		"Name": "accessKeyTester",
+		"TesterType": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"TesterArg": "pvc\\html\\val_tester\\regex\\RegexAccessKey"
+	},
+	{
+		"Name": "urlTester",
+		"TesterType": "pvc\\validator\\val_tester\\filter_var\\FilterVarTester",
+		"TesterArg": "pvc\\filtervar\\FilterVarValidateUrl"
+	}
+]

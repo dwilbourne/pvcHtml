@@ -6,34 +6,33 @@
 
 declare (strict_types=1);
 
-namespace pvcTests\html\abstract\attribute;
+namespace pvcTests\html\unit_tests\attribute;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\abstract\attribute\AttributeSingleValue;
-use pvc\html\abstract\err\InvalidAttributeValueException;
+use pvc\html\attribute\AttributeSingleValue;
+use pvc\html\err\InvalidAttributeValueException;
+use pvc\html\err\InvalidNumberOfParametersException;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeSingleValueTest extends TestCase
 {
-    protected string $name;
-
     protected ValTesterInterface|MockObject $tester;
 
     protected AttributeSingleValue $attribute;
 
     public function setUp(): void
     {
-        $this->name = 'target';
         $this->tester = $this->createMock(ValTesterInterface::class);
-        $this->attribute = new AttributeSingleValue($this->name, $this->tester);
+        $this->attribute = new AttributeSingleValue();
+        $this->attribute->setTester($this->tester);
     }
 
 
     /**
      * testSetValueConvertsCaseIfNotCaseSensitive
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\AttributeSingleValue::setValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
      */
     public function testSetValueConvertsCaseIfNotCaseSensitive(): void
     {
@@ -51,9 +50,31 @@ class AttributeSingleValueTest extends TestCase
     }
 
     /**
+     * testSetValueFailsWithZeroArguments
+     * @throws InvalidAttributeValueException
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
+     */
+    public function testSetValueFailsWithZeroArguments(): void
+    {
+        self::expectException(InvalidNumberOfParametersException::class);
+        $this->attribute->setValue();
+    }
+
+    /**
+     * testSetValueFailsWithMoreThanOneArgument
+     * @throws InvalidAttributeValueException
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
+     */
+    public function testSetValueFailsWithMoreThanOneArgument(): void
+    {
+        self::expectException(InvalidNumberOfParametersException::class);
+        $this->attribute->setValue('foo', 'bar');
+    }
+
+    /**
      * testSetValueThrowsExceptionWhenTesterFails
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\AttributeSingleValue::setValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
      */
     public function testSetValueThrowsExceptionWhenTesterFails(): void
     {
@@ -66,8 +87,8 @@ class AttributeSingleValueTest extends TestCase
     /**
      * testSetGetValue
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\AttributeSingleValue::setValue
-     * @covers \pvc\html\abstract\attribute\AttributeSingleValue::getValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::getValue
      */
     public function testSetGetValue(): void
     {
@@ -78,26 +99,18 @@ class AttributeSingleValueTest extends TestCase
     }
 
     /**
-     * testRenderWithNoValueSet
-     * @covers \pvc\html\abstract\attribute\AttributeSingleValue::render
-     */
-    public function testRenderWithNoValueSet(): void
-    {
-        self::expectException(InvalidAttributeValueException::class);
-        $this->attribute->render();
-    }
-
-    /**
      * testRenderWithValueSet
      * @throws InvalidAttributeValueException
-     * @covers \pvc\html\abstract\attribute\AttributeSingleValue::render
+     * @covers \pvc\html\attribute\AttributeSingleValue::render
      */
     public function testRenderWithValueSet(): void
     {
+        $name = 'foo';
         $value = 'bar\'s';
         $this->tester->method('testValue')->willReturn(true);
+        $this->attribute->setName($name);
         $this->attribute->setValue($value);
-        $expectedRendering = $this->name . '=\'bar\'s\'';
+        $expectedRendering = $name . '=\'bar\'s\'';
         self::assertEquals($expectedRendering, $this->attribute->render());
     }
 }

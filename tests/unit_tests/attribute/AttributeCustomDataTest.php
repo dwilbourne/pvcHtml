@@ -6,12 +6,12 @@
 
 declare (strict_types=1);
 
-namespace pvcTests\html\abstract\attribute;
+namespace pvcTests\html\unit_tests\attribute;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\abstract\attribute\AttributeCustomData;
-use pvc\html\abstract\err\InvalidCustomDataNameException;
+use pvc\html\attribute\AttributeCustomData;
+use pvc\html\err\InvalidCustomDataNameException;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeCustomDataTest extends TestCase
@@ -25,32 +25,33 @@ class AttributeCustomDataTest extends TestCase
 
     /**
      * testConstruct
-     * @covers \pvc\html\abstract\attribute\AttributeCustomData::__construct
      * @throws InvalidCustomDataNameException
-     * @covers \pvc\html\abstract\attribute\AttributeCustomData::setName
-     * @covers \pvc\html\abstract\attribute\AttributeCustomData::getName
+     * @covers \pvc\html\attribute\AttributeCustomData::setName
+     * @covers \pvc\html\attribute\AttributeCustomData::getName
      */
-    public function testConstruct(): void
+    public function testSetGetName(): void
     {
-        $customDataName = 'foo';
-        $attribute = new AttributeCustomData($customDataName, $this->valTester);
-        self::assertInstanceOf(AttributeCustomData::class, $attribute);
-        $expectedResult = 'data-' . $customDataName;
+        $name = 'foo';
+        $attribute = new AttributeCustomData();
+        $attribute->setName($name);
+        $expectedResult = 'data-' . $name;
         self::assertEquals($expectedResult, $attribute->getName());
     }
 
     /**
      * testSetNameFailsWithInvalidCustomDataName
      * @throws InvalidCustomDataNameException
-     * @covers \pvc\html\abstract\attribute\AttributeCustomData::setName
+     * @covers \pvc\html\attribute\AttributeCustomData::setName
      */
     public function testSetNameFailsWithInvalidCustomDataName(): void
     {
         /**
          * must be lower case and/or numbers
          */
-        $customDataName = 'HOB!@';
+        $name = 'HOB!@';
+        $attribute = new AttributeCustomData();
         self::expectException(InvalidCustomDataNameException::class);
-        $attribute = new AttributeCustomData($customDataName, $this->valTester);
+        $attribute->setName($name);
+        unset($attribute);
     }
 }

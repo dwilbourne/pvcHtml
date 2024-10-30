@@ -1,0 +1,26 @@
+[
+	{
+		"Name": "a",
+		"Comment": "anchor tag, creates a hyperlink",
+		"TagType": "Tag",
+		"AllowedAttributes": [
+			"download",
+			"href",
+			"hreflang",
+			"media",
+			"ping",
+			"referrerpolicy",
+			"rel",
+			"target",
+			"type"
+		],
+		"AllowedSubTags": []
+	},
+	{
+		"Name": "area",
+		"Comment": "defines an area inside an image map",
+		"TagType": "TagVoid",
+		"AllowedAttributes": [],
+		"AllowedSubTags": []
+	}
+]

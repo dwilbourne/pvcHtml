@@ -5,9 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace pvc\html\abstract\attribute;
+namespace pvc\html\attribute;
 
-use pvc\html\abstract\err\InvalidAttributeValueException;
+use pvc\html\err\InvalidAttributeValueException;
+use pvc\html\err\InvalidNumberOfParametersException;
 use pvc\interfaces\html\attribute\AttributeSingleValueInterface;
 
 /**
@@ -22,11 +23,20 @@ class AttributeSingleValue extends AttributeWithValue implements AttributeSingle
 
     /**
      * setValue
-     * @param string $value
+     * @param string ...$values
      * @throws InvalidAttributeValueException
      */
-    public function setValue(string $value): void
+    public function setValue(...$values): void
     {
+        /**
+         * should be a single value
+         */
+        if(count($values) != 1) {
+            throw new InvalidNumberOfParametersException('1');
+        } else {
+            $value = $values[0];
+        }
+
         /**
          * if the value is not case-sensitive, set it to lower case
          */
@@ -38,7 +48,7 @@ class AttributeSingleValue extends AttributeWithValue implements AttributeSingle
          * test the value
          */
         if (!$this->getTester()->testValue($value)) {
-            throw new InvalidAttributeValueException($this->getName());
+            throw new InvalidAttributeValueException();
         }
 
         $this->value = $value;
@@ -59,9 +69,6 @@ class AttributeSingleValue extends AttributeWithValue implements AttributeSingle
      */
     public function render(): string
     {
-        if (empty($this->getValue())) {
-            throw new InvalidAttributeValueException($this->getName());
-        }
         return $this->getName() . "='" . $this->getValue() . "'";
     }
 }

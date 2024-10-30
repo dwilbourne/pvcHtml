@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace pvc\html\abstract\err;
+namespace pvc\html\err;
 
 use pvc\err\stock\LogicException;
 
