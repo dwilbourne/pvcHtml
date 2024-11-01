@@ -16,7 +16,7 @@
 		"psr-4": {
 			"pvc\\html\\": "src/",
 			"pvcTests\\html\\": "tests/",
-			"pvcExamples\\html\\": "examples"
+			"pvcExamples\\html\\": "examples/"
 		}
 	},
 	"minimum-stability": "dev",
