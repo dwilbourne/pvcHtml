@@ -1,2 +1,2 @@
 # pvcHtml
-code that creates html controls and groups of controls for user input
+code that creates html tags and their attributes as objects
