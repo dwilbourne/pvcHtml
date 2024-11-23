@@ -13,21 +13,25 @@ use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\Event;
 use pvc\html\err\AttributeNotAllowedException;
 use pvc\html\err\InvalidAttributeIdNameException;
+use pvc\html\err\InvalidDefinitionIdException;
 use pvc\html\err\UnsetAttributeNameException;
 use pvc\html\err\UnsetTagNameException;
 use pvc\html\tag\TagVoid;
+use pvc\interfaces\html\attribute\AttributeCustomDataInterface;
 use pvc\interfaces\html\attribute\AttributeInterface;
 use pvc\interfaces\html\attribute\AttributeSingleValueInterface;
 use pvc\interfaces\html\attribute\AttributeVoidInterface;
 use pvc\interfaces\html\attribute\EventInterface;
+use pvc\interfaces\html\factory\definitions\DefinitionType;
 use pvc\interfaces\html\factory\HtmlFactoryInterface;
+use pvc\interfaces\validator\ValTesterInterface;
 
 class TagVoidTest extends TestCase
 {
     /**
      * @var string
      */
-    protected string $tagName;
+    protected string $tagDefId;
 
     /**
      * @var TagVoid
@@ -41,11 +45,22 @@ class TagVoidTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->tagName = 'a';
+        $this->tagDefId = 'a';
         $this->factory = $this->createMock(HtmlFactoryInterface::class);
         $this->tag = new TagVoid();
         $this->tag->setHtmlFactory($this->factory);
-        $this->tag->setName($this->tagName);
+        $this->tag->setDefId($this->tagDefId);
+        $this->tag->setName($this->tagDefId);
+    }
+
+    /**
+     * testSetGetDefId
+     * @covers \pvc\html\tag\TagVoid::getDefId()
+     * @covers \pvc\html\tag\TagVoid::setDefId()
+     */
+    public function testSetGetDefId(): void
+    {
+        self::assertEquals($this->tagDefId, $this->tag->getDefId());
     }
 
     /**
@@ -68,25 +83,82 @@ class TagVoidTest extends TestCase
         /**
          * default behavior returns an empty string if id has not been set
          */
-        self::assertEquals($this->tagName, $this->tag->getName());
+        self::assertEquals($this->tagDefId, $this->tag->getName());
     }
 
     /**
      * testSetGetAllowedAttributes
-     * @covers \pvc\html\tag\TagVoid::setAllowedAttributeIds
-     * @covers \pvc\html\tag\TagVoid::getAllowedAttributeIds
+     * @covers \pvc\html\tag\TagVoid::setAllowedAttributeDefIds
+     * @covers \pvc\html\tag\TagVoid::getAllowedAttributeDefIds
      */
     public function testSetGetAllowedAttributes(): void
     {
         /**
          * default is an empty array
          */
-        self::assertIsArray($this->tag->getAllowedAttributeIds());
-        self::assertEmpty($this->tag->getAllowedAttributeIds());
+        self::assertIsArray($this->tag->getAllowedAttributeDefIds());
+        self::assertEmpty($this->tag->getAllowedAttributeDefIds());
 
-        $allowedAttributes = ['foo', 'bar', 'baz'];
-        $this->tag->setAllowedAttributeIds($allowedAttributes);
-        self::assertEqualsCanonicalizing($allowedAttributes, $this->tag->getAllowedAttributeIds());
+        $allowedAttributeDefIds = ['foo', 'bar', 'baz'];
+        $this->tag->setAllowedAttributeDefIds($allowedAttributeDefIds);
+        self::assertEqualsCanonicalizing($allowedAttributeDefIds, $this->tag->getAllowedAttributeDefIds());
+    }
+
+    /**
+     * testIsAllowedAttributeSucceedsWithEvent
+     * @covers \pvc\html\tag\TagVoid::isAllowedAttribute()
+     */
+    public function testIsAllowedAttributeSucceedsWithEvent(): void
+    {
+        $event = $this->createMock(EventInterface::class);
+        self::assertTrue($this->tag->isAllowedAttribute($event));
+    }
+
+    /**
+     * testIsAllowedAttributeSucceedsWithGlobalAttribute
+     * @covers \pvc\html\tag\TagVoid::isAllowedAttribute()
+     */
+    public function testIsAllowedAttributeSucceedsWithGlobalAttribute(): void
+    {
+        $event = $this->createMock(EventInterface::class);
+        $event->method('isGlobal')->willreturn(true);
+        self::assertTrue($this->tag->isAllowedAttribute($event));
+    }
+
+    /**
+     * testIsAllowedAttributeSucceedsIfAttributeIsAllowed
+     * @covers \pvc\html\tag\TagVoid::isAllowedAttribute()
+     */
+    public function testIsAllowedAttributeSucceedsIfAttributeIsAllowed(): void
+    {
+        $defId = 'foo';
+        $attribute = $this->createMock(AttributeInterface::class);
+        $attribute->method('getDefId')->willReturn($defId);
+        $attribute->method('isGlobal')->willReturn(false);
+        $this->tag->setAllowedAttributeDefIds([$defId]);
+        self::assertTrue($this->tag->isAllowedAttribute($attribute));
+    }
+
+    /**
+     * testIsAllowedAttributeSucceedsWithEventName
+     * @covers \pvc\html\tag\TagVoid::isAllowedAttribute()
+     */
+    public function testIsAllowedAttributeSucceedsWithEventName(): void
+    {
+        $defId = 'foo';
+        $this->factory->method('getDefinitionIds')->willReturn([$defId]);
+        self::assertTrue($this->tag->isAllowedAttribute($defId));
+    }
+
+    /**
+     * testIsAllowedAttributeFailsWithUnknownAttributeName
+     * @covers \pvc\html\tag\TagVoid::isAllowedAttribute()
+     */
+    public function testIsAllowedAttributeFailsWithUnknownAttributeName(): void
+    {
+        $defId = 'foo';
+        $this->factory->method('getDefinitionIds')->willReturn(['bar']);
+        self::assertFalse($this->tag->isAllowedAttribute($defId));
     }
 
     /**
@@ -110,140 +182,119 @@ class TagVoidTest extends TestCase
 
     /**
      * testSetGetRemoveAttribute
-     * @covers \pvc\html\tag\TagVoid::setAttributeObject
+     * @covers \pvc\html\tag\TagVoid::setAttribute()
+     * @covers \pvc\html\tag\TagVoid::setCustomData
+     * @covers \pvc\html\tag\TagVoid::setEvent()
      * @covers \pvc\html\tag\TagVoid::isAllowedAttribute
      * @covers \pvc\html\tag\TagVoid::getAttribute
      * @covers \pvc\html\tag\TagVoid::removeAttribute
      */
     public function testSetGetRemoveAttribute(): void
     {
-        $attributeId = 'href';
+        $attributeDefId = 'href';
         $attribute1 = $this->createMock(AttributeVoidInterface::class);
-        $attribute1->method('getId')->willReturn($attributeId);
+        $attribute1->method('getDefId')->willReturn($attributeDefId);
 
-        $attribute2 = $this->createMock(AttributeVoidInterface::class);
-        $attribute2->method('getId')->willReturn($attributeId);
+        $attribute2 = $this->createMock(AttributeSingleValueInterface::class);
+        $attribute2->method('getDefId')->willReturn($attributeDefId);
 
-        self::assertNull($this->tag->getAttribute($attributeId));
+        self::assertNull($this->tag->getAttribute($attributeDefId));
 
-        /**
-         * demonstrate fluent setter and getter
-         */
-        $this->tag->setAllowedAttributeIds([$attributeId]);
-        self::assertEquals($this->tag, $this->tag->setAttributeObject($attribute1));
-        self::assertEquals($attribute1, $this->tag->getAttribute($attributeId));
+        $this->tag->setAllowedAttributeDefIds([$attributeDefId]);
+        self::assertEquals($this->tag, $this->tag->setAttribute($attribute1));
+        self::assertEquals($attribute1, $this->tag->getAttribute($attributeDefId));
 
         /**
-         * illustrate that you cannot have two attributes with the same id: setting the second one overwrites
+         * illustrate that you cannot have two attributes with the same defId: setting the second one overwrites
          * the first
          */
 
-        $this->tag->setAttributeObject($attribute2);
+        $this->tag->setAttribute($attribute2);
         $this->assertEquals(1, count($this->tag->getAttributes()));
-        self::assertEquals($attribute2, $this->tag->getAttribute($attributeId));
+        self::assertEquals($attribute2, $this->tag->getAttribute($attributeDefId));
 
         /**
          * remove the attribute
          */
-        $this->tag->removeAttribute($attributeId);
-        self::assertNull($this->tag->getAttribute($attributeId));
+        $this->tag->removeAttribute($attributeDefId);
+        self::assertNull($this->tag->getAttribute($attributeDefId));
         $this->assertEquals(0, count($this->tag->getAttributes()));
 
         $event = $this->createMock(EventInterface::class);
-        $event->method('getId')->willReturn('onchange');
-        $this->tag->setAttributeObject($event);
-        self::assertEquals($event, $this->tag->getAttribute($event->getId()));
+        $event->method('getDefId')->willReturn('onchange');
+        $this->tag->setEvent($event);
+        self::assertEquals($event, $this->tag->getAttribute($event->getDefId()));
     }
 
     /**
-     * testSetAttributeFailsWithDisallowedAttributeName
-     * @throws UnsetAttributeNameException
-     * @covers \pvc\html\tag\TagVoid::setAttributeObject
+     * testSetAttributeMakesAttributeIfItDoesNotExist
+     * @covers \pvc\html\tag\TagVoid::setAttribute
+     * @covers \pvc\html\tag\TagVoid::makeOrGetAttribute()
      */
-    public function testSetAttributeFailsWithDisallowedAttributeName(): void
+    public function testSetAttributeMakesAttributeIfItDoesNotExist(): void
     {
-        $attrName = 'shape';
-        $attribute = $this->createMock(AttributeVoidInterface::class);
-        $attribute->method('getName')->willReturn($attrName);
-        $attribute->method('isGlobal')->willReturn(false);
-        self::expectException(AttributeNotAllowedException::class);
-        $this->tag->setAttributeObject($attribute);
+        $defId = 'foo';
+        $attribute = $this->createMock(AttributeInterface::class);
+        $attribute->method('getDefId')->willReturn($defId);
+        $this->tag->setAllowedAttributeDefIds([$defId]);
+        $this->factory->method('getDefinitionType')->with($defId)->willReturn('Attribute');
+        $this->factory->method('makeAttribute')->with($defId)->willReturn($attribute);
+
+        $this->tag->setAttribute($defId);
+        self::assertEquals($attribute, $this->tag->getAttribute($attribute->getDefId()));
     }
 
     /**
-     * testSetAttributeWithMultiValuedAttribute
+     * testSetAttributeThrowsExceptionIfAttributeIsNotAllowed
+     * @throws AttributeNotAllowedException
+     * @throws InvalidAttributeIdNameException
+     * @throws UnsetAttributeNameException
      * @covers \pvc\html\tag\TagVoid::setAttribute
      */
-    public function testSetAttribute(): void
+    public function testSetAttributeThrowsExceptionIfAttributeIsNotAllowed(): void
     {
-        $attrName = 'foo';
-        $attribute = $this->createMock(AttributeInterface::class);
-        $attribute->method('getName')->willReturn($attrName);
-        $attribute->method('isGlobal')->willReturn(true);
-        $value = ['bar', 'baz'];
+        $defId = 'foo';
+        $this->tag->setAllowedAttributeDefIds(['bar']);
+        self::expectException(AttributeNotAllowedException::class);
+        $this->tag->setAttribute($defId);
+    }
+
+    /**
+     * testMagicCallMethodToSetAttribute
+     * @covers \pvc\html\tag\TagVoid::__call
+     * @covers \pvc\html\tag\TagVoid::makeOrGetAttribute
+     */
+    public function testMagicCallMethodToSetAttribute(): void
+    {
+        $defId = 'foo';
+        $attribute = $this->createMock(AttributeSingleValueInterface::class);
+        $attribute->method('getDefId')->willReturn($defId);
+        $value = 'bar';
         $attribute->expects($this->once())->method('setValue')->with($value);
-
-        $this->factory->expects($this->once())->method('canMakeAttribute')->with($attrName)->willreturn(true);
-        $this->factory->method('makeAttribute')->with($attrName)->willReturn($attribute);
-        $this->tag->$attrName($value);
-    }
-
-    /**
-     * testMakeOrGetAttributeGetsAttributesEventsIfTheyExist
-     * @throws UnsetAttributeNameException
-     * @throws \pvc\html\err\InvalidAttributeIdNameException
-     * @covers \pvc\html\tag\TagVoid::makeOrGetAttribute
-     */
-    public function testMakeOrGetAttributeGetsAttributesEventsIfTheyExist(): void
-    {
-        $fooId = 'foo';
-        $foo = $this->createMock(AttributeSingleValueInterface::class);
-        $foo->method('getId')->willReturn($fooId);
-        $foo->method('isGlobal')->willReturn(true);
-        $this->tag->setAttributeObject($foo);
-
-        $barId = 'bar';
-        $bar = $this->createMock(Event::class);
-        $bar->method('getId')->willReturn($barId);
-        $this->tag->setAttributeObject($bar);
-
-        $this->tag->setAttributeObject($foo);
-        $this->tag->setAttributeObject($bar);
-
-        self::assertEquals($foo, $this->tag->makeOrGetAttribute($fooId));
-        self::assertEquals($bar, $this->tag->makeOrGetAttribute($barId));
-    }
-
-    /**
-     * testMakeOrGetAttributeMakesAttributeEventIfTheyDoNotExist
-     * @throws \pvc\html\err\InvalidAttributeIdNameException
-     * @covers \pvc\html\tag\TagVoid::makeOrGetAttribute
-     */
-    public function testMakeOrGetAttributeMakesAttributeIfItDoesNotExist(): void
-    {
-        $fooName = 'foo';
-        $foo = $this->createMock(AttributeSingleValueInterface::class);
-
-        $this->factory->expects($this->once())->method('canMakeAttribute')->with($fooName)->willReturn(true);
-        $this->factory->expects($this->once())->method('makeAttribute')->with($fooName)->willReturn($foo);
-
-        self::assertEquals($foo, $this->tag->makeOrGetAttribute($fooName));
+        $this->tag->setAllowedAttributeDefIds([$defId]);
+        $this->factory->method('getDefinitionType')->with($defId)->willReturn('Attribute');
+        $this->factory->method('makeAttribute')->with($defId)->willReturn($attribute);
+        $this->tag->$defId($value);
     }
 
     /**
      * testMakeOrGetAttributeMakesEventIfItDoesNotExist
      * @throws \pvc\html\err\InvalidAttributeIdNameException
+     * @covers \pvc\html\tag\TagVoid::__get
      * @covers \pvc\html\tag\TagVoid::makeOrGetAttribute
      */
     public function testMakeOrGetAttributeMakesEventIfItDoesNotExist(): void
     {
-        $barName = 'bar';
+        $defId = 'bar';
         $bar = $this->createMock(Event::class);
-
-        $this->factory->expects($this->once())->method('canMakeEvent')->with($barName)->willReturn(true);
-        $this->factory->expects($this->once())->method('makeEvent')->with($barName)->willReturn($bar);
-
-        self::assertEquals($bar, $this->tag->makeOrGetAttribute($barName));
+        $this->factory->method('getDefinitionType')->with($defId)->willReturn('Event');
+        $this->factory->expects($this->once())->method('makeEvent')->with($defId)->willReturn($bar);
+        $map = [
+            [DefinitionType::Attribute, []],
+            [DefinitionType::Event, [$defId]],
+            ];
+        $this->factory->method('getDefinitionIds')->willReturnMap($map);
+        self::assertEquals($bar, $this->tag->$defId);
     }
 
     /**
@@ -251,33 +302,62 @@ class TagVoidTest extends TestCase
      * @throws \pvc\html\err\InvalidAttributeIdNameException
      * @covers \pvc\html\tag\TagVoid::makeOrGetAttribute
      */
-    public function testMakeOrGetAttributeThrowsExceptionIfDoesNotExistAndCannotMake(): void
+    public function testMakeOrGetAttributeThrowsExceptionIfNotAllowed(): void
     {
-        $fooName = 'foo';
-        $this->factory->expects($this->once())->method('canMakeAttribute')->with($fooName)->willReturn(false);
-        self::expectException(InvalidAttributeIdNameException::class);
-        $this->tag->makeOrGetAttribute($fooName);
+        $defId = 'foo';
+        $this->tag->setAllowedAttributeDefIds(['bar']);
+        self::expectException(AttributeNotAllowedException::class);
+        $this->tag->$defId;
     }
 
     /**
-     * testMagicCallMethodToSetAttribute
-     * @covers \pvc\html\tag\TagVoid::__call
+     * testMakeOrGetAttributeThrowsExceptionIfDoesnotExistAndCannotMake
      * @covers \pvc\html\tag\TagVoid::makeOrGetAttribute
-     * @covers \pvc\html\tag\TagVoid::setAttribute
      */
-    public function testMagicCallMethodToSetAttribute(): void
+    public function testMakeOrGetAttributeThrowsExceptionIfDoesnotExistAndCannotMake(): void
     {
-        $attrName = 'foo';
-        $attribute = $this->createMock(AttributeSingleValueInterface::class);
-        $attribute->method('getName')->willReturn($attrName);
-        $attribute->method('isGlobal')->willReturn(true);
-        $value = 'bar';
-        $attribute->expects($this->once())->method('setValue')->with($value);
-
-        $this->factory->expects($this->once())->method('canMakeAttribute')->with($attrName)->willreturn(true);
-        $this->factory->method('makeAttribute')->with($attrName)->willReturn($attribute);
-        $this->tag->$attrName($value);
+        $defId = 'foo';
+        $this->tag->setAllowedAttributeDefIds(['foo']);
+        $this->factory->expects($this->once())->method('getDefinitionType')->with($defId)->willReturn(null);
+        self::expectException(InvalidDefinitionIdException::class);
+        $this->tag->$defId;
     }
+
+    /**
+     * testSetCustomDataMakesAttributeIfPassedAString
+     * @covers \pvc\html\tag\TagVoid::setCustomData()
+     */
+    public function testSetCustomDataMakesAttributeIfPassedAString(): void
+    {
+        $defId = 'data-foo';
+        $value = 'something';
+        $attribute = $this->createMock(AttributeCustomDataInterface::class);
+        $attribute->method('getDefId')->willReturn($defId);
+        $this->factory
+            ->expects($this->once())
+            ->method('makeCustomData')
+            ->with($defId)
+            ->willReturn($attribute);
+        $this->tag->setCustomData($defId, $value);
+        self::assertEquals($attribute, $this->tag->$defId);
+    }
+
+    /**
+     * testSetCustomDataUpdatesTesterAndValueIfPassedAnAttribute
+     * @covers \pvc\html\tag\TagVoid::setCustomData()
+     */
+    public function testSetCustomDataUpdatesTesterAndValueIfPassedAnAttribute(): void
+    {
+        $defId = 'data-foo';
+        $value = 'something';
+        $valTester = $this->createMock(ValTesterInterface::class);
+        $attribute = $this->createMock(AttributeCustomDataInterface::class);
+        $attribute->method('getDefId')->willReturn($defId);
+        $attribute->expects($this->once())->method('setTester')->with($valTester);
+        $attribute->expects($this->once())->method('setValue')->with($value);
+        $this->tag->setCustomData($attribute, $value, $valTester);
+    }
+
 
     /**
      * testGetAttributes
@@ -285,27 +365,27 @@ class TagVoidTest extends TestCase
      */
     public function testGetAttributes(): void
     {
-        $attr1Name = 'href';
+        $attr1DefId = 'href';
         $attr1 = $this->createStub(AttributeVoidInterface::class);
-        $attr1->method('getId')->willReturn($attr1Name);
+        $attr1->method('getDefId')->willReturn($attr1DefId);
 
-        $attr2Name = 'hidden';
+        $attr2DefId = 'hidden';
         $attr2 = $this->createStub(AttributeVoidInterface::class);
-        $attr2->method('getId')->willReturn($attr2Name);
+        $attr2->method('getDefId')->willReturn($attr2DefId);
 
-        $event1Name = 'onclick';
+        $event1DefId = 'onclick';
         $event1 = $this->createStub(Event::class);
-        $event1->method('getId')->willReturn($event1Name);
+        $event1->method('getDefId')->willReturn($event1DefId);
 
-        $event2Name = 'ondragstart';
+        $event2DefId = 'ondragstart';
         $event2 = $this->createStub(Event::class);
-        $event2->method('getId')->willReturn($event2Name);
+        $event2->method('getDefId')->willReturn($event2DefId);
 
-        $this->tag->setAllowedAttributeIds(['href', 'hidden']);
-        $this->tag->setAttributeObject($attr1);
-        $this->tag->setAttributeObject($attr2);
-        $this->tag->setAttributeObject($event1);
-        $this->tag->setAttributeObject($event2);
+        $this->tag->setAllowedAttributeDefIds(['href', 'hidden']);
+        $this->tag->setAttribute($attr1);
+        $this->tag->setAttribute($attr2);
+        $this->tag->setEvent($event1);
+        $this->tag->setEvent($event2);
 
         /**
          * default behavior is to return both attributes and events
@@ -316,7 +396,7 @@ class TagVoidTest extends TestCase
         self::assertEquals(2, count($this->tag->getAttributes(TagVoid::ATTRIBUTES)));
         self::assertEquals(2, count($this->tag->getAttributes(TagVoid::EVENTS)));
 
-        $this->tag->removeAttribute($event2Name);
+        $this->tag->removeAttribute($event2DefId);
         self::assertEquals(1, count($this->tag->getAttributes(TagVoid::EVENTS)));
     }
 
@@ -328,7 +408,7 @@ class TagVoidTest extends TestCase
     public function testGenerateOpeningTagWithNoAttributes(): void
     {
         $expectedResult = '<a>';
-        $this->tag->setName($this->tagName);
+        $this->tag->setName($this->tagDefId);
         self::assertEquals($expectedResult, $this->tag->generateOpeningTag());
     }
 
@@ -343,7 +423,7 @@ class TagVoidTest extends TestCase
 
         $attr1 = $this->getMockBuilder(AttributeSingleValueInterface::class)
                       ->getMockForAbstractClass();
-        $attr1->method('getId')->willReturn($attr1NameId);
+        $attr1->method('getDefId')->willReturn($attr1NameId);
         $attr1->method('getName')->willReturn($attr1NameId);
         $attr1->method('getValue')->willReturn($attr1Value);
         $attr1->method('render')->willReturn($attr1NameId . '=\'' . $attr1Value . '\'');
@@ -353,16 +433,16 @@ class TagVoidTest extends TestCase
 
         $event1 = $this->getMockBuilder(EventInterface::class)
                        ->getMockForAbstractClass();
-        $event1->method('getId')->willReturn($event1NameId);
+        $event1->method('getDefId')->willReturn($event1NameId);
         $event1->method('getName')->willReturn($event1NameId);
         $event1->method('getScript')->willReturn($event1Value);
         $event1->method('render')->willReturn($event1NameId . '=\'' . $event1Value . '\'');
 
-        $this->tag->setName($this->tagName);
+        $this->tag->setName($this->tagDefId);
 
-        $this->tag->setAllowedAttributeIds(['href']);
-        $this->tag->setAttributeObject($attr1);
-        $this->tag->setAttributeObject($event1);
+        $this->tag->setAllowedAttributeDefIds(['href']);
+        $this->tag->setAttribute($attr1);
+        $this->tag->setEvent($event1);
 
         $expectedResult = "<a href='bar' onclick='some javascript'>";
         self::assertEquals($expectedResult, $this->tag->generateOpeningTag());

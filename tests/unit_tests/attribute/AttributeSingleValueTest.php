@@ -11,6 +11,7 @@ namespace pvcTests\html\unit_tests\attribute;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\AttributeSingleValue;
+use pvc\html\err\InvalidAttributeException;
 use pvc\html\err\InvalidAttributeValueException;
 use pvc\html\err\InvalidNumberOfParametersException;
 use pvc\interfaces\validator\ValTesterInterface;
@@ -25,6 +26,7 @@ class AttributeSingleValueTest extends TestCase
     {
         $this->tester = $this->createMock(ValTesterInterface::class);
         $this->attribute = new AttributeSingleValue();
+        $this->attribute->setName('foo');
         $this->attribute->setTester($this->tester);
     }
 
@@ -61,6 +63,17 @@ class AttributeSingleValueTest extends TestCase
     }
 
     /**
+     * testSetValuefailsWithEmptyArgument
+     * @throws InvalidAttributeValueException
+     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
+     */
+    public function testSetValuefailsWithEmptyArgument(): void
+    {
+        self::expectException(InvalidAttributeValueException::class);
+        $this->attribute->setValue('');
+    }
+
+    /**
      * testSetValueFailsWithMoreThanOneArgument
      * @throws InvalidAttributeValueException
      * @covers \pvc\html\attribute\AttributeSingleValue::setValue
@@ -89,6 +102,7 @@ class AttributeSingleValueTest extends TestCase
      * @throws InvalidAttributeValueException
      * @covers \pvc\html\attribute\AttributeSingleValue::setValue
      * @covers \pvc\html\attribute\AttributeSingleValue::getValue
+     * @covers \pvc\html\attribute\AttributeSingleValue::__get
      */
     public function testSetGetValue(): void
     {
@@ -96,6 +110,17 @@ class AttributeSingleValueTest extends TestCase
         $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue($value);
         self::assertEquals($value, $this->attribute->getValue());
+        self::assertEquals($value, $this->attribute->value);
+    }
+
+    /**
+     * testMagicGetThrowsExceptionForBadAttribute
+     * @covers \pvc\html\attribute\AttributeSingleValue::__get
+     */
+    public function testMagicGetThrowsExceptionForBadAttribute(): void
+    {
+        self::expectException(InvalidAttributeException::class);
+        $this->attribute->foo;
     }
 
     /**

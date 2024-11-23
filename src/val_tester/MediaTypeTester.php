@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace pvc\html\val_tester;
 
-use pvc\interfaces\http\mimetype\MimeTypesInterface;
+use pvc\interfaces\http\mime\MimeTypesInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
 /**

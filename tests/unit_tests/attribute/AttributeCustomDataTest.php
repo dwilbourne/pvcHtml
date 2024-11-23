@@ -31,10 +31,10 @@ class AttributeCustomDataTest extends TestCase
      */
     public function testSetGetName(): void
     {
-        $name = 'foo';
+        $name = 'data-foo';
         $attribute = new AttributeCustomData();
         $attribute->setName($name);
-        $expectedResult = 'data-' . $name;
+        $expectedResult = $name;
         self::assertEquals($expectedResult, $attribute->getName());
     }
 
@@ -43,12 +43,29 @@ class AttributeCustomDataTest extends TestCase
      * @throws InvalidCustomDataNameException
      * @covers \pvc\html\attribute\AttributeCustomData::setName
      */
-    public function testSetNameFailsWithInvalidCustomDataName(): void
+    public function testSetNameFailsWithunprefixedCustomDataName(): void
     {
         /**
-         * must be lower case and/or numbers
+         * must be lower case and/or numbers prefixed by 'data-'
          */
-        $name = 'HOB!@';
+        $name = 'foo';
+        $attribute = new AttributeCustomData();
+        self::expectException(InvalidCustomDataNameException::class);
+        $attribute->setName($name);
+        unset($attribute);
+    }
+
+    /**
+     * testSetnameFailsWithCustomNameThatHasIllegalCharacters
+     * @throws InvalidCustomDataNameException
+     * @covers \pvc\html\attribute\AttributeCustomData::setName
+     */
+    public function testSetnameFailsWithCustomNameThatHasIllegalCharacters(): void
+    {
+        /**
+         * must be lower case and/or numbers prefixed by 'data-'
+         */
+        $name = 'data-%*(HB9';
         $attribute = new AttributeCustomData();
         self::expectException(InvalidCustomDataNameException::class);
         $attribute->setName($name);

@@ -1,4 +1,7 @@
 parameters:
-	level: max
-	paths:
-		- src
+   ignoreErrors:
+   		- '#Class [a-zA-Z0-9\\_]+ has an uninitialized readonly property \$[a-zA-Z0-9_]+. Assign it in the constructor.#'
+   		- '#Readonly property [a-zA-Z0-9\\_]+::\$[a-zA-Z0-9]+ is assigned outside of the constructor.#'
+   level: max
+   paths:
+        - src

@@ -1,0 +1,20 @@
+[
+	{
+		"defId": "accept",
+		"defType": "Attribute",
+		"name": "accept",
+		"concrete": "AttributeMultiValue",
+		"valueTester": "pvc\\html\\val_tester\\MediaTypeTester",
+		"global": false,
+		"caseSensitive": false
+	},
+	{
+		"defId": "accept",
+		"defType": "Attribute",
+		"name": "accept",
+		"concrete": "AttributeMultiValue",
+		"valueTester": "pvc\\html\\val_tester\\MediaTypeTester",
+		"global": false,
+		"caseSensitive": false
+	}
+]

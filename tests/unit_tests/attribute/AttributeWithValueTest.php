@@ -10,7 +10,6 @@ namespace pvcTests\html\unit_tests\attribute;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\AttributeWithValue;
-use pvc\html\err\UnsetValueTesterException;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeWithValueTest extends TestCase

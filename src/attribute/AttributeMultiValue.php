@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace pvc\html\attribute;
 
+use pvc\html\err\InvalidAttributeException;
 use pvc\html\err\InvalidAttributeValueException;
 use pvc\html\err\InvalidNumberOfParametersException;
 use pvc\interfaces\html\attribute\AttributeMultiValueInterface;
@@ -49,7 +50,7 @@ class AttributeMultiValue extends AttributeWithValue implements AttributeMultiVa
              * test the array element
              */
             if (!$this->getTester()->testValue(($value))) {
-                throw new InvalidAttributeValueException();
+                throw new InvalidAttributeValueException($this->getName(), $value);
             }
             $newValues[] = $value;
         }
@@ -69,6 +70,23 @@ class AttributeMultiValue extends AttributeWithValue implements AttributeMultiVa
         return $this->values;
     }
 
+    /**
+     * __get
+     * add a little fluency so you can write ->value instead of ->getValue()
+     * @param string $id
+     * @return array<string>
+     * @throws InvalidAttributeException
+     */
+    public function __get(string $id): array
+    {
+        if ($id == 'value' || $id == 'values') {
+            return $this->getValue();
+        } else {
+            throw new InvalidAttributeException($id);
+        }
+    }
+
+
 
     /**
      * render
@@ -77,7 +95,7 @@ class AttributeMultiValue extends AttributeWithValue implements AttributeMultiVa
     public function render(): string
     {
         if (empty($this->getValues())) {
-            throw new InvalidAttributeValueException($this->getName());
+            throw new InvalidAttributeValueException($this->getName(), '{null}');
         }
         return $this->name . "='" . implode(' ', $this->values) . "'";
     }

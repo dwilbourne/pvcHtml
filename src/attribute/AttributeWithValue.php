@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace pvc\html\attribute;
 
-use pvc\html\err\UnsetValueTesterException;
 use pvc\interfaces\html\attribute\AttributeWithValueInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 
@@ -26,7 +25,7 @@ abstract class AttributeWithValue extends AttributeVoid implements AttributeWith
      * it knows nothing about other attributes and elements which are outside its own scope.
      *
      * Also, values are strings when you write html by hand.  But because this library makes live objects,
-     * we can work with various kinds of data datypes if we need to.
+     * we can work with various kinds of data ypes if we need to.
      */
     protected ValTesterInterface $tester;
 
@@ -39,10 +38,10 @@ abstract class AttributeWithValue extends AttributeVoid implements AttributeWith
 
     /**
      * I would normally put in a constructor with the ValueTester object as an argument since it's a dependency.  But
-     * ContainerFactory makes void attributes as well as attributes that have values within the same method and void
-     * attributes obviously do not have value testers.  The Containerfactory checks to see if there is a value tester
-     * in the definition and then sets it if there is one using a method call.  So do not put the dependency into the
-     * constructor here.
+     * HtmlFactory makes void attributes as well as attributes that have values within the same method and void
+     * attributes obviously do not have value testers.  The HtmlFactory checks to see if there is a value tester
+     * in the definition and then sets it if there is one using a method call.  If there is no value tster in the
+     * definition, it defaults to AlwaysTrueTester.  So do not put the dependency into the constructor here.
      */
     /**
      * getTester
@@ -55,11 +54,11 @@ abstract class AttributeWithValue extends AttributeVoid implements AttributeWith
 
     /**
      * setTester
-     * @param ValTesterInterface<string> $tester
+     * @param ValTesterInterface<string> $valTester
      */
-    public function setTester(ValTesterInterface $tester): void
+    public function setTester(ValTesterInterface $valTester): void
     {
-        $this->tester = $tester;
+        $this->tester = $valTester;
     }
 
     /**

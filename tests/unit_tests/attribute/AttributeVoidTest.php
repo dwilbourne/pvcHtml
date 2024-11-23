@@ -26,17 +26,15 @@ class AttributeVoidTest extends TestCase
     }
 
     /**
-     * testSetIdThrowsExceptionWithInvalidId
-     * @throws InvalidAttributeIdNameException
-     * @covers \pvc\html\attribute\AttributeVoid::setId
+     * testSetGetDefId
+     * @covers \pvc\html\attribute\AttributeVoid::setDefId()
+     * @covers \pvc\html\attribute\AttributeVoid::getDefId()
      */
-    public function testSetIdThrowsExceptionWithInvalidId(): void
+    public function testSetGetDefId(): void
     {
-        $id = '%7g(';
-        $attribute = new AttributeVoid();
-        self::expectException(InvalidAttributeIdNameException::class);
-        $attribute->setId($id);
-        unset($attribute);
+        $testId = 'hidden';
+        $this->attribute->setDefId($testId);
+        self::assertEquals($testId, $this->attribute->getDefId());
     }
 
     /**
@@ -53,18 +51,6 @@ class AttributeVoidTest extends TestCase
         unset($attribute);
     }
 
-    /**
-     * testSetGetId
-     * @throws InvalidAttributeIdNameException
-     * @covers \pvc\html\attribute\AttributeVoid::setId()
-     * @covers \pvc\html\attribute\AttributeVoid::getId()
-     */
-    public function testSetGetId(): void
-    {
-        $testId = 'hidden';
-        $this->attribute->setId($testId);
-        self::assertEquals($testId, $this->attribute->getId());
-    }
 
     /**
      * testSetGetName

@@ -21,20 +21,23 @@ class _HtmlXDataTest extends XDataTestMaster
      * @throws ReflectionException
      * @covers \pvc\html\err\_HtmlXData::getLocalXCodes
      * @covers \pvc\html\err\_HtmlXData::getXMessageTemplates
-     * @covers \pvc\html\err\AmbiguousMethodCallException
      * @covers \pvc\html\err\AttributeNotAllowedException
-     * @covers \pvc\html\err\DefinitionsFileException
+     * @covers \pvc\html\err\InvalidDefinitionsFileException
+     * @covers \pvc\html\err\InvalidAttributeException
      * @covers \pvc\html\err\InvalidAttributeIdNameException
      * @covers \pvc\html\err\InvalidAttributeValueException
      * @covers \pvc\html\err\InvalidCustomDataNameException
      * @covers \pvc\html\err\InvalidEventNameException
-     * @covers \pvc\html\err\InvalidInnerTextException
-     * @covers \pvc\html\err\InvalidMethodCallException
      * @covers \pvc\html\err\InvalidNumberOfParametersException
-     * @covers \pvc\html\err\InvalidSubTagException
+     * @covers \pvc\html\err\ChildElementNotAllowedException
      * @covers \pvc\html\err\InvalidTagNameException
-     * @covers \pvc\html\err\UnsetAttributeNameException
-     * @covers \pvc\html\err\UnsetTagNameException
+     * @covers \pvc\html\err\MakeDefinitionException
+     * @covers \pvc\html\err\InvalidAttributeValueTesterNameException
+     * @covers \pvc\html\err\DuplicateDefinitionIdException
+     * @covers \pvc\html\err\InvalidDefinitionIdException
+     * @covers \pvc\html\err\DTOExtraPropertyException
+     * @covers \pvc\html\err\DTOMissingPropertyException
+     * @covers \pvc\html\err\DTOInvalidPropertyValueException
      */
     public function testValidatorXData(): void
     {

@@ -26,6 +26,7 @@ class EventTest extends TestCase
     {
         $this->scriptTester = $this->createMock(ValTesterInterface::class);
         $this->event = new Event($this->scriptTester);
+        $this->event->setName('foo');
     }
 
     /**

@@ -20,11 +20,8 @@ class AttributeVoid implements AttributeInterface
 {
     /**
      * @var string
-     * because the 'type' attribute appears in both input and button elements and the values of the type attribute
-     * are different between the two, the id can be different from the name.  The definitions use ids of
-     * type_input and type_button to differentiate between the two
      */
-    protected string $id;
+    protected string $defId;
 
     /**
      * @var string
@@ -38,24 +35,21 @@ class AttributeVoid implements AttributeInterface
     protected bool $global = false;
 
     /**
-     * getId
+     * getDefId
      * @return string
      */
-    public function getId(): string
+    public function getDefId(): string
     {
-        return $this->id;
+        return $this->defId;
     }
 
     /**
-     * setId
-     * @param string $id
+     * setDefId
+     * @param string $defId
      */
-    public function setId(string $id): void
+    public function setDefId(string $defId): void
     {
-        if (!$this->isValidAttributeIdName($id)) {
-            throw new InvalidAttributeIdNameException($id);
-        }
-        $this->id = $id;
+        $this->defId = $defId;
     }
 
     /**
@@ -91,7 +85,7 @@ class AttributeVoid implements AttributeInterface
      *
      *  As a practical matter, pre-defined html attribute names are purely alphabetic with a couple that are
      *  hyphenated.  And since the usual manner of
-     *  creating an attribute is in a factory / container, most times the attribute names come right from the
+     *  creating an attribute is in a htmlFactory / container, most times the attribute names come right from the
      *  html specification.  However, you can create an attribute using an arbitrary id and at least in some browsers,
      *  you can get at the value using javascript even if the id is not prefixed with 'data-'.  So this
      *  validation tries to find the middle ground between what the language spec says and how browsers
@@ -127,15 +121,6 @@ class AttributeVoid implements AttributeInterface
     }
 
     /**
-     * render
-     * @return string
-     */
-    public function render(): string
-    {
-        return $this->getName();
-    }
-
-    /**
      * setValue
      * @param string ...$values
      * @throws InvalidNumberOfParametersException
@@ -154,5 +139,14 @@ class AttributeVoid implements AttributeInterface
     public function getValue(): array|string|null
     {
         return null;
+    }
+
+    /**
+     * render
+     * @return string
+     */
+    public function render(): string
+    {
+        return $this->getName();
     }
 }

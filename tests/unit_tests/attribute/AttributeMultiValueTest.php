@@ -11,6 +11,7 @@ namespace pvcTests\html\unit_tests\attribute;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\AttributeMultiValue;
+use pvc\html\err\InvalidAttributeException;
 use pvc\html\err\InvalidAttributeValueException;
 use pvc\html\err\InvalidNumberOfParametersException;
 use pvc\interfaces\validator\ValTesterInterface;
@@ -28,6 +29,7 @@ class AttributeMultiValueTest extends TestCase
     {
         $this->tester = $this->createMock(ValTesterInterface::class);
         $this->attribute = new AttributeMultiValue();
+        $this->attribute->setName('foo');
         $this->attribute->setTester($this->tester);
     }
 
@@ -69,6 +71,7 @@ class AttributeMultiValueTest extends TestCase
      * @throws InvalidAttributeValueException
      * @covers \pvc\html\attribute\AttributeMultiValue::setValue
      * @covers \pvc\html\attribute\AttributeMultiValue::getValue
+     * @covers \pvc\html\attribute\AttributeMultiValue::__get
      * @covers \pvc\html\attribute\AttributeMultiValue::setValues
      * @covers \pvc\html\attribute\AttributeMultiValue::getValues
      */
@@ -78,6 +81,18 @@ class AttributeMultiValueTest extends TestCase
         $testValue = ['bar', 'baz', 'quux'];
         $this->attribute->setValues(...$testValue);
         self::assertEquals($testValue, $this->attribute->getValues());
+        self::assertEquals($testValue, $this->attribute->value);
+        self::assertEquals($testValue, $this->attribute->values);
+    }
+
+    /**
+     * testMagicGetThrowsExceptionForBadAttribute
+     * @covers \pvc\html\attribute\AttributeMultiValue::__get
+     */
+    public function testMagicGetThrowsExceptionForBadAttribute(): void
+    {
+        self::expectException(InvalidAttributeException::class);
+        $this->attribute->foo;
     }
 
     /**

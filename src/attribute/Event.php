@@ -52,7 +52,7 @@ class Event extends AttributeVoid implements EventInterface
     public function setScript(string $script): void
     {
         if (!$this->scriptTester->testValue($script)) {
-            throw new InvalidAttributeValueException();
+            throw new InvalidAttributeValueException($this->getName(), $script);
         }
         $this->script = $script;
     }

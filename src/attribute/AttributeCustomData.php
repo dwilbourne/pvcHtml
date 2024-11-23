@@ -8,11 +8,12 @@ declare(strict_types=1);
 namespace pvc\html\attribute;
 
 use pvc\html\err\InvalidCustomDataNameException;
+use pvc\interfaces\html\attribute\AttributeCustomDataInterface;
 
 /**
  * Class AttributeCustomData
  */
-class AttributeCustomData extends AttributeSingleValue
+class AttributeCustomData extends AttributeSingleValue implements AttributeCustomDataInterface
 {
     /**
      * setName
@@ -28,9 +29,14 @@ class AttributeCustomData extends AttributeSingleValue
          * be prefixed with 'data-'. It should not contain any uppercase letters.  This regex restricts it to lower
          * case letters and numbers
          */
-        if (!$this->isValidAttributeIdName($name)) {
-            throw new InvalidCustomDataNameException();
+        if (!str_starts_with($name, 'data-')) {
+            throw new InvalidCustomDataNameException($name);
         }
-        $this->name = 'data-' . $name;
+
+        $suffix = substr($name, 5);
+        if (!$this->isValidAttributeIdName($suffix)) {
+            throw new InvalidCustomDataNameException($name);
+        }
+        $this->name = $name;
     }
 }

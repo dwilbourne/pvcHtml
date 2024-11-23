@@ -1,0 +1,324 @@
+[
+	{
+		"defId": "accessKeyTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"arg": "pvc\\html\\val_tester\\regex\\RegexAccessKey"
+	},
+	{
+		"defId": "urlTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\filter_var\\FilterVarTester",
+		"arg": "pvc\\filtervar\\FilterVarValidateUrl"
+	},
+	{
+		"defId": "autocompleteTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"on",
+			"off"
+		]
+	},
+	{
+		"defId": "cssClassTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"arg": "pvc\\html\\val_tester\\regex\\RegexCssClass"
+	},
+	{
+		"defId": "trueFalseTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"arg": "pvc\\regex\\boolean\\RegexTrueFalse"
+	},
+	{
+		"defId": "crossOriginTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"anonymous",
+			"usecredentials"
+		]
+	},
+	{
+		"defId": "javascriptDateTimeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\parser\\ParserTester",
+		"arg": "pvc\\parser\\date_time\\ParserJavascriptDateTime"
+	},
+	{
+		"defId": "textDirectionTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"arg": "pvc\\html\\val_tester\\regex\\RegexTextDirection"
+	},
+	{
+		"defId": "fileNameTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"arg": "pvc\\regex\\filename\\RegexWindowsFilename"
+	},
+	{
+		"defId": "encTypeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"application\/x-www-form-urlencoded",
+			"multipart\/form-data"
+		]
+	},
+	{
+		"defId": "positiveIntegerSimpleTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"arg": "pvc\\regex\\numeric\\RegexPositiveIntegerSimple"
+	},
+	{
+		"defId": "languageCodeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\callable\\CallableTester",
+		"arg": [
+			"pvc\\intl\\LanguageCodes",
+			"validate"
+		]
+	},
+	{
+		"defId": "htmlIdNameTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"arg": "pvc\\html\\val_tester\\regex\\RegexIdName"
+	},
+	{
+		"defId": "inputModeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"none",
+			"text",
+			"decimal",
+			"numeric",
+			"tel",
+			"search",
+			"email",
+			"url"
+		]
+	},
+	{
+		"defId": "methodTypeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"get",
+			"post",
+			"put",
+			"patch",
+			"delete"
+		]
+	},
+	{
+		"defId": "mediaTypeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\html\\val_tester\\MediaTypeTester",
+		"arg": "pvc\\interfaces\\http\\mime\\MimeTypesInterface"
+	},
+	{
+		"defId": "regexPatternTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\callable\\CallableTester",
+		"arg": [
+			"pvc\\regex\\Regex",
+			"validatePattern"
+		]
+	},
+	{
+		"defId": "popoverTargetActionTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"show",
+			"hide",
+			"toggle"
+		]
+	},
+	{
+		"defId": "preloadTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"auto",
+			"metadata",
+			"none"
+		]
+	},
+	{
+		"defId": "referrerPolicyTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"no-referrer",
+			"no-referrer-when-downgrade",
+			"origin",
+			"origin-when-cross-origin",
+			"same-origin",
+			"strict-origin",
+			"strict-origin-when-cross-origin",
+			"unsafe-url"
+		]
+	},
+	{
+		"defId": "relChoiceTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"nofollow",
+			"noopener",
+			"noreferrer",
+			"stylesheet",
+			"icon",
+			"canonical",
+			"dns-prefetch",
+			"external",
+			"author",
+			"help",
+			"license",
+			"prev",
+			"next",
+			"bookmark",
+			"search",
+			"alternate",
+			"tag"
+		]
+	},
+	{
+		"defId": "sandBoxChoiceTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"allow-downloads",
+			"allow-forms",
+			"allow-modals",
+			"allow-orientation-lock",
+			"allow-pointer-lock",
+			"allow-popups",
+			"allow-popups-to-escape-sandbox",
+			"allow-presentation",
+			"allow-same-origin",
+			"allow-scripts",
+			"allow-storage-access-by-user-activation",
+			"allow-top-navigation",
+			"allow-top-navigation-by-user-activation",
+			"allow-top-navigation-to-custom-protocols"
+		]
+	},
+	{
+		"defId": "scopeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"col",
+			"row",
+			"colgroup",
+			"rowgroup"
+		]
+	},
+	{
+		"defId": "shapeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"rect",
+			"circle",
+			"poly"
+		]
+	},
+	{
+		"defId": "sizesTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"arg": "pvc\\html\\val_tester\\regex\\RegexSizes"
+	},
+	{
+		"defId": "targetTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"_blank",
+			"_parent",
+			"_self",
+			"_top"
+		]
+	},
+	{
+		"defId": "yesNoTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\regex\\RegexTester",
+		"arg": "pvc\\regex\\boolean\\RegexYesNo"
+	},
+	{
+		"defId": "buttonTypeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"submit",
+			"reset",
+			"button"
+		]
+	},
+	{
+		"defId": "inputTypeTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"button",
+			"checkbox",
+			"color",
+			"date",
+			"datetime-local",
+			"email",
+			"file",
+			"hidden",
+			"image",
+			"month",
+			"number",
+			"password",
+			"radio",
+			"range",
+			"reset",
+			"search",
+			"submit",
+			"tel",
+			"text",
+			"time",
+			"url",
+			"week"
+		]
+	},
+	{
+		"defId": "charsetTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\callable\\CallableTester",
+		"arg": [
+			"pvc\\intl\\Charset",
+			"isValid"
+		]
+	},
+	{
+		"defId": "wrapTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"hard",
+			"soft",
+			"off"
+		]
+	},
+	{
+		"defId": "xmlnsTester",
+		"defType": "AttributeValueTester",
+		"concrete": "pvc\\validator\\val_tester\\list_choice\\ListChoiceTester",
+		"arg": [
+			"http:\/\/www.w3.org\/1999\/xhtml"
+		]
+	}
+]

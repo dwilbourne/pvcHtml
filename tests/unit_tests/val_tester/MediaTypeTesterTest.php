@@ -10,7 +10,7 @@ namespace pvcTests\html\unit_tests\val_tester;
 
 use PHPUnit\Framework\TestCase;
 use pvc\html\val_tester\MediaTypeTester;
-use pvc\interfaces\http\mimetype\MimeTypesInterface;
+use pvc\interfaces\http\mime\MimeTypesInterface;
 
 class MediaTypeTesterTest extends TestCase
 {

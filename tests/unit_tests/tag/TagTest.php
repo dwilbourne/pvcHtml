@@ -10,14 +10,11 @@ namespace pvcTests\html\unit_tests\tag;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use pvc\html\err\AmbiguousMethodCallException;
-use pvc\html\err\InvalidMethodCallException;
-use pvc\html\err\InvalidSubTagException;
+use pvc\html\err\ChildElementNotAllowedException;
 use pvc\html\tag\Tag;
-use pvc\interfaces\html\attribute\AttributeInterface;
 use pvc\interfaces\html\factory\HtmlFactoryInterface;
 use pvc\interfaces\html\tag\TagInterface;
-use pvc\interfaces\html\tag\TagVoidInterface;
+use pvc\interfaces\msg\MsgFactoryInterface;
 use pvc\interfaces\msg\MsgInterface;
 
 /**
@@ -33,211 +30,179 @@ class TagTest extends TestCase
     /**
      * @var string
      */
-    protected string $tagName;
+    protected string $tagDefId;
 
-    protected HtmlFactoryInterface|MockObject $factory;
+    protected HtmlFactoryInterface|MockObject $htmlFactory;
 
-    protected array $sampleAllowedSubtags = ['foo', 'bar', 'baz'];
+    protected MsgFactoryInterface|MockObject $msgFactory;
 
-    protected MsgInterface $testMsg;
-
-    protected TagVoidInterface|MockObject $mockInnerTagVoid;
-
-    protected TagInterface|MockObject $mockInnerTag;
+    protected array $sampleAllowedChildDefIds = ['foo', 'bar', 'baz'];
 
     public function setUp(): void
     {
-        $this->tagName = 'foo';
-        $this->factory = $this->createMock(HtmlFactoryInterface::class);
+        $this->tagDefId = 'foo';
+        $this->htmlFactory = $this->createMock(HtmlFactoryInterface::class);
+        $this->msgFactory = $this->createMock(MsgFactoryInterface::class);
         $this->tag = new Tag();
-        $this->tag->setHtmlFactory($this->factory);
-        $this->tag->setName($this->tagName);
-        $this->testMsg = $this->createMock(MsgInterface::class);
-        $this->mockInnerTagVoid = $this->createMock(TagVoidInterface::class);
-        $this->mockInnerTag = $this->createMock(TagInterface::class);
+        $this->tag->setHtmlFactory($this->htmlFactory);
+        $this->tag->setMsgFactory($this->msgFactory);
+        $this->tag->setName($this->tagDefId);
     }
 
     /**
-     * testSetGetAllowedSubtags
-     * @throws InvalidSubTagException
-     * @covers \pvc\html\tag\Tag::setAllowedSubTags
-     * @covers \pvc\html\tag\Tag::getAllowedSubTags
+     * testSetGetHtmlFactory
+     * @covers \pvc\html\tag\Tag::getHtmlFactory()
+     * @covers \pvc\html\tag\Tag::setHtmlFactory()
      */
-    public function testSetGetAllowedSubtags(): void
+    public function testSetGetHtmlFactory(): void
     {
-        $this->tag->setAllowedSubTags($this->sampleAllowedSubtags);
-        self::assertEqualsCanonicalizing($this->sampleAllowedSubtags, $this->tag->getAllowedSubTags());
+        self::assertEquals($this->htmlFactory, $this->tag->getHtmlFactory());
     }
 
     /**
-     * testAddSubTagObjectThrowsExceptionWhenSubTagNotAllowed
-     * @throws InvalidSubTagException
-     * @covers \pvc\html\tag\Tag::addSubTagObject
-     * @covers \pvc\html\tag\Tag::canAddSubTag
+     * testSetGetMsgFactory
+     * @covers \pvc\html\tag\Tag::getMsgFactory
+     * @covers \pvc\html\tag\Tag::setMsgFactory
      */
-    public function testAddSubTagObjectThrowsExceptionWhenSubTagNotAllowed(): void
+    public function testSetGetMsgFactory(): void
     {
+        self::assertEquals($this->msgFactory, $this->tag->getMsgFactory());
+    }
+
+    /**
+     * testSetGetAllowedChildDefIds
+     * @throws ChildElementNotAllowedException
+     * @covers \pvc\html\tag\Tag::setAllowedChildDefIds
+     * @covers \pvc\html\tag\Tag::getAllowedChildDefIds
+     */
+    public function testSetGetAllowedChildDefIds(): void
+    {
+        $this->tag->setAllowedChildDefIds($this->sampleAllowedChildDefIds);
+        self::assertEqualsCanonicalizing($this->sampleAllowedChildDefIds, $this->tag->getAllowedChildDefIds());
+    }
+
+    /**
+     * testIsAllowedChildDefIdReturnsTrueIfAllowedChildDefIdsIsEmpty
+     * @covers \pvc\html\tag\Tag::isAllowedChildDefId()
+     * note that it being allowed is not the same thing as being able to make it
+     */
+    public function testIsAllowedChildDefIdReturnsTrueIfAllowedChildDefIdsIsEmpty(): void
+    {
+        $defId = 'foo';
+        self::assertTrue($this->tag->isAllowedChildDefId($defId));
+    }
+
+    /**
+     * testSetChildThrowsExceptionWhenChildIsNotAllowed
+     * @throws ChildElementNotAllowedException
+     * @covers \pvc\html\tag\Tag::setChild
+     * @covers \pvc\html\tag\Tag::isAllowedChildDefId
+     */
+    public function testSetChildThrowsExceptionWhenChildIsNotAllowed(): void
+    {
+        $disallowedDefId = 'tr';
+        $child = $this->createMock(TagInterface::class);
+        $child->method('getDefId')->willReturn($disallowedDefId);
+        $this->tag->setAllowedChildDefIds($this->sampleAllowedChildDefIds);
+        self::expectException(ChildElementNotAllowedException::class);
+        $this->tag->setChild($child);
+    }
+
+    /**
+     * testSetGetChild
+     * @throws ChildElementNotAllowedException
+     * @covers \pvc\html\tag\Tag::setChild
+     * @covers \pvc\html\tag\Tag::getChild()
+     * @covers \pvc\html\tag\Tag::isAllowedChildDefId
+     */
+    public function testSetGetChild(): void
+    {
+        $defId = $childKey = 'foo';
         $subtag = $this->createMock(TagInterface::class);
-        $subtag->method('getName')->willReturn('tr');
-        $this->tag->setAllowedSubTags($this->sampleAllowedSubtags);
-
-        self::expectException(InvalidSubTagException::class);
-
-        $this->tag->addSubTagObject($subtag);
+        $subtag->method('getDefId')->willReturn($defId);
+        $this->tag->setAllowedChildDefIds($this->sampleAllowedChildDefIds);
+        $this->tag->setChild($subtag, $childKey);
+        self::assertEquals($subtag, $this->tag->getChild($childKey));
     }
 
     /**
-     * testAddSubTagObject
-     * @throws InvalidSubTagException
-     * @covers \pvc\html\tag\Tag::addSubTagObject
-     * @covers \pvc\html\tag\Tag::canAddSubTag
+     * testGetChildReturnsNullIfChildKeyDoesNotExist
+     * @covers \pvc\html\tag\Tag::getChild
      */
-    public function testAddSubTagObject(): void
+    public function testGetChildReturnsNullIfChildKeyDoesNotExist(): void
     {
-        $subtag = $this->createMock(TagInterface::class);
-        $subtag->method('getName')->willReturn('foo');
-        $this->tag->setAllowedSubTags($this->sampleAllowedSubtags);
-        $this->tag->addSubTagObject($subtag);
-        self::assertEquals($subtag, $this->tag->getSubTag($subtag->getName()));
+        self::assertNull($this->tag->getChild('form'));
     }
 
     /**
-     * testGetSubTagReturnsNullIfSubtagDoesNotExist
-     * @covers \pvc\html\tag\Tag::getSubTag
+     * testSetChildMakesNewChildIfPassedAStringArgument
+     * @throws ChildElementNotAllowedException
+     * @covers \pvc\html\tag\Tag::setChild()
+     * @covers \pvc\html\tag\Tag::getChild()
      */
-    public function testGetSubTagReturnsNullIfSubtagDoesNotExist(): void
+    public function testSetChildMakesNewChildIfPassedAStringArgument(): void
     {
-        self::assertNull($this->tag->getSubTag('form'));
+        $defId = $childKey ='foo';
+        $this->tag->setAllowedChildDefIds([$defId]);
+
+        $child = $this->createMock(Tag::class);
+        $child->method('getDefId')->willReturn($defId);
+        $this->htmlFactory->method('makeElement')->with($defId)->willReturn($child);
+
+        $this->tag->setChild($defId, $childKey);
+        self::assertEquals($child, $this->tag->getChild($childKey));
     }
 
     /**
-     * testGetSubTagReturnsFirstInstanceOfSubtag
-     * @throws InvalidSubTagException
-     * @covers \pvc\html\tag\Tag::getSubTag
+     * testGeneratingChildKeys
+     * @covers \pvc\html\tag\Tag::generateChildKey()
      */
-    public function testGetSubTagReturnsFirstInstanceOfSubtag(): void
+    public function testGeneratingChildKeys(): void
     {
-        $tagName = 'div';
+        $defId = 'foo';
+        $this->tag->setAllowedChildDefIds([$defId]);
 
-        $subtag1 = $this->createMock(TagInterface::class);
-        $subtag1->method('getName')->willReturn($tagName);
+        $child1 = $this->createMock(Tag::class);
+        $child2 = $this->createMock(Tag::class);
+        $child3 = $this->createMock(Tag::class);
 
-        $subtag2 = $this->createMock(TagInterface::class);
-        $subtag2->method('getName')->willReturn($tagName);
+        $child1->method('getDefId')->willReturn($defId);
+        $child2->method('getDefId')->willReturn($defId);
+        $child3->method('getDefId')->willReturn($defId);
 
-        $this->tag->addSubTagObject($subtag1);
-        $this->tag->addSubTagObject($subtag2);
+        $child1->method('getName')->willReturn($defId);
+        $child2->method('getName')->willReturn($defId);
+        $child3->method('getName')->willReturn($defId);
 
-        self::assertEquals($subtag1, $this->tag->getSubTag($tagName));
-    }
+        $this->tag->setChild($child1);
+        $this->tag->setChild($child2);
+        $this->tag->setChild($child3);
 
-    /**
-     * testAddSubTag
-     * @throws InvalidSubTagException
-     * @covers \pvc\html\tag\Tag::addSubTag
-     */
-    public function testAddSubTagWithFluentSetter(): void
-    {
-        $fooName = 'foo';
-        $foo = $this->createMock(TagInterface::class);
-        $foo->method('getName')->willReturn($fooName);
-        $this->factory->expects($this->once())->method('makeElement')->with($fooName)->willReturn($foo);
-        self::assertEquals($foo, $this->tag->addSubTag($fooName));
-    }
-
-    /**
-     * testMagicCallThrowsExceptionWithAmbiguousName
-     * @covers \pvc\html\tag\Tag::__call
-     */
-    public function testMagicCallThrowsExceptionWithAmbiguousName(): void
-    {
-        $fooName = 'foo';
-        $this->factory->method('isAmbiguousName')->with($fooName)->willReturn(true);
-        self::expectException(AmbiguousMethodCallException::class);
-        $this->tag->$fooName();
-    }
-
-    /**
-     * testMagicCallCreatesGetsElement
-     * @covers \pvc\html\tag\Tag::__call
-     */
-    public function testMagicCallCreatesGetsElement(): void
-    {
-        $fooName = 'foo';
-        $this->factory->method('isAmbiguousName')->with($fooName)->willReturn(false);
-        $foo = $this->createMock(TagInterface::class);
-        $foo->method('getName')->willReturn($fooName);
-        $this->factory->expects($this->once())->method('canMakeElement')->with($fooName)->willReturn(true);
-        $this->factory->expects($this->once())->method('makeElement')->with($fooName)->willReturn($foo);
-        $this->tag->$fooName();
-        self::assertEquals($foo, $this->tag->getSubTag($fooName));
-    }
-
-    /**
-     * testMagicCallCreatesGetsAttributeId
-     * @covers \pvc\html\tag\Tag::__call
-     */
-    public function testMagicCallCreatesGetsAttributeId(): void
-    {
-        $fooNameId = 'foo';
-        $this->factory->method('isAmbiguousName')->with($fooNameId)->willReturn(false);
-        $foo = $this->createMock(AttributeInterface::class);
-        $foo->method('getId')->willReturn($fooNameId);
-        $foo->method('getName')->willReturn($fooNameId);
-        $foo->method('isGlobal')->willReturn(true);
-        $this->factory->expects($this->once())->method('canMakeElement')->with($fooNameId)->willReturn(false);
-        /**
-         * called twice: once in Tag::__call and then again in TagVoid::makeOrGetAttribute
-         */
-        $this->factory->expects($this->exactly(2))->method('canMakeAttribute')->with($fooNameId)->willReturn(true);
-        $this->factory->expects($this->once())->method('makeAttribute')->with($fooNameId)->willReturn($foo);
-        $this->tag->$fooNameId();
-        self::assertEquals($foo, $this->tag->getAttribute($fooNameId));
-    }
-
-    /**
-     * testMagicCallThrowsExceptionIfNeitherAnAttributeNorATag
-     * @covers \pvc\html\tag\Tag::__call
-     */
-    public function testMagicCallThrowsExceptionIfNeitherAnAttributeNorATag(): void
-    {
-        $fooName = 'foo';
-        $this->factory->method('isAmbiguousName')->with($fooName)->willReturn(false);
-        $this->factory->expects($this->once())->method('canMakeElement')->with($fooName)->willReturn(false);
-        $this->factory->expects($this->once())->method('canMakeAttribute')->with($fooName)->willReturn(false);
-        self::expectException(InvalidMethodCallException::class);
-        $this->tag->$fooName();
+        self::assertSame($child1, $this->tag->getChild('foo0'));
+        self::assertSame($child2, $this->tag->getChild('foo1'));
+        self::assertSame($child3, $this->tag->getChild('foo2'));
     }
 
     /**
      * testAddGetInnerHtml
-     * @returns Tag
-     * @covers \pvc\html\tag\Tag::addMsg
-     * @covers \pvc\html\tag\Tag::addText
-     * @covers \pvc\html\tag\Tag::addSubTagObject
-     * @covers \pvc\html\tag\Tag::getInnerHtml
+     * @covers \pvc\html\tag\Tag::setInnerText
+     * @covers \pvc\html\tag\Tag::getInnerText
      */
     public function testAddGetInnerHtml(): void
     {
-        self::assertIsArray($this->tag->getInnerHtml());
-        self::assertEmpty($this->tag->getInnerHtml());
+        self::assertEmpty($this->tag->getInnerText());
 
-        $expectedResult = [$this->testMsg];
-        $this->tag->addMsg($this->testMsg);
-        self::assertEquals($expectedResult, $this->tag->getInnerHtml());
+        $msg = $this->createMock(MsgInterface::class);
+        $this->tag->setInnerText($msg);
+        self::assertEquals($msg, $this->tag->getInnerText());
 
+        /**
+         * one overwrites the other.  If you need to intermix msg objects and text, put them inside tags / child
+         * elements
+         */
         $text = 'this is some text';
-        $expectedResult = [$this->testMsg, $text];
-        $this->tag->addText($text);
-        self::assertEquals($expectedResult, $this->tag->getInnerHtml());
-
-        $expectedResult = [$this->testMsg, $text, $this->mockInnerTagVoid];
-        $this->tag->addSubTagObject($this->mockInnerTagVoid);
-        self::assertEqualsCanonicalizing($expectedResult, $this->tag->getInnerHtml());
-
-        $expectedResult = [$this->testMsg, $text, $this->mockInnerTagVoid, $this->mockInnerTag];
-        $this->tag->addSubTagObject($this->mockInnerTag);
-        self::assertEqualsCanonicalizing($expectedResult, $this->tag->getInnerHtml());
+        $this->tag->setInnerText($text);
+        self::assertEquals($text, $this->tag->getInnerText());
     }
 
     /**
@@ -246,7 +211,7 @@ class TagTest extends TestCase
      */
     public function testGenerateClosingTag(): void
     {
-        $expectedResult = '</' . $this->tagName . '>';
+        $expectedResult = '</' . $this->tagDefId . '>';
         self::assertEquals($expectedResult, $this->tag->generateClosingTag());
     }
 }
