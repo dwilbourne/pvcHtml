@@ -10,18 +10,13 @@ namespace pvcTests\html\unit_tests\factory\definitions\implementations\league;
 use League\Container\Definition\Definition;
 use PHPUnit\Framework\TestCase;
 use pvc\html\err\DTOInvalidPropertyValueException;
-use pvc\html\factory\definitions\implementations\league\LeagueDefinitionFactory;
-use pvc\interfaces\html\factory\definitions\AbstractDefinitionFactoryInterface;
+use pvc\html\err\DTOMissingPropertyException;
+use pvc\html\factory\definitions\implementations\league\HtmlDefinitionFactory;
 use pvc\interfaces\html\factory\definitions\DefinitionFactoryInterface;
+use stdClass;
 
 /**
  * Class LeagueDefinitionFactoryTest
- *
- * @phpstan-import-type ElementDef from AbstractDefinitionFactoryInterface
- * @phpstan-import-type AttributeDef from AbstractDefinitionFactoryInterface
- * @phpstan-import-type AttributeValueTesterDef from AbstractDefinitionFactoryInterface
- * @phpstan-import-type EventDef from AbstractDefinitionFactoryInterface
- * @phpstan-import-type OtherDef from AbstractDefinitionFactoryInterface
  */
 class LeagueDefinitionFactoryTest extends TestCase
 {
@@ -31,7 +26,7 @@ class LeagueDefinitionFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->definitionFactory = new LeagueDefinitionFactory();
+        $this->definitionFactory = new HtmlDefinitionFactory();
     }
 
     /**
@@ -40,7 +35,6 @@ class LeagueDefinitionFactoryTest extends TestCase
      */
     public function testMakeAttributeDefinition(): void
     {
-        /** @var AttributeDef $attributeDef */
         $attributeDef = [
             'defId' => 'target',
             'defType' => 'Attribute',
@@ -57,12 +51,11 @@ class LeagueDefinitionFactoryTest extends TestCase
 
     /**
      * testMakeAttributeDefinitionFailsIfConcreteIsnotAnAttribute
-     * @throws \pvc\html\err\DTOMissingPropertyException
+     * @throws DTOMissingPropertyException
      * @covers \pvc\html\factory\definitions\implementations\league\LeagueDefinitionFactory::makeAttributeDefinition
      */
     public function testMakeAttributeDefinitionFailsIfConcreteIsnotAnAttribute(): void
     {
-        /** @var AttributeDef $attributeDef */
         $attributeDef = [
             'defId' => 'target',
             'defType' => 'Attribute',
@@ -83,7 +76,6 @@ class LeagueDefinitionFactoryTest extends TestCase
      */
     public function testMakeAttributeTesterDefinition(): void
     {
-        /** @var AttributeValueTesterDef $valueTesterDef */
         $valueTesterDef = [
             'defId' => 'urlTester',
             'defType' => 'AttributeValueTester',
@@ -103,7 +95,6 @@ class LeagueDefinitionFactoryTest extends TestCase
      */
     public function testMakeAttributeTesterDefinitionFailsIfNotAValTester(): void
     {
-        /** @var AttributeValueTesterDef $valueTesterDef */
         $valueTesterDef = [
             'defId' => 'urlTester',
             'defType' => 'AttributeValueTester',
@@ -131,8 +122,6 @@ class LeagueDefinitionFactoryTest extends TestCase
             'allowedAttributeDefIds' => ['attr1', 'attr2'],
             'allowedChildDefIds' => ['tag1', 'tag2'],
         ];
-
-        /** @var ElementDef $def */
         $def = $this->definitionFactory->makeElementDefinition($elementDef);
         self::assertInstanceOf(Definition::class, $def);
     }
@@ -144,7 +133,6 @@ class LeagueDefinitionFactoryTest extends TestCase
      */
     public function testMakeElementDefinitionFailsIfConcreteIsNotAnElement(): void
     {
-        /** @var ElementDef $def */
         $elementDef = [
             'defId' => 'ul',
             'defType' => 'Element',
@@ -194,7 +182,7 @@ class LeagueDefinitionFactoryTest extends TestCase
             'comment' => 'unordered list',
             'concrete' => 'Tag',
             'allowedAttributeDefIds' => ['attr1', 'attr2'],
-            'allowedChildDefIds' => [true, new \stdClass()],
+            'allowedChildDefIds' => [true, new stdClass()],
         ];
         self::expectException(DTOInvalidPropertyValueException::class);
         $this->definitionFactory->makeElementDefinition($elementDef);
@@ -206,7 +194,6 @@ class LeagueDefinitionFactoryTest extends TestCase
      */
     public function testMakeEventDefinition(): void
     {
-        /** @var EventDef $eventDef */
         $eventDef = [
             'defId' => 'onchange',
             'defType' => 'Event',
@@ -224,7 +211,6 @@ class LeagueDefinitionFactoryTest extends TestCase
      */
     public function testMakeEventDefinitionFailsIfEventNameIsnotAnEvent(): void
     {
-        /** @var EventDef $eventDef */
         $eventDef = [
             'defId' => 'onchange',
             'defType' => 'Event',
@@ -240,7 +226,6 @@ class LeagueDefinitionFactoryTest extends TestCase
      */
     public function testMakeOtherDefinition(): void
     {
-        /** @var OtherDef $otherDef */
         $otherDef = [
             'defId' => 'foo',
             'defType' => 'Other',
@@ -261,7 +246,6 @@ class LeagueDefinitionFactoryTest extends TestCase
      */
     public function testMakeOtherDefinitionFailsIfConcreteIsNotAClassString(): void
     {
-        /** @var OtherDef $otherDef */
         $otherDef = [
             'defId' => 'foo',
             'defType' => 'Other',

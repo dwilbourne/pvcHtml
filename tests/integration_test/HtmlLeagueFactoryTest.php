@@ -10,10 +10,14 @@ namespace pvcTests\html\integration_test;
 
 use League\Container\Container;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use pvc\html\attribute\Event;
+use pvc\html\err\InvalidAttributeIdNameException;
+use pvc\html\err\InvalidEventNameException;
 use pvc\html\err\InvalidTagNameException;
-use pvc\html\factory\definitions\implementations\league\LeagueContainer;
-use pvc\html\factory\definitions\implementations\league\LeagueDefinitionFactory;
+use pvc\html\factory\definitions\implementations\league\HtmlContainer;
+use pvc\html\factory\definitions\implementations\league\HtmlDefinitionFactory;
 use pvc\html\factory\HtmlFactory;
 use pvc\html\tag\TagVoid;
 use pvc\interfaces\html\attribute\AttributeCustomDataInterface;
@@ -29,10 +33,7 @@ use Throwable;
  */
 class HtmlLeagueFactoryTest extends TestCase
 {
-    /**
-     * @var LeagueContainer<VendorSpecificDefinition>
-     */
-    protected LeagueContainer $container;
+    protected HtmlContainer $container;
 
     /**
      * @var DefinitionFactoryInterface<VendorSpecificDefinition>
@@ -46,8 +47,9 @@ class HtmlLeagueFactoryTest extends TestCase
     
     public function setUp(): void
     {
-        $this->container = new LeagueContainer(new Container());
-        $this->definitionFactory = new LeagueDefinitionFactory();
+        $leagueContainer = new Container();
+        $this->container = new HtmlContainer($leagueContainer);
+        $this->definitionFactory = new HtmlDefinitionFactory();
         $this->htmlFactory = new HtmlFactory($this->container, $this->definitionFactory);
     }
 
@@ -98,8 +100,8 @@ class HtmlLeagueFactoryTest extends TestCase
     /**
      * testMakeCustomData
      * @throws InvalidTagNameException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @covers \pvc\html\factory\HtmlFactory::makeCustomData
      */
     public function testMakeCustomData(): void
@@ -116,9 +118,9 @@ class HtmlLeagueFactoryTest extends TestCase
 
     /**
      * testMakeEvents
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \pvc\html\err\InvalidEventNameException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws InvalidEventNameException
      * @covers \pvc\html\factory\HtmlFactory::makeEvent
      */
     public function testMakeEvents(): void
@@ -131,9 +133,9 @@ class HtmlLeagueFactoryTest extends TestCase
 
     /**
      * testMakeElements
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \pvc\html\err\InvalidTagNameException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws InvalidTagNameException
      * @covers \pvc\html\factory\HtmlFactory::makeElement
      */
     public function testMakeElements(): void
@@ -146,9 +148,9 @@ class HtmlLeagueFactoryTest extends TestCase
 
     /**
      * testMakeOthers
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \pvc\html\err\InvalidTagNameException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws InvalidTagNameException
      * @covers \pvc\html\factory\HtmlFactory::getContainer
      */
     public function testMakeOthers(): void
@@ -161,8 +163,8 @@ class HtmlLeagueFactoryTest extends TestCase
 
     /**
      * testMakeAttributeValueTesters
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @covers \pvc\html\factory\HtmlFactory::getContainer
      */
     public function testMakeAttributeValueTesters(): void
@@ -180,9 +182,9 @@ class HtmlLeagueFactoryTest extends TestCase
 
     /**
      * testMakeAttributes
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \pvc\html\err\InvalidAttributeIdNameException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws InvalidAttributeIdNameException
      * @covers \pvc\html\factory\HtmlFactory::makeAttribute
      */
     public function testMakeAttributes(): void
