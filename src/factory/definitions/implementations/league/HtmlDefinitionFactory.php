@@ -24,6 +24,7 @@ use pvc\html\factory\definitions\types\EventType;
 use pvc\html\val_tester\EventScriptTester;
 use pvc\interfaces\html\factory\definitions\DefinitionFactoryInterface;
 use pvc\interfaces\validator\ValTesterInterface;
+use ReflectionClass;
 use Throwable;
 
 /**
@@ -32,7 +33,7 @@ use Throwable;
  * @phpstan-import-type DefArray from DefinitionFactoryInterface
  * @implements DefinitionFactoryInterface<Definition>
  */
-class LeagueDefinitionFactory implements DefinitionFactoryInterface
+class HtmlDefinitionFactory implements DefinitionFactoryInterface
 {
     /**
      * makeAttributeDefinition
@@ -71,7 +72,7 @@ class LeagueDefinitionFactory implements DefinitionFactoryInterface
     {
         try {
             /** @phpstan-ignore argument.type */
-            $reflection = new \ReflectionClass($valTester);
+            $reflection = new ReflectionClass($valTester);
             if (!$reflection->implementsInterface(ValTesterInterface::class)) {
                 return false;
             }

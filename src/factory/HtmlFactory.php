@@ -8,13 +8,17 @@ declare(strict_types=1);
 
 namespace pvc\html\factory;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use pvc\html\attribute\AttributeCustomData;
 use pvc\html\err\DTOInvalidPropertyValueException;
 use pvc\html\err\DuplicateDefinitionIdException;
+use pvc\html\err\InvalidAttributeIdNameException;
 use pvc\html\err\InvalidDefinitionsFileException;
 use pvc\html\err\InvalidEventNameException;
 use pvc\html\err\InvalidTagNameException;
-use pvc\html\err\InvalidAttributeIdNameException;
+use pvc\html\factory\definitions\implementations\league\HtmlContainer;
+use pvc\html\factory\definitions\implementations\league\HtmlDefinitionFactory;
 use pvc\interfaces\html\attribute\AttributeCustomDataInterface;
 use pvc\interfaces\html\attribute\AttributeInterface;
 use pvc\interfaces\html\attribute\EventInterface;
@@ -22,6 +26,7 @@ use pvc\interfaces\html\factory\definitions\DefinitionFactoryInterface;
 use pvc\interfaces\html\factory\definitions\DefinitionType;
 use pvc\interfaces\html\factory\HtmlContainerInterface;
 use pvc\interfaces\html\factory\HtmlFactoryInterface;
+use pvc\interfaces\html\tag\TagInterface;
 use pvc\interfaces\html\tag\TagVoidInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 use pvc\validator\val_tester\always_true\AlwaysTrueTester;
@@ -92,12 +97,12 @@ class HtmlFactory implements HtmlFactoryInterface
      * @param DefinitionFactoryInterface<VendorSpecificDefinition> $definitionFactory
      */
     public function __construct(
-        HtmlContainerInterface $container,
-        DefinitionFactoryInterface $definitionFactory,
+        HtmlContainerInterface $container = null,
+        DefinitionFactoryInterface $definitionFactory = null,
         string $definitionsFile = null,
     ) {
-        $this->setContainer($container);
-        $this->setDefinitionFactory($definitionFactory);
+        $this->setContainer($container ?: new HtmlContainer());
+        $this->setDefinitionFactory($definitionFactory ?: new HtmlDefinitionFactory());
 
         if ($definitionsFile) {
             $this->setDefinitionsFile($definitionsFile);
@@ -276,10 +281,10 @@ class HtmlFactory implements HtmlFactoryInterface
      * @param string $elementName
      * @return TagVoidInterface<VendorSpecificDefinition>
      * @throws InvalidTagNameException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function makeElement(string $elementName): TagVoidInterface
+    public function makeElement(string $elementName): TagVoidInterface|TagInterface
     {
         $elementDefId = ($this->isAmbiguousName($elementName) ? $elementName . '_element' : $elementName);
 
@@ -297,8 +302,8 @@ class HtmlFactory implements HtmlFactoryInterface
      * @param string $attributeName
      * @return AttributeInterface
      * @throws InvalidAttributeIdNameException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function makeAttribute(string $attributeName): AttributeInterface
     {
@@ -316,8 +321,8 @@ class HtmlFactory implements HtmlFactoryInterface
      * @param string $eventName
      * @return EventInterface
      * @throws InvalidEventNameException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function makeEvent(string $eventName): EventInterface
     {
@@ -335,8 +340,8 @@ class HtmlFactory implements HtmlFactoryInterface
      * @param string $attributeName
      * @param ValTesterInterface<string>|null $valTester
      * @return AttributeCustomDataInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      *
      * although we never like hard dependencies inside a method, this class is a htmlFactory.  And this method is, by
      * definition, tightly coupled to the AttributeCustomData class.......

@@ -11,15 +11,17 @@ namespace pvc\html\factory\definitions\implementations\league;
 use League\Container\Container;
 use League\Container\Definition\DefinitionInterface;
 use League\Container\ReflectionContainer;
-use pvc\interfaces\html\factory\definitions\AbstractDefinitionFactoryInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use pvc\interfaces\html\factory\definitions\DefinitionFactoryInterface;
 use pvc\interfaces\html\factory\HtmlContainerInterface;
 
 /**
  * Class HtmlLeagueContainer
- * @template VendorSpecificDefinition of AbstractDefinitionFactoryInterface
+ * @template VendorSpecificDefinition of DefinitionFactoryInterface
  * @implements HtmlContainerInterface<VendorSpecificDefinition<DefinitionInterface>>
  */
-class LeagueContainer implements HtmlContainerInterface
+class HtmlContainer implements HtmlContainerInterface
 {
     /**
      * @var Container
@@ -29,9 +31,9 @@ class LeagueContainer implements HtmlContainerInterface
     /**
      * @param Container $container
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container = null)
     {
-        $this->container = $container;
+        $this->container = $container ?: new Container();
 
         /**
          * enable autowiring
@@ -53,8 +55,8 @@ class LeagueContainer implements HtmlContainerInterface
      * get
      * @param string $id
      * @return mixed
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function get(string $id): mixed
     {
