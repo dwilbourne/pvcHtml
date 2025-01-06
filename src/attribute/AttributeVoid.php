@@ -85,7 +85,7 @@ class AttributeVoid implements AttributeInterface
      *
      *  As a practical matter, pre-defined html attribute names are purely alphabetic with a couple that are
      *  hyphenated.  And since the usual manner of
-     *  creating an attribute is in a htmlFactory / container, most times the attribute names come right from the
+     *  creating an attribute is in a htmlBuilder / container, most times the attribute names come right from the
      *  html specification.  However, you can create an attribute using an arbitrary id and at least in some browsers,
      *  you can get at the value using javascript even if the id is not prefixed with 'data-'.  So this
      *  validation tries to find the middle ground between what the language spec says and how browsers

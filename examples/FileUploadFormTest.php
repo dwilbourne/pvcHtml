@@ -9,9 +9,9 @@ namespace pvcExamples\html;
 
 use League\Container\Container;
 use PHPUnit\Framework\TestCase;
-use pvc\html\factory\definitions\implementations\league\HtmlContainer;
-use pvc\html\factory\definitions\implementations\league\HtmlDefinitionFactory;
-use pvc\html\factory\HtmlFactory;
+use pvc\html\builder\definitions\implementations\league\HtmlContainer;
+use pvc\html\builder\definitions\implementations\league\HtmlDefinitionFactory;
+use pvc\html\builder\HtmlBuilder;
 use pvc\html\frmtr\FrmtrHtml;
 use pvc\intl\Locale;
 use pvc\msg\MsgFrmtr;
@@ -36,7 +36,7 @@ class FileUploadFormTest extends TestCase
          */
         $definitionsFactory = new HtmlDefinitionFactory();
 
-        $factory = new HtmlFactory($container, $definitionsFactory);
+        $factory = new HtmlBuilder($container, $definitionsFactory);
 
         $locale = new Locale();
         $locale->setLocaleString('en');

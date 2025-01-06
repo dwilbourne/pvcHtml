@@ -13,17 +13,18 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use pvc\html\attribute\Event;
+use pvc\html\builder\definitions\implementations\league\HtmlContainer;
+use pvc\html\builder\definitions\implementations\league\HtmlDefinitionFactory;
+use pvc\html\builder\HtmlBuilder;
+use pvc\html\element\ElementVoid;
 use pvc\html\err\InvalidAttributeIdNameException;
 use pvc\html\err\InvalidEventNameException;
 use pvc\html\err\InvalidTagNameException;
-use pvc\html\factory\definitions\implementations\league\HtmlContainer;
-use pvc\html\factory\definitions\implementations\league\HtmlDefinitionFactory;
-use pvc\html\factory\HtmlFactory;
-use pvc\html\tag\TagVoid;
 use pvc\interfaces\html\attribute\AttributeCustomDataInterface;
 use pvc\interfaces\html\attribute\AttributeInterface;
-use pvc\interfaces\html\factory\definitions\DefinitionFactoryInterface;
-use pvc\interfaces\html\factory\definitions\DefinitionType;
+use pvc\interfaces\html\builder\definitions\DefinitionFactoryInterface;
+use pvc\interfaces\html\builder\definitions\DefinitionType;
+use pvc\interfaces\html\builder\HtmlContainerInterface;
 use pvc\interfaces\validator\ValTesterInterface;
 use Throwable;
 
@@ -33,7 +34,7 @@ use Throwable;
  */
 class HtmlLeagueFactoryTest extends TestCase
 {
-    protected HtmlContainer $container;
+    protected HtmlContainerInterface $container;
 
     /**
      * @var DefinitionFactoryInterface<VendorSpecificDefinition>
@@ -41,30 +42,30 @@ class HtmlLeagueFactoryTest extends TestCase
     protected DefinitionFactoryInterface $definitionFactory;
 
     /**
-     * @var HtmlFactory
+     * @var HtmlBuilder
      */
-    protected HtmlFactory $htmlFactory;
+    protected HtmlBuilder $htmlFactory;
     
     public function setUp(): void
     {
         $leagueContainer = new Container();
         $this->container = new HtmlContainer($leagueContainer);
         $this->definitionFactory = new HtmlDefinitionFactory();
-        $this->htmlFactory = new HtmlFactory($this->container, $this->definitionFactory);
+        $this->htmlFactory = new HtmlBuilder($this->container, $this->definitionFactory);
     }
 
     /**
      * testMakeElementContainer
-     * @covers \pvc\html\factory\HtmlFactory::__construct
+     * @covers \pvc\html\builder\HtmlBuilder::__construct
      */
     public function testConstruct(): void
     {
-        self::assertInstanceOf(HtmlFactory::class, $this->htmlFactory);
+        self::assertInstanceOf(HtmlBuilder::class, $this->htmlFactory);
     }
 
     /**
      * testGetDefinitionTypes
-     * @covers \pvc\html\factory\HtmlFactory::getDefinitionTypes
+     * @covers \pvc\html\builder\HtmlBuilder::getDefinitionTypes
      */
     public function testGetDefinitionTypes(): void
     {
@@ -80,7 +81,7 @@ class HtmlLeagueFactoryTest extends TestCase
 
     /**
      * testGetDefinitionType
-     * @covers \pvc\html\factory\HtmlFactory::getDefinitionType()
+     * @covers \pvc\html\builder\HtmlBuilder::getDefinitionType()
      */
     public function testGetDefinitionType(): void
     {
@@ -89,7 +90,7 @@ class HtmlLeagueFactoryTest extends TestCase
 
     /**
      * testGetDefinitionIds
-     * @covers \pvc\html\factory\HtmlFactory::getDefinitionIds
+     * @covers \pvc\html\builder\HtmlBuilder::getDefinitionIds
      */
     public function testGetDefinitionIds(): void
     {
@@ -102,7 +103,7 @@ class HtmlLeagueFactoryTest extends TestCase
      * @throws InvalidTagNameException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @covers \pvc\html\factory\HtmlFactory::makeCustomData
+     * @covers \pvc\html\builder\HtmlBuilder::makeCustomData
      */
     public function testMakeCustomData(): void
     {
@@ -121,7 +122,7 @@ class HtmlLeagueFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws InvalidEventNameException
-     * @covers \pvc\html\factory\HtmlFactory::makeEvent
+     * @covers \pvc\html\builder\HtmlBuilder::makeEvent
      */
     public function testMakeEvents(): void
     {
@@ -136,13 +137,13 @@ class HtmlLeagueFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws InvalidTagNameException
-     * @covers \pvc\html\factory\HtmlFactory::makeElement
+     * @covers \pvc\html\builder\HtmlBuilder::makeElement
      */
     public function testMakeElements(): void
     {
         $elementDefIds = $this->htmlFactory->getDefinitionIds(DefinitionType::Element);
         foreach($elementDefIds as $defId) {
-            self::assertInstanceOf(TagVoid::class, $this->htmlFactory->makeElement($defId));
+            self::assertInstanceOf(ElementVoid::class, $this->htmlFactory->makeElement($defId));
         }
     }
 
@@ -151,7 +152,7 @@ class HtmlLeagueFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws InvalidTagNameException
-     * @covers \pvc\html\factory\HtmlFactory::getContainer
+     * @covers \pvc\html\builder\HtmlBuilder::getContainer
      */
     public function testMakeOthers(): void
     {
@@ -165,7 +166,7 @@ class HtmlLeagueFactoryTest extends TestCase
      * testMakeAttributeValueTesters
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @covers \pvc\html\factory\HtmlFactory::getContainer
+     * @covers \pvc\html\builder\HtmlBuilder::getContainer
      */
     public function testMakeAttributeValueTesters(): void
     {
@@ -185,7 +186,7 @@ class HtmlLeagueFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws InvalidAttributeIdNameException
-     * @covers \pvc\html\factory\HtmlFactory::makeAttribute
+     * @covers \pvc\html\builder\HtmlBuilder::makeAttribute
      */
     public function testMakeAttributes(): void
     {

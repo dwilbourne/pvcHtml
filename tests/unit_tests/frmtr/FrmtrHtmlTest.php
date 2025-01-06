@@ -11,8 +11,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\frmtr\FrmtrHtml;
 use pvc\interfaces\frmtr\msg\FrmtrMsgInterface;
-use pvc\interfaces\html\tag\TagInterface;
-use pvc\interfaces\html\tag\TagVoidInterface;
+use pvc\interfaces\html\element\ElementInterface;
+use pvc\interfaces\html\element\ElementVoidInterface;
 use pvc\interfaces\intl\LocaleInterface;
 use pvc\interfaces\msg\MsgInterface;
 
@@ -69,7 +69,7 @@ class FrmtrHtmlTest extends TestCase
     public function testFormatTagVoid(): void
     {
         $expectedResult = '<col>';
-        $tag = $this->createMock(TagVoidInterface::class);
+        $tag = $this->createMock(ElementVoidInterface::class);
         $tag->expects($this->once())->method('generateOpeningTag')->willReturn($expectedResult);
         self::assertEquals($expectedResult, $this->frmtrHtml->format($tag));
     }
@@ -94,12 +94,12 @@ class FrmtrHtmlTest extends TestCase
 
         $literalText = 'this string is not to be translated';
 
-        $innerTag = $this->createMock(TagInterface::class);
+        $innerTag = $this->createMock(ElementInterface::class);
         $innerTag->expects($this->once())->method('getChildren')->willReturn([$innerMsg, $literalText]);
         $innerTag->expects($this->once())->method('generateOpeningTag')->willReturn($innerTagOpeningString);
         $innerTag->expects($this->once())->method('generateClosingTag')->willReturn($innerTagClosingString);
 
-        $tag = $this->createMock(TagInterface::class);
+        $tag = $this->createMock(ElementInterface::class);
         $tag->expects($this->once())->method('getChildren')->willReturn([$innerTag]);
         $tag->expects($this->once())->method('generateOpeningTag')->willReturn($tagOpeningString);
         $tag->expects($this->once())->method('generateClosingTag')->willReturn($tagClosingString);
