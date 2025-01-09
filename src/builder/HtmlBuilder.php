@@ -93,6 +93,29 @@ class HtmlBuilder implements HtmlBuilderInterface
     ];
 
     /**
+     * @var array<string>
+     */
+    protected array $globalAttributes = [
+        'accesskey',
+        'class',
+        'contenteditable',
+        'dir',
+        'draggable',
+        'enterkeyhint',
+        'hidden',
+        'id',
+        'inert',
+        'inputmode',
+        'lang',
+        'popover',
+        'spellcheck',
+        'style',
+        'tabindex',
+        'title',
+        'translate'
+    ];
+
+    /**
      * @param HtmlContainerInterface<VendorSpecificDefinition> $container
      * @param DefinitionFactoryInterface<VendorSpecificDefinition> $definitionFactory
      */
@@ -144,6 +167,15 @@ class HtmlBuilder implements HtmlBuilderInterface
     public function setDefinitionFactory(DefinitionFactoryInterface $definitionFactory): void
     {
         $this->definitionFactory = $definitionFactory;
+    }
+
+    /**
+     * getGlobalAttributeDefIds
+     * @return string[]
+     */
+    public function getGlobalAttributeDefIds(): array
+    {
+        return $this->globalAttributes;
     }
 
     protected function setDefinitionsFile(string $filename): void

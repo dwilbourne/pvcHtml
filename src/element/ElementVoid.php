@@ -123,7 +123,7 @@ class ElementVoid implements ElementVoidInterface
      */
     public function getAllowedAttributeDefIds(): array
     {
-        return $this->allowedAttributeDefIds;
+        return array_merge($this->allowedAttributeDefIds, $this->htmlBuilder->getGlobalAttributeDefIds());
     }
 
     /**
