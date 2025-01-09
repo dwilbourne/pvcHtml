@@ -143,6 +143,7 @@ class HtmlDefinitionFactory implements DefinitionFactoryInterface
         }
 
         $def = (new Definition($elementDTO->defId, $class))
+            ->addMethodCall('setDefId', [new LiteralArgument($elementDTO->defId)])
             ->addMethodCall('setName', [new LiteralArgument($elementDTO->name)])
             ->addMethodCall('setAllowedAttributeDefIds', [$elementDTO->allowedAttributeDefIds]);
 
