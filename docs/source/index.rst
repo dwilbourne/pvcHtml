@@ -20,7 +20,7 @@ Design Points
 #############
 
 A simple interface.  It's likely that you will interact with only one object in the library: the HtmlFactory object
-. That factory allows you to create any valid html 5 element, attribute or event.  You have the option of using a
+. That htmlBuilder allows you to create any valid html 5 element, attributeArrayElement or event.  You have the option of using a
 fluid interface (which will prevent autocompletion in your ide but which is more concise and easier to read) or you
 can choose to add attributes and child elements to your structure using conventional method calls.
 

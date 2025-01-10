@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ReformatJson extends TestCase
 {
-    protected string $dirName = 'I:/www/pvcHtml/src/factory/definitions/json/';
+    protected string $dirName = 'I:/www/pvcHtml/src/htmlBuilder/definitions/json/';
 
     public function testReformatAttributeDefs(): void
     {

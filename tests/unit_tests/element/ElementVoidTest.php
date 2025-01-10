@@ -29,26 +29,26 @@ class ElementVoidTest extends TestCase
     /**
      * @var string
      */
-    protected string $tagDefId;
+    protected string $elementDefId;
 
     /**
      * @var ElementVoid
      */
-    protected ElementVoid $tag;
+    protected ElementVoid $element;
 
-    protected HtmlBuilderInterface|MockObject $factory;
+    protected HtmlBuilderInterface|MockObject $htmlBuilder;
 
     /**
      * setUp
      */
     public function setUp(): void
     {
-        $this->tagDefId = 'a';
-        $this->factory = $this->createMock(HtmlBuilderInterface::class);
-        $this->tag = new ElementVoid();
-        $this->tag->setHtmlBuilder($this->factory);
-        $this->tag->setDefId($this->tagDefId);
-        $this->tag->setName($this->tagDefId);
+        $this->elementDefId = 'col';
+        $this->htmlBuilder = $this->createMock(HtmlBuilderInterface::class);
+        $this->element = new ElementVoid();
+        $this->element->setHtmlBuilder($this->htmlBuilder);
+        $this->element->setDefId($this->elementDefId);
+        $this->element->setName($this->elementDefId);
     }
 
     /**
@@ -58,7 +58,7 @@ class ElementVoidTest extends TestCase
      */
     public function testSetGetDefId(): void
     {
-        self::assertEquals($this->tagDefId, $this->tag->getDefId());
+        self::assertEquals($this->elementDefId, $this->element->getDefId());
     }
 
     /**
@@ -68,7 +68,7 @@ class ElementVoidTest extends TestCase
      */
     public function testSetGetFactory(): void
     {
-        self::assertEquals($this->factory, $this->tag->getHtmlBuilder());
+        self::assertEquals($this->htmlBuilder, $this->element->getHtmlBuilder());
     }
 
     /**
@@ -81,7 +81,7 @@ class ElementVoidTest extends TestCase
         /**
          * default behavior returns an empty string if id has not been set
          */
-        self::assertEquals($this->tagDefId, $this->tag->getName());
+        self::assertEquals($this->elementDefId, $this->element->getName());
     }
 
     /**
@@ -94,12 +94,12 @@ class ElementVoidTest extends TestCase
         /**
          * default is an empty array
          */
-        self::assertIsArray($this->tag->getAllowedAttributeDefIds());
-        self::assertEmpty($this->tag->getAllowedAttributeDefIds());
+        self::assertIsArray($this->element->getAllowedAttributeDefIds());
+        self::assertEmpty($this->element->getAllowedAttributeDefIds());
 
         $allowedAttributeDefIds = ['foo', 'bar', 'baz'];
-        $this->tag->setAllowedAttributeDefIds($allowedAttributeDefIds);
-        self::assertEqualsCanonicalizing($allowedAttributeDefIds, $this->tag->getAllowedAttributeDefIds());
+        $this->element->setAllowedAttributeDefIds($allowedAttributeDefIds);
+        self::assertEqualsCanonicalizing($allowedAttributeDefIds, $this->element->getAllowedAttributeDefIds());
     }
 
     /**
@@ -108,8 +108,11 @@ class ElementVoidTest extends TestCase
      */
     public function testIsAllowedAttributeSucceedsWithEvent(): void
     {
+        $defId = 'onclick';
         $event = $this->createMock(EventInterface::class);
-        self::assertTrue($this->tag->isAllowedAttribute($event));
+        $event->method('getDefId')->willReturn($defId);
+        $this->htmlBuilder->method('getDefinitionType')->with($defId)->willReturn(DefinitionType::Event);
+        self::assertTrue($this->element->isAllowedAttribute($event));
     }
 
     /**
@@ -118,9 +121,9 @@ class ElementVoidTest extends TestCase
      */
     public function testIsAllowedAttributeSucceedsWithGlobalAttribute(): void
     {
-        $event = $this->createMock(EventInterface::class);
-        $event->method('isGlobal')->willreturn(true);
-        self::assertTrue($this->tag->isAllowedAttribute($event));
+        $attribute = $this->createMock(AttributeInterface::class);
+        $attribute->method('getDefId')->willreturn('class');
+        self::assertTrue($this->element->isAllowedAttribute($attribute));
     }
 
     /**
@@ -132,20 +135,8 @@ class ElementVoidTest extends TestCase
         $defId = 'foo';
         $attribute = $this->createMock(AttributeInterface::class);
         $attribute->method('getDefId')->willReturn($defId);
-        $attribute->method('isGlobal')->willReturn(false);
-        $this->tag->setAllowedAttributeDefIds([$defId]);
-        self::assertTrue($this->tag->isAllowedAttribute($attribute));
-    }
-
-    /**
-     * testIsAllowedAttributeSucceedsWithEventName
-     * @covers \pvc\html\element\ElementVoid::isAllowedAttribute()
-     */
-    public function testIsAllowedAttributeSucceedsWithEventName(): void
-    {
-        $defId = 'foo';
-        $this->factory->method('getDefinitionIds')->willReturn([$defId]);
-        self::assertTrue($this->tag->isAllowedAttribute($defId));
+        $this->element->setAllowedAttributeDefIds([$defId]);
+        self::assertTrue($this->element->isAllowedAttribute($attribute));
     }
 
     /**
@@ -155,8 +146,8 @@ class ElementVoidTest extends TestCase
     public function testIsAllowedAttributeFailsWithUnknownAttributeName(): void
     {
         $defId = 'foo';
-        $this->factory->method('getDefinitionIds')->willReturn(['bar']);
-        self::assertFalse($this->tag->isAllowedAttribute($defId));
+        $this->htmlBuilder->method('getDefinitionIds')->willReturn(['bar']);
+        self::assertFalse($this->element->isAllowedAttribute($defId));
     }
 
     /**
@@ -165,7 +156,7 @@ class ElementVoidTest extends TestCase
      */
     public function testGetAttributeReturnsNullWhenAttributeDoesNotExist(): void
     {
-        self::assertNull($this->tag->getAttribute('href'));
+        self::assertNull($this->element->getAttribute('href'));
     }
 
     /**
@@ -174,8 +165,8 @@ class ElementVoidTest extends TestCase
      */
     public function testSetGetAttributesReturnsEmptyArrayWhenTagHasNoAttributes(): void
     {
-        self::assertIsArray($this->tag->getAttributes());
-        self::assertEmpty($this->tag->getAttributes());
+        self::assertIsArray($this->element->getAttributes());
+        self::assertEmpty($this->element->getAttributes());
     }
 
     /**
@@ -196,32 +187,34 @@ class ElementVoidTest extends TestCase
         $attribute2 = $this->createMock(AttributeSingleValueInterface::class);
         $attribute2->method('getDefId')->willReturn($attributeDefId);
 
-        self::assertNull($this->tag->getAttribute($attributeDefId));
+        $this->htmlBuilder->method('getDefinitionType')->with($attributeDefId)->willReturn(DefinitionType::Attribute);
 
-        $this->tag->setAllowedAttributeDefIds([$attributeDefId]);
-        self::assertEquals($this->tag, $this->tag->setAttribute($attribute1));
-        self::assertEquals($attribute1, $this->tag->getAttribute($attributeDefId));
+        self::assertNull($this->element->getAttribute($attributeDefId));
+
+        $this->element->setAllowedAttributeDefIds([$attributeDefId]);
+        self::assertEquals($this->element, $this->element->setAttribute($attribute1));
+        self::assertEquals($attribute1, $this->element->getAttribute($attributeDefId));
 
         /**
          * illustrate that you cannot have two attributes with the same defId: setting the second one overwrites
          * the first
          */
 
-        $this->tag->setAttribute($attribute2);
-        $this->assertEquals(1, count($this->tag->getAttributes()));
-        self::assertEquals($attribute2, $this->tag->getAttribute($attributeDefId));
+        $this->element->setAttribute($attribute2);
+        $this->assertEquals(1, count($this->element->getAttributes()));
+        self::assertEquals($attribute2, $this->element->getAttribute($attributeDefId));
 
         /**
          * remove the attribute
          */
-        $this->tag->removeAttribute($attributeDefId);
-        self::assertNull($this->tag->getAttribute($attributeDefId));
-        $this->assertEquals(0, count($this->tag->getAttributes()));
+        $this->element->removeAttribute($attributeDefId);
+        self::assertNull($this->element->getAttribute($attributeDefId));
+        $this->assertEquals(0, count($this->element->getAttributes()));
 
         $event = $this->createMock(EventInterface::class);
         $event->method('getDefId')->willReturn('onchange');
-        $this->tag->setEvent($event);
-        self::assertEquals($event, $this->tag->getAttribute($event->getDefId()));
+        $this->element->setEvent($event);
+        self::assertEquals($event, $this->element->getAttribute($event->getDefId()));
     }
 
     /**
@@ -234,12 +227,13 @@ class ElementVoidTest extends TestCase
         $defId = 'foo';
         $attribute = $this->createMock(AttributeInterface::class);
         $attribute->method('getDefId')->willReturn($defId);
-        $this->tag->setAllowedAttributeDefIds([$defId]);
-        $this->factory->method('getDefinitionType')->with($defId)->willReturn('Attribute');
-        $this->factory->method('makeAttribute')->with($defId)->willReturn($attribute);
+        $this->element->setAllowedAttributeDefIds([$defId]);
+        $this->htmlBuilder->method('getDefinitionType')->with($defId)->willReturn(DefinitionType::Attribute);
+        $this->htmlBuilder->method('makeAttribute')->with($defId)->willReturn($attribute);
 
-        $this->tag->setAttribute($defId);
-        self::assertEquals($attribute, $this->tag->getAttribute($attribute->getDefId()));
+        $this->element->setAttribute($defId);
+        $actualResult = $this->element->getAttribute($attribute->getDefId());
+        self::assertEquals($attribute, $actualResult);
     }
 
     /**
@@ -251,9 +245,9 @@ class ElementVoidTest extends TestCase
     public function testSetAttributeThrowsExceptionIfAttributeIsNotAllowed(): void
     {
         $defId = 'foo';
-        $this->tag->setAllowedAttributeDefIds(['bar']);
+        $this->element->setAllowedAttributeDefIds(['bar']);
         self::expectException(AttributeNotAllowedException::class);
-        $this->tag->setAttribute($defId);
+        $this->element->setAttribute($defId);
     }
 
     /**
@@ -268,10 +262,10 @@ class ElementVoidTest extends TestCase
         $attribute->method('getDefId')->willReturn($defId);
         $value = 'bar';
         $attribute->expects($this->once())->method('setValue')->with($value);
-        $this->tag->setAllowedAttributeDefIds([$defId]);
-        $this->factory->method('getDefinitionType')->with($defId)->willReturn('Attribute');
-        $this->factory->method('makeAttribute')->with($defId)->willReturn($attribute);
-        $this->tag->$defId($value);
+        $this->element->setAllowedAttributeDefIds([$defId]);
+        $this->htmlBuilder->method('getDefinitionType')->with($defId)->willReturn(DefinitionType::Attribute);
+        $this->htmlBuilder->method('makeAttribute')->with($defId)->willReturn($attribute);
+        $this->element->$defId($value);
     }
 
     /**
@@ -284,14 +278,14 @@ class ElementVoidTest extends TestCase
     {
         $defId = 'bar';
         $bar = $this->createMock(Event::class);
-        $this->factory->method('getDefinitionType')->with($defId)->willReturn('Event');
-        $this->factory->expects($this->once())->method('makeEvent')->with($defId)->willReturn($bar);
+        $this->htmlBuilder->method('getDefinitionType')->with($defId)->willReturn(DefinitionType::Event);
+        $this->htmlBuilder->expects($this->once())->method('makeEvent')->with($defId)->willReturn($bar);
         $map = [
             [DefinitionType::Attribute, []],
             [DefinitionType::Event, [$defId]],
             ];
-        $this->factory->method('getDefinitionIds')->willReturnMap($map);
-        self::assertEquals($bar, $this->tag->$defId);
+        $this->htmlBuilder->method('getDefinitionIds')->willReturnMap($map);
+        self::assertEquals($bar, $this->element->$defId);
     }
 
     /**
@@ -302,9 +296,9 @@ class ElementVoidTest extends TestCase
     public function testMakeOrGetAttributeThrowsExceptionIfNotAllowed(): void
     {
         $defId = 'foo';
-        $this->tag->setAllowedAttributeDefIds(['bar']);
+        $this->element->setAllowedAttributeDefIds(['bar']);
         self::expectException(AttributeNotAllowedException::class);
-        $this->tag->$defId;
+        $this->element->$defId;
     }
 
     /**
@@ -314,10 +308,10 @@ class ElementVoidTest extends TestCase
     public function testMakeOrGetAttributeThrowsExceptionIfDoesnotExistAndCannotMake(): void
     {
         $defId = 'foo';
-        $this->tag->setAllowedAttributeDefIds(['foo']);
-        $this->factory->expects($this->once())->method('getDefinitionType')->with($defId)->willReturn(null);
+        $this->element->setAllowedAttributeDefIds(['foo']);
+        $this->htmlBuilder->expects($this->once())->method('getDefinitionType')->with($defId)->willReturn(null);
         self::expectException(InvalidDefinitionIdException::class);
-        $this->tag->$defId;
+        $this->element->$defId;
     }
 
     /**
@@ -330,13 +324,13 @@ class ElementVoidTest extends TestCase
         $value = 'something';
         $attribute = $this->createMock(AttributeCustomDataInterface::class);
         $attribute->method('getDefId')->willReturn($defId);
-        $this->factory
+        $this->htmlBuilder
             ->expects($this->once())
             ->method('makeCustomData')
             ->with($defId)
             ->willReturn($attribute);
-        $this->tag->setCustomData($defId, $value);
-        self::assertEquals($attribute, $this->tag->$defId);
+        $this->element->setCustomData($defId, $value);
+        self::assertEquals($attribute, $this->element->$defId);
     }
 
     /**
@@ -352,7 +346,7 @@ class ElementVoidTest extends TestCase
         $attribute->method('getDefId')->willReturn($defId);
         $attribute->expects($this->once())->method('setTester')->with($valTester);
         $attribute->expects($this->once())->method('setValue')->with($value);
-        $this->tag->setCustomData($attribute, $value, $valTester);
+        $this->element->setCustomData($attribute, $value, $valTester);
     }
 
 
@@ -378,23 +372,31 @@ class ElementVoidTest extends TestCase
         $event2 = $this->createStub(Event::class);
         $event2->method('getDefId')->willReturn($event2DefId);
 
-        $this->tag->setAllowedAttributeDefIds(['href', 'hidden']);
-        $this->tag->setAttribute($attr1);
-        $this->tag->setAttribute($attr2);
-        $this->tag->setEvent($event1);
-        $this->tag->setEvent($event2);
+        $valueMap = [
+            [$attr1DefId, DefinitionType::Attribute],
+            [$attr2DefId, DefinitionType::Attribute],
+            [$event1DefId, DefinitionType::Event],
+            [$event2DefId, DefinitionType::Event],
+        ];
+        $this->htmlBuilder->method('getDefinitionType')->willReturnMap($valueMap);
+
+        $this->element->setAllowedAttributeDefIds(['href', 'hidden']);
+        $this->element->setAttribute($attr1);
+        $this->element->setAttribute($attr2);
+        $this->element->setEvent($event1);
+        $this->element->setEvent($event2);
 
         /**
          * default behavior is to return both attributes and events
          */
-        self::assertEquals(4, count($this->tag->getAttributes()));
-        self::assertEquals(4, count($this->tag->getAttributes(ElementVoid::ATTRIBUTES | ElementVoid::EVENTS)));
+        self::assertEquals(4, count($this->element->getAttributes()));
+        self::assertEquals(4, count($this->element->getAttributes(ElementVoid::ATTRIBUTES | ElementVoid::EVENTS)));
 
-        self::assertEquals(2, count($this->tag->getAttributes(ElementVoid::ATTRIBUTES)));
-        self::assertEquals(2, count($this->tag->getAttributes(ElementVoid::EVENTS)));
+        self::assertEquals(2, count($this->element->getAttributes(ElementVoid::ATTRIBUTES)));
+        self::assertEquals(2, count($this->element->getAttributes(ElementVoid::EVENTS)));
 
-        $this->tag->removeAttribute($event2DefId);
-        self::assertEquals(1, count($this->tag->getAttributes(ElementVoid::EVENTS)));
+        $this->element->removeAttribute($event2DefId);
+        self::assertEquals(1, count($this->element->getAttributes(ElementVoid::EVENTS)));
     }
 
 
@@ -404,9 +406,9 @@ class ElementVoidTest extends TestCase
      */
     public function testGenerateOpeningTagWithNoAttributes(): void
     {
-        $expectedResult = '<a>';
-        $this->tag->setName($this->tagDefId);
-        self::assertEquals($expectedResult, $this->tag->generateOpeningTag());
+        $expectedResult = '<' . $this->elementDefId . '>';
+        $this->element->setName($this->elementDefId);
+        self::assertEquals($expectedResult, $this->element->generateOpeningTag());
     }
 
     /**
@@ -415,33 +417,40 @@ class ElementVoidTest extends TestCase
      */
     public function testGenerateOpeningTagWithAttributes(): void
     {
-        $attr1NameId = 'href';
+        $attr1DefId = 'href';
         $attr1Value = 'bar';
 
         $attr1 = $this->getMockBuilder(AttributeSingleValueInterface::class)
                       ->getMockForAbstractClass();
-        $attr1->method('getDefId')->willReturn($attr1NameId);
-        $attr1->method('getName')->willReturn($attr1NameId);
+        $attr1->method('getDefId')->willReturn($attr1DefId);
+        $attr1->method('getName')->willReturn($attr1DefId);
         $attr1->method('getValue')->willReturn($attr1Value);
-        $attr1->method('render')->willReturn($attr1NameId . '=\'' . $attr1Value . '\'');
+        $attr1->method('render')->willReturn($attr1DefId . '=\'' . $attr1Value . '\'');
 
-        $event1NameId = 'onclick';
+        $event1DefId = 'onclick';
         $event1Value = 'some javascript';
 
         $event1 = $this->getMockBuilder(EventInterface::class)
                        ->getMockForAbstractClass();
-        $event1->method('getDefId')->willReturn($event1NameId);
-        $event1->method('getName')->willReturn($event1NameId);
+        $event1->method('getDefId')->willReturn($event1DefId);
+        $event1->method('getName')->willReturn($event1DefId);
         $event1->method('getScript')->willReturn($event1Value);
-        $event1->method('render')->willReturn($event1NameId . '=\'' . $event1Value . '\'');
+        $event1->method('render')->willReturn($event1DefId . '=\'' . $event1Value . '\'');
 
-        $this->tag->setName($this->tagDefId);
+        $valueMap = [
+            [$attr1DefId, DefinitionType::Attribute],
+            [$event1DefId, DefinitionType::Event],
+        ];
+        $this->htmlBuilder->method('getDefinitionType')->willReturnMap($valueMap);
 
-        $this->tag->setAllowedAttributeDefIds(['href']);
-        $this->tag->setAttribute($attr1);
-        $this->tag->setEvent($event1);
 
-        $expectedResult = "<a href='bar' onclick='some javascript'>";
-        self::assertEquals($expectedResult, $this->tag->generateOpeningTag());
+        $this->element->setName($this->elementDefId);
+
+        $this->element->setAllowedAttributeDefIds(['href']);
+        $this->element->setAttribute($attr1);
+        $this->element->setEvent($event1);
+
+        $expectedResult = '<' . $this->elementDefId . " href='bar' onclick='some javascript'>";
+        self::assertEquals($expectedResult, $this->element->generateOpeningTag());
     }
 }

@@ -22,13 +22,13 @@ use pvc\interfaces\msg\MsgInterface;
  * @extends ElementVoid<VendorSpecificDefinition>
  * @implements ElementInterface<VendorSpecificDefinition>
  *
- * Handles all elements which have a closing tag
+ * Handles all elements which have a closing element
  */
 class Element extends ElementVoid implements ElementInterface
 {
     /**
      * @var array<string>
-     * an empty array means that any tag is allowed as a subtag
+     * an empty array means that any element is allowed as a subtag
      */
     protected array $allowedChildDefIds = [];
 
@@ -86,8 +86,8 @@ class Element extends ElementVoid implements ElementInterface
     public function isAllowedChildDefId(string $defId): bool
     {
         /**
-         * empty allowedSubTag array means you can put any tag in there, which is wrong, but gives us some slack
-         * for the moment in determining what child elements are allowed inside each tag.  In other words,
+         * empty allowedSubTag array means you can put any element in there, which is wrong, but gives us some slack
+         * for the moment in determining what child elements are allowed inside each element.  In other words,
          * the definitions inside the container are not yet complete
          */
         if (empty($this->getAllowedChildDefIds())) {
@@ -152,7 +152,7 @@ class Element extends ElementVoid implements ElementInterface
     protected function generateChildKey(ElementVoidInterface $childElement): string
     {
         /**
-         * tag type is something like 'form' or 'div' etc...
+         * element type is something like 'form' or 'div' etc...
          */
         $tagType = $childElement->getName();
         $callBack = function(ElementVoidInterface $tag) use ($tagType) {

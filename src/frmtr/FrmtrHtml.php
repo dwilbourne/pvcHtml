@@ -76,7 +76,7 @@ class FrmtrHtml implements FrmtrHtmlInterface
         $z = $value->generateOpeningTag();
 
         /**
-         * if it is a tag (not a void tag) then go ahead and generate the inner html and the closing tag
+         * if it is a element (not a void element) then go ahead and generate the inner html and the closing element
          */
         if ($value instanceof ElementInterface) {
             /** @var ElementVoidInterface<VendorSpecificDefinition>|MsgInterface|string $item */

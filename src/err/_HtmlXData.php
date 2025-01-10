@@ -43,7 +43,7 @@ class _HtmlXData extends XDataAbstract
     public function getXMessageTemplates(): array
     {
         return [
-            AttributeNotAllowedException::class => 'Attribute ${attributeDefId} is not permitted inside a(n) ${tagDefId} tag.',
+            AttributeNotAllowedException::class => 'Attribute ${attributeDefId} is not permitted inside a(n) ${elementDefId} element.',
             InvalidDefinitionsFileException::class => '${filePath} either does not exist or contains invalid definitions',
             InvalidAttributeIdNameException::class => 'Attribute id ${badName} is not a valid identifier for an attribute id.',
             InvalidAttributeValueException::class => 'Error trying to set attribute ${attributeName} to invalid value [${badValue}].',
@@ -53,7 +53,7 @@ class _HtmlXData extends XDataAbstract
             InvalidEventNameException::class => '${eventName} is not a valid event id.',
             InvalidNumberOfParametersException::class => 'Invalid number of parameters: expected ${expectedNumberOfParameters}',
             ChildElementNotAllowedException::class => 'Invalid subtag [${badDefId}] - either the subtag is invalid or it is a duplicate of a required subtag (see HtmlConfig).',
-            InvalidTagNameException::class => '${tagDefId} is not a valid tag id.',
+            InvalidTagNameException::class => '${elementDefId} is not a valid element id.',
             MakeDefinitionException::class => 'Unable to make definition of type ${type}.',
             DuplicateDefinitionIdException::class => 'Definition id ${defId} already exists in the container.',
             InvalidDefinitionIdException::class => 'No definition exists for defId ${defId}.',

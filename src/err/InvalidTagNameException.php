@@ -15,8 +15,8 @@ use Throwable;
  */
 class InvalidTagNameException extends LogicException
 {
-    public function __construct(string $tagDefId, Throwable $prev = null)
+    public function __construct(string $elementDefId, Throwable $prev = null)
     {
-        parent::__construct($tagDefId, $prev);
+        parent::__construct($elementDefId, $prev);
     }
 }

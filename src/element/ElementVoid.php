@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace pvc\html\element;
 
-use pvc\html\attribute\Event;
 use pvc\html\err\AttributeNotAllowedException;
 use pvc\html\err\InvalidDefinitionIdException;
 use pvc\interfaces\html\attribute\AttributeCustomDataInterface;
@@ -39,11 +38,14 @@ class ElementVoid implements ElementVoidInterface
      * ordinarily, I would set this in the constructor.  But doing so in this case creates a circular
      * dependency in the ContainerFactory class.  The HtmlBuilder has a dependency on the ContainerFactory
      * and the circular dependency is created if the ContainerFactory needs to resolve HtmlBuilder as part of the
-     * constructor of any given tag. The problem is resolved by having the htmlBuilder get the tag from the container and
+     * constructor of any given element. The problem is resolved by having the htmlBuilder get the element from the container and
      * then manually set the HtmlFactory object using setter injection in the HtmlFactory class.
      */
     protected HtmlBuilderInterface $htmlBuilder;
 
+    /**
+     * TODO: consider using actual deftypes instead of these constants
+     */
     public const ATTRIBUTES = 1;
 
     public const EVENTS = 2;
@@ -62,6 +64,30 @@ class ElementVoid implements ElementVoidInterface
      * @var array<string>
      */
     protected array $allowedAttributeDefIds = [];
+
+    /**
+     * @var array<string>
+     */
+    protected array $globalAttributes = [
+        'accesskey',
+        'class',
+        'contenteditable',
+        'dir',
+        'draggable',
+        'enterkeyhint',
+        'hidden',
+        'id',
+        'inert',
+        'inputmode',
+        'lang',
+        'popover',
+        'spellcheck',
+        'style',
+        'tabindex',
+        'title',
+        'translate'
+    ];
+
 
     /**
      * @var array<string, AttributeInterface>
@@ -97,6 +123,15 @@ class ElementVoid implements ElementVoidInterface
     }
 
     /**
+     * getGlobalAttributeDefIds
+     * @return string[]
+     */
+    public function getGlobalAttributeDefIds(): array
+    {
+        return $this->globalAttributes;
+    }
+
+    /**
      * getName
      * @return string
      */
@@ -107,7 +142,7 @@ class ElementVoid implements ElementVoidInterface
 
     /**
      * setName
-     * changing the tag id implies having to change the list of attributes the tag supports so attributes are
+     * changing the element id implies having to change the list of attributes the element supports so attributes are
      * reinitialized!
      * @param string $name
      */
@@ -115,15 +150,6 @@ class ElementVoid implements ElementVoidInterface
     {
         $this->name = $name;
         $this->attributes = [];
-    }
-
-    /**
-     * getAllowedAttributeDefIds
-     * @return array<string>
-     */
-    public function getAllowedAttributeDefIds(): array
-    {
-        return array_merge($this->allowedAttributeDefIds, $this->htmlBuilder->getGlobalAttributeDefIds());
     }
 
     /**
@@ -135,6 +161,11 @@ class ElementVoid implements ElementVoidInterface
         $this->allowedAttributeDefIds = $allowedAttributeDefIds;
     }
 
+    public function getAllowedAttributeDefIds(): array
+    {
+        return $this->allowedAttributeDefIds;
+    }
+
     /**
      * isAllowedAttribute
      * @param AttributeInterface|string $attribute
@@ -142,25 +173,22 @@ class ElementVoid implements ElementVoidInterface
      */
     public function isAllowedAttribute(AttributeInterface|string $attribute): bool
     {
-        /**
-         * as far as I know it is not "illegal" to put any event into any tag, although there are some form-based
-         * events that are typically used in forms.  See https://www.w3schools.com/tags/ref_eventattributes.asp
-         * for a place to start
-         */
-        if (!is_string($attribute)) {
-            if ($attribute instanceof EventInterface || $attribute->isGlobal()) {
-                return true;
-            } else {
-                $defId = $attribute->getDefId();
-            }
-        } else {
-            $defId = $attribute;
-        }
+        $defId = ($attribute instanceof AttributeInterface) ? $attribute->getDefId() : $attribute;
 
+        /**
+         * if it is a global attributeArrayElement, it is ok
+         */
+        if (in_array($defId, $this->getGlobalAttributeDefIds())) return true;
+
+        /**
+         * if the defId is in the list of allowed attributes, it is OK
+         */
         if (in_array($defId, $this->getAllowedAttributeDefIds())) return true;
-        if (in_array($defId, $this->getHtmlBuilder()->getDefinitionIds(DefinitionType::Attribute)) &&
-            empty($this->getAllowedAttributeDefIds())) return true;
-        if (in_array($defId, $this->getHtmlBuilder()->getDefinitionIds(DefinitionType::Event))) return true;
+
+        /**
+         * as far as I know, it is not 'illegal' to add any event to an element
+         */
+        if ($this->htmlBuilder->getDefinitionType($defId) == DefinitionType::Event) return true;
 
         return false;
     }
@@ -186,7 +214,7 @@ class ElementVoid implements ElementVoidInterface
     public function setAttribute(string|AttributeInterface $attribute, ...$values): ElementVoid
     {
         /**
-         * convert $attribute if necessary to AttributeInterface
+         * convert $attributeArrayElement if necessary to AttributeInterface
          */
         if (is_string($attribute)) {
             $attribute = $this->makeOrGetAttribute($attribute);
@@ -200,16 +228,16 @@ class ElementVoid implements ElementVoidInterface
      * setCustomData
      * @param string|AttributeCustomDataInterface $attribute
      *
-     * If $attribute is a string, then it is interpreted as a definition id.  Normally, attribute definition id's need
-     * to be unique within the attribute container.  But since this is a custom attribute, it does not exist within
+     * If $attributeArrayElement is a string, then it is interpreted as a definition id.  Normally, attributeArrayElement definition id's need
+     * to be unique within the attributeArrayElement container.  But since this is a custom attributeArrayElement, it does not exist within
      * the container at all.  The 'uniqueness' of the defId is what distinguishes it from other attributes within this
      * element. It can be any string that you want as long as it starts with 'data-'.  It was tempting to make the
-     * parameter just the part of the string after the 'data-' prefix, but in order to get the attribute, you *must*
+     * parameter just the part of the string after the 'data-' prefix, but in order to get the attributeArrayElement, you *must*
      * use the entire identifier (e.g. 'data-foo').  Here's why: it would be confusing but not technically wrong to
-     * create a custom attribute called 'data-name', for example, for an element that already has a name attribute.
+     * create a custom attributeArrayElement called 'data-name', for example, for an element that already has a name attributeArrayElement.
      * Then if you accessed it by the suffix (e.g. 'name'), you would not know whether you are
-     * referring to the name attribute or the data-name attribute. (Either that or you would end up setting the
-     * attribute with one name and getting it with another). So to keep things symmetrical and neat, custom
+     * referring to the name attributeArrayElement or the data-name attributeArrayElement. (Either that or you would end up setting the
+     * attributeArrayElement with one name and getting it with another). So to keep things symmetrical and neat, custom
      * attributes always use the fully qualified name (which is used as the definition id and the key within the
      * attributes array).
      *
@@ -254,7 +282,7 @@ class ElementVoid implements ElementVoidInterface
      * @throws AttributeNotAllowedException
      * @throws InvalidDefinitionIdException
      * in terms of semantics, I would really rather that we could use __set here.  But php requires that __set return
-     * void, whereas __call returns mixed, which is necessary for creating fluent setters for attribute values.
+     * void, whereas __call returns mixed, which is necessary for creating fluent setters for attributeArrayElement values.
      */
     public function __call(string|AttributeInterface $attribute, array $arguments): mixed
     {
@@ -266,7 +294,7 @@ class ElementVoid implements ElementVoidInterface
 
     /**
      * __get
-     * make or get the attribute
+     * make or get the attributeArrayElement
      * @param string $defId
      * @return AttributeInterface|null
      */
@@ -278,13 +306,13 @@ class ElementVoid implements ElementVoidInterface
     protected function makeOrGetAttribute(string $defId) : AttributeInterface
     {
         /**
-         * if the attribute exists, return it.
+         * if the attributeArrayElement exists, return it.
          */
         if ($attribute = $this->getAttribute($defId)) return $attribute;
 
         /**
-         * even if the allowedAttributes array is empty (meaning that any attribute is OK), the isAllowedAttribute
-         * method will return false if the defId is in the container but is not an attribute or an event (e.g. if it
+         * even if the allowedAttributes array is empty (meaning that any attributeArrayElement is OK), the isAllowedAttribute
+         * method will return false if the defId is in the container but is not an attributeArrayElement or an event (e.g. if it
          * is an element, a valueTester or an 'other')
          */
         if (!$this->isAllowedAttribute($defId)) {
@@ -292,13 +320,14 @@ class ElementVoid implements ElementVoidInterface
         }
 
         /**
-         * do we know how to make it?
+         * do we know how to make it and is it either an attribute or an event?
          */
-        if (!$type = $this->getHtmlBuilder()->getDefinitionType($defId)) {
+        $defType = $this->getHtmlBuilder()->getDefinitionType($defId);
+        if (!in_array($defType, [DefinitionType::Attribute, DefinitionType::Event])) {
             throw new InvalidDefinitionIdException($defId);
         }
 
-        $method =  ($type == 'Attribute') ? 'makeAttribute' : 'makeEvent';
+        $method =  ($defType == DefinitionType::Attribute) ? 'makeAttribute' : 'makeEvent';
         $result = $this->getHtmlBuilder()->$method($defId);
 
         assert($result instanceof  AttributeInterface);
@@ -307,33 +336,28 @@ class ElementVoid implements ElementVoidInterface
 
     /**
      * getAttributes
-     * @param int $attributeTypes
+     * @param int $defTypeMask
      * @return array<AttributeInterface>
      */
-    public function getAttributes(int $attributeTypes = self::ATTRIBUTES | self::EVENTS): array
+    public function getAttributes(int $defTypeMask = self::ATTRIBUTES | self::EVENTS): array
     {
-        $callback = function ($item) use ($attributeTypes) {
+        $callback = function (AttributeInterface $attributesArrayElement) use ($defTypeMask) : bool {
             /**
-             * $item is an attribute if it is not an event.......
+             * @var DefinitionType $defType
              */
-            $isEvent = ($item instanceof Event) ? self::EVENTS : 0;
-            $isAttribute = $isEvent ? 0 : self::ATTRIBUTES;
-
-            if (1 == (self::ATTRIBUTES & $attributeTypes & $isAttribute)) {
-                return true;
-            }
-            if (2 == (self::EVENTS & $attributeTypes & $isEvent)) {
-                return true;
-            }
-            return false;
+            $defType = $this->getHtmlBuilder()->getDefinitionType($attributesArrayElement->getDefId());
+            $isAttribute = ($defType == DefinitionType::Attribute) ? self::ATTRIBUTES : 0;
+            $isEvent = ($defType == DefinitionType::Event) ? self::EVENTS : 0;
+            return (($defTypeMask & $isAttribute) || ($defTypeMask & $isEvent));
         };
+
         return array_filter($this->attributes, $callback);
     }
 
     /**
      * removeAttribute
      * @param string $defId
-     * removes an attribute (or event)
+     * removes an attributeArrayElement (or event)
      */
     public function removeAttribute(string $defId): void
     {

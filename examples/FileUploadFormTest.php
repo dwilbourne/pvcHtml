@@ -32,7 +32,7 @@ class FileUploadFormTest extends TestCase
         $container = new HtmlContainer($leagueContainer);
 
         /**
-         * this factory contains the methods to create vendor-specific definitions which will be added to the container.
+         * this htmlBuilder contains the methods to create vendor-specific definitions which will be added to the container.
          */
         $definitionsFactory = new HtmlDefinitionFactory();
 

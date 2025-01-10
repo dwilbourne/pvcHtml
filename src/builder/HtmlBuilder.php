@@ -58,7 +58,8 @@ class HtmlBuilder implements HtmlBuilderInterface
     protected string $definitionsFile = __DIR__ . '/definitions/Definitions.json';
 
     /**
-     * @var array<string, string>
+     * @var array<string, DefinitionType>
+     * key is the defId, value is whether it is an attribute, element, etc
      */
     protected array $definitionTypes;
 
@@ -90,29 +91,6 @@ class HtmlBuilder implements HtmlBuilderInterface
         'style',
         'title',
         'type',
-    ];
-
-    /**
-     * @var array<string>
-     */
-    protected array $globalAttributes = [
-        'accesskey',
-        'class',
-        'contenteditable',
-        'dir',
-        'draggable',
-        'enterkeyhint',
-        'hidden',
-        'id',
-        'inert',
-        'inputmode',
-        'lang',
-        'popover',
-        'spellcheck',
-        'style',
-        'tabindex',
-        'title',
-        'translate'
     ];
 
     /**
@@ -169,15 +147,6 @@ class HtmlBuilder implements HtmlBuilderInterface
         $this->definitionFactory = $definitionFactory;
     }
 
-    /**
-     * getGlobalAttributeDefIds
-     * @return string[]
-     */
-    public function getGlobalAttributeDefIds(): array
-    {
-        return $this->globalAttributes;
-    }
-
     protected function setDefinitionsFile(string $filename): void
     {
         if (!is_readable($filename)) {
@@ -228,11 +197,14 @@ class HtmlBuilder implements HtmlBuilderInterface
 
         foreach ($jsonDefs as $jsonDef) {
             /**
-             * this artifact is really for diagnostics.  Using the getDefinitionIdsTypes method you can return
-             * all of this array or filter it for definition ids of a certain type
+             * this artifact is used to see if a defId is referring to an Attribute, Event, etc
              */
             $defId = $jsonDef['defId'];
-            $defType = $jsonDef['defType'];
+
+            /**
+             * $defType is an enum such as Attribute or Element.
+             */
+            $defType = DefinitionType::tryFrom($jsonDef['defType']);
 
             $def = $this->makeDefinition($jsonDef);
 
@@ -254,31 +226,30 @@ class HtmlBuilder implements HtmlBuilderInterface
      */
     protected function makeDefinition(array $defArray): mixed
     {
-        $defTypeString = $defArray['defType'];
+        $defType = DefinitionType::tryFrom($defArray['defType']);
 
-        $result = match(strval($defTypeString)) {
-            'Attribute' => $this->definitionFactory->makeAttributeDefinition($defArray),
-            'AttributeValueTester' => $this->definitionFactory->makeAttributeValueTesterDefinition($defArray),
-            'Element' => $this->definitionFactory->makeElementDefinition($defArray),
-            'Event' => $this->definitionFactory->makeEventDefinition($defArray),
-            'Other' => $this->definitionFactory->makeOtherDefinition($defArray),
-            default => throw new DTOInvalidPropertyValueException('defType', $defTypeString, 'DTOTrait'),
+        $result = match($defType) {
+            DefinitionType::Attribute => $this->definitionFactory->makeAttributeDefinition($defArray),
+            DefinitionType::AttributeValueTester => $this->definitionFactory->makeAttributeValueTesterDefinition($defArray),
+            DefinitionType::Element => $this->definitionFactory->makeElementDefinition($defArray),
+            DefinitionType::Event => $this->definitionFactory->makeEventDefinition($defArray),
+            DefinitionType::Other => $this->definitionFactory->makeOtherDefinition($defArray),
+            default => throw new DTOInvalidPropertyValueException('defType', $defType->value, 'DTOTrait'),
         };
         return $result;
     }
 
     /**
-     * getDefinitionIdsTypes
-     * @param DefinitionType $type
-     * @return array<string, string>
+     * getDefinitionTypes
+     * @param DefinitionType $typeFilter
+     * @return array<string, DefinitionType>
      */
-    public function getDefinitionTypes(DefinitionType $type = null): array
+    public function getDefinitionTypes(DefinitionType $typeFilter = null): array
     {
-        $result = [];
-        foreach ($this->definitionTypes as $defId => $defType) {
-            if (is_null($type) || $defType == $type->value) {
-                $result[$defId] = $defType;
-            }
+        $result = $this->definitionTypes;
+        if ($typeFilter) {
+            $result = array_filter($result,
+                function (DefinitionType $defType) use ($typeFilter) { return ($defType == $typeFilter); });
         }
         return $result;
     }
@@ -286,9 +257,9 @@ class HtmlBuilder implements HtmlBuilderInterface
     /**
      * getDefinitionType
      * @param string $defId
-     * @return string|null
+     * @return DefinitionType|null
      */
-    public function getDefinitionType(string $defId): ?string
+    public function getDefinitionType(string $defId): ?DefinitionType
     {
         return $this->definitionTypes[$defId] ?? null;
     }

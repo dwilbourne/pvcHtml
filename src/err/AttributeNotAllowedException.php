@@ -16,8 +16,8 @@ use Throwable;
  */
 class AttributeNotAllowedException extends LogicException
 {
-    public function __construct(string $attributeDefId, string $tagDefId, Throwable $prev = null)
+    public function __construct(string $attributeDefId, string $elementDefId, Throwable $prev = null)
     {
-        parent::__construct($attributeDefId, $tagDefId, $prev);
+        parent::__construct($attributeDefId, $elementDefId, $prev);
     }
 }

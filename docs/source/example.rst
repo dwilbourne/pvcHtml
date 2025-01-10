@@ -11,10 +11,10 @@ namespace pvcExamples\html;
 use League\Container\Container;
 use PHPUnit\Framework\TestCase;
 use pvc\frmtr\html\FrmtrHtml;
-use pvc\html\factory\definitions\AbstractDefinitionFactory;
-use pvc\html\factory\definitions\implementations\league\LeagueContainer;
-use pvc\html\factory\definitions\implementations\league\LeagueDefinitionFactory;
-use pvc\html\factory\HtmlFactory;
+use pvc\html\htmlBuilder\definitions\AbstractDefinitionFactory;
+use pvc\html\htmlBuilder\definitions\implementations\league\LeagueContainer;
+use pvc\html\htmlBuilder\definitions\implementations\league\LeagueDefinitionFactory;
+use pvc\html\htmlBuilder\HtmlFactory;
 use pvc\intl\Locale;
 use pvc\msg\MsgFrmtr;
 
@@ -28,7 +28,7 @@ class FileUploadFormTest extends TestCase
         $leagueDefinitionsFactory = new LeagueDefinitionFactory();
         $abstractDefinitionsFactory = new AbstractDefinitionFactory($leagueDefinitionsFactory);
 
-        $factory = new HtmlFactory($container, $abstractDefinitionsFactory);
+        $htmlBuilder = new HtmlFactory($container, $abstractDefinitionsFactory);
 
         $locale = new Locale();
         $locale->setLocaleString('en');
@@ -41,14 +41,14 @@ class FileUploadFormTest extends TestCase
         /**
          * long form using public method names to make attributes
          */
-        $form = $factory->makeElement('form')
+        $form = $htmlBuilder->makeElement('form')
                         ->setAttribute('method', 'post')
                         ->setAttribute('action', 'file://target.php');
 
         /**
          * short form using magic 'setter'
          */
-        $form = $factory->makeElement('form')->method('post')->action('file://target.php');
+        $form = $htmlBuilder->makeElement('form')->method('post')->action('file://target.php');
 
         $form->setChild('input')->input_type('file')->name('filename');
         $form->setChild('button')->button_type('submit')->name('btnOK')->value('ok')->setInnerText('Ok');

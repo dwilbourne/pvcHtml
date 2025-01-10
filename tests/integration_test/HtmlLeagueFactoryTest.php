@@ -44,14 +44,14 @@ class HtmlLeagueFactoryTest extends TestCase
     /**
      * @var HtmlBuilder
      */
-    protected HtmlBuilder $htmlFactory;
+    protected HtmlBuilder $htmlBuilder;
     
     public function setUp(): void
     {
         $leagueContainer = new Container();
         $this->container = new HtmlContainer($leagueContainer);
         $this->definitionFactory = new HtmlDefinitionFactory();
-        $this->htmlFactory = new HtmlBuilder($this->container, $this->definitionFactory);
+        $this->htmlBuilder = new HtmlBuilder($this->container, $this->definitionFactory);
     }
 
     /**
@@ -60,7 +60,7 @@ class HtmlLeagueFactoryTest extends TestCase
      */
     public function testConstruct(): void
     {
-        self::assertInstanceOf(HtmlBuilder::class, $this->htmlFactory);
+        self::assertInstanceOf(HtmlBuilder::class, $this->htmlBuilder);
     }
 
     /**
@@ -69,13 +69,13 @@ class HtmlLeagueFactoryTest extends TestCase
      */
     public function testGetDefinitionTypes(): void
     {
-        $defTypes = $this->htmlFactory->getDefinitionTypes();
+        $defTypes = $this->htmlBuilder->getDefinitionTypes();
         self::assertIsArray($defTypes);
         self::assertTrue(in_array('html', array_keys($defTypes)));
 
-        $attributeTypes = $this->htmlFactory->getDefinitionTypes(DefinitionType::Attribute);
-        foreach($attributeTypes as $type) {
-            self::assertEquals(DefinitionType::Attribute->value, $type);
+        $attributeTypes = $this->htmlBuilder->getDefinitionTypes(DefinitionType::Attribute);
+        foreach($attributeTypes as $defType) {
+            self::assertEquals(DefinitionType::Attribute, $defType);
         }
     }
 
@@ -85,7 +85,7 @@ class HtmlLeagueFactoryTest extends TestCase
      */
     public function testGetDefinitionType(): void
     {
-        self::assertEquals('Element', $this->htmlFactory->getDefinitionType('html'));
+        self::assertEquals(DefinitionType::Element, $this->htmlBuilder->getDefinitionType('html'));
     }
 
     /**
@@ -94,8 +94,8 @@ class HtmlLeagueFactoryTest extends TestCase
      */
     public function testGetDefinitionIds(): void
     {
-        $defTypes = $this->htmlFactory->getDefinitionTypes();
-        self::assertEqualsCanonicalizing($this->htmlFactory->getDefinitionIds(), array_keys($defTypes));
+        $defTypes = $this->htmlBuilder->getDefinitionTypes();
+        self::assertEqualsCanonicalizing($this->htmlBuilder->getDefinitionIds(), array_keys($defTypes));
     }
 
     /**
@@ -114,7 +114,7 @@ class HtmlLeagueFactoryTest extends TestCase
 
         self::assertInstanceOf(
             AttributeCustomDataInterface::class,
-            $this->htmlFactory->makeCustomData($defId, $value, $valTester));
+            $this->htmlBuilder->makeCustomData($defId, $value, $valTester));
     }
 
     /**
@@ -126,9 +126,9 @@ class HtmlLeagueFactoryTest extends TestCase
      */
     public function testMakeEvents(): void
     {
-        $eventDefIds = $this->htmlFactory->getDefinitionIds(DefinitionType::Event);
+        $eventDefIds = $this->htmlBuilder->getDefinitionIds(DefinitionType::Event);
         foreach($eventDefIds as $defId) {
-            self::assertInstanceOf(Event::class, $this->htmlFactory->makeEvent($defId));
+            self::assertInstanceOf(Event::class, $this->htmlBuilder->makeEvent($defId));
         }
     }
 
@@ -141,9 +141,9 @@ class HtmlLeagueFactoryTest extends TestCase
      */
     public function testMakeElements(): void
     {
-        $elementDefIds = $this->htmlFactory->getDefinitionIds(DefinitionType::Element);
+        $elementDefIds = $this->htmlBuilder->getDefinitionIds(DefinitionType::Element);
         foreach($elementDefIds as $defId) {
-            self::assertInstanceOf(ElementVoid::class, $this->htmlFactory->makeElement($defId));
+            self::assertInstanceOf(ElementVoid::class, $this->htmlBuilder->makeElement($defId));
         }
     }
 
@@ -156,9 +156,9 @@ class HtmlLeagueFactoryTest extends TestCase
      */
     public function testMakeOthers(): void
     {
-        $otherDefIds = $this->htmlFactory->getDefinitionIds(DefinitionType::Other);
+        $otherDefIds = $this->htmlBuilder->getDefinitionIds(DefinitionType::Other);
         foreach($otherDefIds as $defId) {
-            self::assertIsObject($this->htmlFactory->getContainer()->get($defId));
+            self::assertIsObject($this->htmlBuilder->getContainer()->get($defId));
         }
     }
 
@@ -170,10 +170,10 @@ class HtmlLeagueFactoryTest extends TestCase
      */
     public function testMakeAttributeValueTesters(): void
     {
-        $attributeValueTesterDefIds = $this->htmlFactory->getDefinitionIds(DefinitionType::AttributeValueTester);
+        $attributeValueTesterDefIds = $this->htmlBuilder->getDefinitionIds(DefinitionType::AttributeValueTester);
         foreach ($attributeValueTesterDefIds as $defId) {
             try {
-                self::assertInstanceOf(ValTesterInterface::class, $this->htmlFactory->getContainer()->get($defId));
+                self::assertInstanceOf(ValTesterInterface::class, $this->htmlBuilder->getContainer()->get($defId));
             } catch(Throwable $e) {
                 echo 'Unable to make val tester ' . $defId . PHP_EOL;
                 throw $e;
@@ -190,9 +190,9 @@ class HtmlLeagueFactoryTest extends TestCase
      */
     public function testMakeAttributes(): void
     {
-        $attributeDefIds = $this->htmlFactory->getDefinitionIds(DefinitionType::Attribute);
+        $attributeDefIds = $this->htmlBuilder->getDefinitionIds(DefinitionType::Attribute);
         foreach ($attributeDefIds as $defId) {
-            self::assertInstanceOf(AttributeInterface::class, $this->htmlFactory->makeAttribute($defId));
+            self::assertInstanceOf(AttributeInterface::class, $this->htmlBuilder->makeAttribute($defId));
         }
     }
 }

@@ -19,8 +19,8 @@ class AttributeCustomData extends AttributeSingleValue implements AttributeCusto
      * setName
      * @param string $name
      * @throws InvalidCustomDataNameException
-     * Custom attributes are stored in the attributes array of a tag with the prefix so
-     * that we can allow a tag to have an 'href' attribute and a 'data-href' attribute.
+     * Custom attributes are stored in the attributes array of a element with the prefix so
+     * that we can allow a element to have an 'href' attribute and a 'data-href' attribute.
      */
     public function setName(string $name): void
     {
