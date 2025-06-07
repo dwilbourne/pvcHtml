@@ -9,10 +9,10 @@ namespace pvcExamples\html;
 
 use League\Container\Container;
 use PHPUnit\Framework\TestCase;
-use pvc\html\builder\definitions\implementations\league\HtmlContainer;
-use pvc\html\builder\definitions\implementations\league\HtmlDefinitionFactory;
-use pvc\html\builder\HtmlBuilder;
+use pvc\html\factory\HtmlContainer;
 use pvc\html\frmtr\FrmtrHtml;
+use pvc\htmlbuilder\builder\HtmlBuilder;
+use pvc\htmlbuilder\container\HtmlDefinitionFactory;
 use pvc\intl\Locale;
 use pvc\msg\MsgFrmtr;
 

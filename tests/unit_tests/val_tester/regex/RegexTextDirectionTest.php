@@ -34,7 +34,7 @@ class RegexTextDirectionTest extends TestCase
         $this->assertEquals($expectedResult, $this->regex->match($textDirection));
     }
 
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return array(
             'lower case ltr - OK' => ['ltr', true],

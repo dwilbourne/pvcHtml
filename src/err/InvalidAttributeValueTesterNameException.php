@@ -16,7 +16,7 @@ use Throwable;
  */
 class InvalidAttributeValueTesterNameException extends LogicException
 {
-    public function __construct(string $attributeValueTesterDefId, Throwable $prev = null)
+    public function __construct(string $attributeValueTesterDefId, ?Throwable $prev = null)
     {
         parent::__construct($attributeValueTesterDefId, $prev);
     }

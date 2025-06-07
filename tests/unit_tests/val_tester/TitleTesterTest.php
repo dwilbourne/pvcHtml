@@ -32,7 +32,7 @@ class TitleTesterTest extends TestCase
         self::assertEquals($expectedOutput, $this->tester->testValue($title), $comment);
     }
 
-    public function valTesterTitleDataProvider(): array
+    public static function valTesterTitleDataProvider(): array
     {
         return [
             ['short title', true, 'failed on short title test'],

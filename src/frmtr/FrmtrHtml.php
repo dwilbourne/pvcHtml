@@ -10,7 +10,6 @@ namespace pvc\html\frmtr;
 
 use pvc\interfaces\frmtr\html\FrmtrHtmlInterface;
 use pvc\interfaces\frmtr\msg\FrmtrMsgInterface;
-use pvc\interfaces\html\builder\definitions\DefinitionFactoryInterface;
 use pvc\interfaces\html\element\ElementInterface;
 use pvc\interfaces\html\element\ElementVoidInterface;
 use pvc\interfaces\intl\LocaleInterface;
@@ -18,8 +17,6 @@ use pvc\interfaces\msg\MsgInterface;
 
 /**
  * Class FrmtrHtml
- * @template VendorSpecificDefinition of DefinitionFactoryInterface
- * @implements FrmtrHtmlInterface<VendorSpecificDefinition>
  */
 class FrmtrHtml implements FrmtrHtmlInterface
 {
@@ -68,7 +65,6 @@ class FrmtrHtml implements FrmtrHtmlInterface
 
     /**
      * format
-     * @param ElementVoidInterface<VendorSpecificDefinition> $value
      * @return string
      */
     public function format($value): string
@@ -79,8 +75,7 @@ class FrmtrHtml implements FrmtrHtmlInterface
          * if it is a element (not a void element) then go ahead and generate the inner html and the closing element
          */
         if ($value instanceof ElementInterface) {
-            /** @var ElementVoidInterface<VendorSpecificDefinition>|MsgInterface|string $item */
-            foreach ($value->getChildren() as $item) {
+            foreach ($value->getNodes() as $item) {
                 $z .= $this->formatInnerHtmlRecurse($item);
             }
             $z .= $value->generateClosingTag();
@@ -91,7 +86,6 @@ class FrmtrHtml implements FrmtrHtmlInterface
 
     /**
      * formatInnerHtmlRecurse
-     * @param ElementVoidInterface<VendorSpecificDefinition>|MsgInterface|string $value
      * @return string
      */
     protected function formatInnerHtmlRecurse(ElementVoidInterface|MsgInterface|string $value): string

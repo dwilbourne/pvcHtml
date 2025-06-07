@@ -43,7 +43,7 @@ class AreaCoordsTesterTest extends TestCase
         self::assertEquals($expectedResult, $this->tester->getShape(), $comment);
     }
 
-    public function shapeProvider(): array
+    public static function shapeProvider(): array
     {
         return [
             ['circle', 'circle', 'failed to set circle properly'],
@@ -67,7 +67,7 @@ class AreaCoordsTesterTest extends TestCase
         self::assertEquals($expectedResult, $this->tester->testValue($coords), $comment);
     }
 
-    public function coordinateProvider(): array
+    public static function coordinateProvider(): array
     {
         return [
             '4 numeric coords' => ['rect', '12, 34, 56, 78', true, 'failed to validate 12, 34, 56, 78 for rect'],

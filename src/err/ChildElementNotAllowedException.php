@@ -16,7 +16,7 @@ use Throwable;
  */
 class ChildElementNotAllowedException extends LogicException
 {
-    public function __construct(string $badDefId, Throwable $prev = null)
+    public function __construct(string $badDefId, ?Throwable $prev = null)
     {
         parent::__construct($badDefId, $prev);
     }

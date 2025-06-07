@@ -16,7 +16,7 @@ use Throwable;
  */
 class InvalidAttributeValueException extends LogicException
 {
-    public function __construct(string $attributeName, mixed $badValue, Throwable $prev = null)
+    public function __construct(string $attributeName, mixed $badValue, ?Throwable $prev = null)
     {
         parent::__construct($attributeName, $badValue, $prev);
     }

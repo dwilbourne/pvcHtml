@@ -10,10 +10,11 @@
 	],
 	"license": "MIT",
 	"config": {
-		"php": "8.3.12"
+		"php": "8.4"
 	},
 	"autoload": {
 		"psr-4": {
+			"pvc\\htmlbuilder\\": "builder/",
 			"pvc\\html\\": "src/",
 			"pvcTests\\html\\": "tests/",
 			"pvcExamples\\html\\": "examples/"
@@ -31,11 +32,11 @@
 		"pvc/parser": "*",
 		"pvc/regex": "*",
 		"pvc/validator": "*",
-		"league/container": "*",
-		"ext-uopz": "*"
+		"league/container": "*"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^9",
-		"phpstan/phpstan": "*"
+		"phpunit/phpunit": "^10",
+		"phpstan/phpstan": "^2",
+		"rector/rector": "^2"
 	}
 }

@@ -1,0 +1,1072 @@
+[
+  {
+    "name": "a",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "anchor tag, creates a hyperlink",
+    "attributeNames": [
+      "download",
+      "href",
+      "hreflang",
+      "media",
+      "ping",
+      "referrerpolicy",
+      "rel",
+      "target",
+      "type"
+    ],
+    "contentCategories": [
+      "flow",
+      "phrasing",
+      "interactive",
+      "palpable"
+    ],
+    "permittedContent": [
+      "transparent",
+      "custom"
+    ],
+    "permittedParent": [
+              "flow",
+              "custom"
+            ]
+  },
+  {
+    "name": "abbr",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines an abbreviation or an acronym.  Use the global title attribute to show the description for the abbreviation\/acronym when you mouse over the element.",
+    "attributeNames": []
+  },
+  {
+    "name": "address",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "The <address> tag defines the contact information for the author\/owner of a document or an article.",
+    "attributeNames": []
+  },
+  {
+    "name": "area",
+    "defType": "Element",
+    "concrete": "ElementVoid",
+    "comment": "defines an area inside an image map",
+    "attributeNames": [
+      "alt",
+      "coords",
+      "download",
+      "href",
+      "hreflang",
+      "media",
+      "referrerpolicy",
+      "rel",
+      "shape",
+      "target",
+      "type"
+    ]
+  },
+  {
+    "name": "article",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "specifies independent, self-contained content. An article should make sense on its own, and it should be possible to distribute it independently of the rest of the site.",
+    "attributeNames": []
+  },
+  {
+    "name": "aside",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "The <aside> tag defines some content aside from the content it is placed in. The <aside> content is often placed as a sidebar in a document.",
+    "attributeNames": []
+  },
+  {
+    "name": "audio",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to embed sound content in a document",
+    "attributeNames": [
+      "autoplay",
+      "controls",
+      "loop",
+      "muted",
+      "preload",
+      "src"
+    ]
+  },
+  {
+    "name": "b",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "makes the contained content bold.  Better to use css",
+    "attributeNames": []
+  },
+  {
+    "name": "base",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "Specify a default URL and a default target for all links on a page",
+    "attributeNames": [
+      "href",
+      "target"
+    ]
+  },
+  {
+    "name": "bdi",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "BDI stands for Bi-Directional Isolation.  The <bdi> tag isolates a part of text that might be formatted in a different direction from other text outside it. This element is useful when embedding user-generated content with an unknown text direction.",
+    "attributeNames": []
+  },
+  {
+    "name": "bdo",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "bi directional override",
+    "attributeNames": []
+  },
+  {
+    "name": "blockquote",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "A section that is quoted from another source",
+    "attributeNames": [
+      "cite_attr"
+    ]
+  },
+  {
+    "name": "body",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines the document body.",
+    "attributeNames": []
+  },
+  {
+    "name": "br",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "inserts a single line break",
+    "attributeNames": []
+  },
+  {
+    "name": "button",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a clickable button.",
+    "attributeNames": [
+      "autofocus",
+      "disabled",
+      "form_attr",
+      "formaction",
+      "formenctype",
+      "formmethod",
+      "formnovalidate",
+      "formtarget",
+      "popovertarget",
+      "popovertargetaction",
+      "name",
+      "button_type",
+      "value"
+    ]
+  },
+  {
+    "name": "canvas",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to draw graphics, on the fly, via scripting (usually JavaScript",
+    "attributeNames": [
+      "height",
+      "width"
+    ]
+  },
+  {
+    "name": "caption",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used inside a table element, defines a table caption.  Must immediately follow the opening table tag",
+    "attributeNames": []
+  },
+  {
+    "name": "cite",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines the title of a creative work",
+    "attributeNames": []
+  },
+  {
+    "name": "code",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "Define some text as computer code",
+    "attributeNames": []
+  },
+  {
+    "name": "col",
+    "defType": "Element",
+    "concrete": "ElementVoid",
+    "comment": "specifies column properties for each column within a <colgroup> element.  useful for applying styles to entire columns, instead of repeating the styles for each cell, for each row",
+    "attributeNames": []
+  },
+  {
+    "name": "colgroup",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "specifies a group of one or more columns in a table for formatting",
+    "attributeNames": []
+  },
+  {
+    "name": "data",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to add a machine-readable translation of a given content",
+    "attributeNames": []
+  },
+  {
+    "name": "datalist",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "specifies a list of pre-defined options for an <input> element",
+    "attributeNames": []
+  },
+  {
+    "name": "dd",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to describe a term\/name in a description list (see dl and dt)",
+    "attributeNames": []
+  },
+  {
+    "name": "embed",
+    "defType": "Element",
+    "concrete": "ElementVoid",
+    "comment": "defines text that has been deleted from a document. Browsers will usually strike a line through deleted text.",
+    "attributeNames": [
+      "cite_attr",
+      "datetime"
+    ]
+  },
+  {
+    "name": "details",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "creates a widget that can open\/close to provide a summary or detailed set of information",
+    "attributeNames": [
+      "open"
+    ]
+  },
+  {
+    "name": "dfn",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "stands for the definition element and it specifies a term that is going to be defined within the content",
+    "attributeNames": []
+  },
+  {
+    "name": "dialog",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a dialog box or subwindow, making it easy to create popup dialogs and modals on a web page",
+    "attributeNames": [
+      "open"
+    ]
+  },
+  {
+    "name": "div",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "section in a document (the classic containing element",
+    "attributeNames": []
+  },
+  {
+    "name": "dl",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a description list",
+    "attributeNames": []
+  },
+  {
+    "name": "dt",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a term\/name in a description list",
+    "attributeNames": []
+  },
+  {
+    "name": "em",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "define emphasized text. The content inside is typically displayed in italic",
+    "attributeNames": []
+  },
+  {
+    "name": "del",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a container for an external resource, such as a web page, a picture, a media player",
+    "attributeNames": [
+      "height",
+      "src",
+      "type",
+      "width"
+    ]
+  },
+  {
+    "name": "fieldset",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to group related elements in a form",
+    "attributeNames": [
+      "disabled",
+      "form_attr",
+      "name"
+    ]
+  },
+  {
+    "name": "figcaption",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a caption for a <figure> element",
+    "attributeNames": []
+  },
+  {
+    "name": "figure",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "specifies self-contained content, like illustrations, diagrams, photos, code listings, etc",
+    "attributeNames": []
+  },
+  {
+    "name": "form",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to create an HTML form for user input",
+    "attributeNames": [
+      "accept-charset",
+      "action",
+      "autocomplete",
+      "enctype",
+      "method",
+      "name",
+      "novalidate",
+      "rel",
+      "target"
+    ]
+  },
+  {
+    "name": "h1",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "heading levels",
+    "attributeNames": []
+  },
+  {
+    "name": "h2",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "",
+    "attributeNames": []
+  },
+  {
+    "name": "h3",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "",
+    "attributeNames": []
+  },
+  {
+    "name": "h4",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "",
+    "attributeNames": []
+  },
+  {
+    "name": "h5",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "",
+    "attributeNames": []
+  },
+  {
+    "name": "h6",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "",
+    "attributeNames": []
+  },
+  {
+    "name": "head",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "a container for metadata (data about data and is placed between the <html> tag and the <body> tag",
+    "attributeNames": [
+      "none"
+    ]
+  },
+  {
+    "name": "header",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "represents a container for introductory content or a set of navigational links.",
+    "attributeNames": []
+  },
+  {
+    "name": "hgroup",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to surround a heading and one or more <p> elements.",
+    "attributeNames": []
+  },
+  {
+    "name": "hr",
+    "defType": "Element",
+    "concrete": "ElementVoid",
+    "comment": "defines a thematic break in an HTML page (e.g. a shift of topic. Most often displayed as a horizontal rule that is used to separate content",
+    "attributeNames": []
+  },
+  {
+    "name": "html",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "represents the root of an HTML document",
+    "attributeNames": []
+  },
+  {
+    "name": "i",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a part of text in an alternate voice or mood. The content inside is typically displayed in italic",
+    "attributeNames": []
+  },
+  {
+    "name": "iframe",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "specifies an inline frame",
+    "attributeNames": [
+      "allow",
+      "height",
+      "loading",
+      "name",
+      "referrerpolicy",
+      "sandbox",
+      "src",
+      "srcdoc",
+      "width"
+    ]
+  },
+  {
+    "name": "img",
+    "defType": "Element",
+    "concrete": "ElementVoid",
+    "comment": "used to embed an image in an HTML page",
+    "attributeNames": [
+      "alt",
+      "crossorigin",
+      "height",
+      "ismap",
+      "loading",
+      "longdesc",
+      "referrerpolicy",
+      "sizes",
+      "src",
+      "srcset",
+      "usemap",
+      "width"
+    ]
+  },
+  {
+    "name": "input",
+    "defType": "Element",
+    "concrete": "ElementVoid",
+    "comment": "specifies an input field where the user can enter data",
+    "attributeNames": [
+      "accept",
+      "alt",
+      "autocomplete",
+      "autofocus",
+      "checked",
+      "dirname",
+      "disabled",
+      "form_attr",
+      "formaction",
+      "formenctype",
+      "formmethod",
+      "formnovalidate",
+      "formtarget",
+      "height",
+      "list",
+      "max",
+      "maxlength",
+      "min",
+      "minlength",
+      "multiple",
+      "name",
+      "pattern",
+      "placeholder",
+      "popovertarget",
+      "popovertargetaction",
+      "readonly",
+      "required",
+      "size",
+      "src",
+      "step",
+      "input_type",
+      "value",
+      "width"
+    ]
+  },
+  {
+    "name": "ins",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a text that has been inserted into a document. Browsers will usually underline inserted text",
+    "attributeNames": [
+      "cite_attr",
+      "datetime"
+    ]
+  },
+  {
+    "name": "kbd",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to define keyboard input. The content inside is displayed in the browser's default monospace font. This tag is not deprecated. However, it is possible to achieve richer effect by using CSS.",
+    "attributeNames": []
+  },
+  {
+    "name": "label",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a label for an element",
+    "attributeNames": [
+      "for",
+      "form_attr"
+    ]
+  },
+  {
+    "name": "legend",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a caption for the <fieldset> element",
+    "attributeNames": []
+  },
+  {
+    "name": "li",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a list item",
+    "attributeNames": [
+      "value"
+    ]
+  },
+  {
+    "name": "link",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines the relationship between the current document and an external resource",
+    "attributeNames": [
+      "crossorigin",
+      "href",
+      "hreflang",
+      "media",
+      "referrerpolicy",
+      "rel",
+      "sizes",
+      "title_attr",
+      "type"
+    ]
+  },
+  {
+    "name": "main",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "Specify the main content of the document",
+    "attributeNames": []
+  },
+  {
+    "name": "map",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "image map",
+    "attributeNames": [
+      "charset",
+      "content",
+      "http-equiv",
+      "name"
+    ]
+  },
+  {
+    "name": "mark",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines text that should be marked or highlighted",
+    "attributeNames": []
+  },
+  {
+    "name": "menu",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines an unordered list of content.  It is an alternative to the <ul> tag and browsers will treat these two lists equally.",
+    "attributeNames": []
+  },
+  {
+    "name": "meta",
+    "defType": "Element",
+    "concrete": "ElementVoid",
+    "comment": "describes metadata within an HTML document",
+    "attributeNames": [
+      "charset",
+      "content",
+      "http-equiv",
+      "name"
+    ]
+  },
+  {
+    "name": "meter",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a scalar measurement within a known range, or a fractional value. This is also known as a gauge",
+    "attributeNames": [
+      "form_attr",
+      "high",
+      "low",
+      "max",
+      "min",
+      "optimum",
+      "value"
+    ]
+  },
+  {
+    "name": "nav",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "A set of navigation links",
+    "attributeNames": []
+  },
+  {
+    "name": "noscript",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines an alternate content to be displayed to users that have disabled scripts in their browser",
+    "attributeNames": []
+  },
+  {
+    "name": "object",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a container for an external resource",
+    "attributeNames": [
+      "data_attr",
+      "form_attr",
+      "height",
+      "name",
+      "type",
+      "typemustmatch",
+      "usemap",
+      "width"
+    ]
+  },
+  {
+    "name": "ol",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines an ordered list",
+    "attributeNames": [
+      "reversed",
+      "start",
+      "type"
+    ]
+  },
+  {
+    "name": "optgroup",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to group related options in a <select> element (drop-down list)",
+    "attributeNames": [
+      "disabled",
+      "label_attr"
+    ]
+  },
+  {
+    "name": "option",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines an option in a select list",
+    "attributeNames": [
+      "disabled",
+      "label_attr",
+      "selected",
+      "value"
+    ]
+  },
+  {
+    "name": "output",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to represent the result of a calculation (like one performed by a script)",
+    "attributeNames": [
+      "for",
+      "form_attr",
+      "name"
+    ]
+  },
+  {
+    "name": "p",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a paragraph",
+    "attributeNames": []
+  },
+  {
+    "name": "param",
+    "defType": "Element",
+    "concrete": "ElementVoid",
+    "comment": "define parameters for an <object> element",
+    "attributeNames": [
+      "name",
+      "value"
+    ]
+  },
+  {
+    "name": "picture",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "gives web developers more flexibility in specifying image resources",
+    "attributeNames": []
+  },
+  {
+    "name": "pre",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines preformatted text.  element is displayed in a fixed-width font, and the text preserves both spaces and line breaks. The text will be displayed exactly as written in the HTML source code.",
+    "attributeNames": []
+  },
+  {
+    "name": "progress",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "Use the <progress> tag in conjunction with JavaScript to display the progress of a task.",
+    "attributeNames": [
+      "max",
+      "value"
+    ]
+  },
+  {
+    "name": "q",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a short quotation",
+    "attributeNames": [
+      "cite_attr"
+    ]
+  },
+  {
+    "name": "rp",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to provide parentheses around a ruby text, to be shown by browsers that do not support ruby annotations",
+    "attributeNames": []
+  },
+  {
+    "name": "rt",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines an explanation or pronunciation of characters (for East Asian typography in a ruby annotation",
+    "attributeNames": []
+  },
+  {
+    "name": "ruby",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "specifies a ruby annotation. A ruby annotation is a small extra text, attached to the main text to indicate the pronunciation or meaning of the corresponding characters. This kind of annotation is often used in Japanese publications",
+    "attributeNames": []
+  },
+  {
+    "name": "s",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "specifies text that is no longer correct, accurate or relevant. The text will be displayed with a line through it",
+    "attributeNames": []
+  },
+  {
+    "name": "sample",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "define sample output from a computer program",
+    "attributeNames": []
+  },
+  {
+    "name": "script",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to embed a client-side script (JavaScript)",
+    "attributeNames": [
+      "async",
+      "crossorigin",
+      "defer",
+      "integrity",
+      "nomodule",
+      "referrerpolicy",
+      "src",
+      "type"
+    ]
+  },
+  {
+    "name": "search",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "Elements inside a <search> element are typically form elements used to perform a search",
+    "attributeNames": []
+  },
+  {
+    "name": "section",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a section in a document",
+    "attributeNames": []
+  },
+  {
+    "name": "select",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "creates a drop-down list",
+    "attributeNames": [
+      "autofocus",
+      "disabled",
+      "form_attr",
+      "multiple",
+      "name",
+      "required",
+      "size"
+    ]
+  },
+  {
+    "name": "small",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines smaller text (like copyright and other side-comments",
+    "attributeNames": []
+  },
+  {
+    "name": "source",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to specify multiple media resources for media elements, such as <video>, <audio>, and <picture>",
+    "attributeNames": [
+      "media",
+      "sizes",
+      "src",
+      "srcset",
+      "type"
+    ]
+  },
+  {
+    "name": "span",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "an inline container used to mark up a part of a text; the inline version of div",
+    "attributeNames": []
+  },
+  {
+    "name": "strong",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to define text with strong importance. The content inside is typically displayed in bold",
+    "attributeNames": []
+  },
+  {
+    "name": "style",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "",
+    "attributeNames": [
+      "media",
+      "type"
+    ]
+  },
+  {
+    "name": "sub",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines subscript text. Subscript text appears half a character below the normal line, and is sometimes rendered in a smaller font",
+    "attributeNames": []
+  },
+  {
+    "name": "summary",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a visible heading for the <details> element. The heading can be clicked to view\/hide the details. The <summary> element should be the first child element of the <details> element.",
+    "attributeNames": []
+  },
+  {
+    "name": "sup",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines superscript text",
+    "attributeNames": []
+  },
+  {
+    "name": "svg",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a container for SVG graphics",
+    "attributeNames": []
+  },
+  {
+    "name": "table",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines an HTML table",
+    "attributeNames": []
+  },
+  {
+    "name": "tbody",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to group the body content in an HTML table",
+    "attributeNames": []
+  },
+  {
+    "name": "td",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a standard data cell in an HTML table (table detail)",
+    "attributeNames": [
+      "colspan",
+      "headers",
+      "rowspan"
+    ]
+  },
+  {
+    "name": "template",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used as a container to hold some HTML content hidden from the user when the page loads. You can use the <template> tag if you have some HTML code you want to use over and over again, but not until you ask for it. To do this without the <template> tag, you have to create the HTML code with JavaScript to prevent the browser from rendering the code.",
+    "attributeNames": []
+  },
+  {
+    "name": "textarea",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a multi-line text input control",
+    "attributeNames": [
+      "autofocus",
+      "cols",
+      "dirname",
+      "disabled",
+      "form_attr",
+      "maxlength",
+      "name",
+      "placeholder",
+      "readonly",
+      "required",
+      "rows",
+      "wrap"
+    ]
+  },
+  {
+    "name": "tfoot",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to group footer content in an HTML table The <tfoot> element must have one or more <tr> tags inside",
+    "attributeNames": []
+  },
+  {
+    "name": "th",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a header cell in an HTML table",
+    "attributeNames": [
+      "abbr",
+      "colspan",
+      "headers",
+      "rowspan",
+      "scope"
+    ]
+  },
+  {
+    "name": "thead",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to group header content in an HTML table must have one or more <tr> tags inside",
+    "attributeNames": []
+  },
+  {
+    "name": "time",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a specific time (or datetime)",
+    "attributeNames": [
+      "datetime"
+    ]
+  },
+  {
+    "name": "title",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines the title of the document",
+    "attributeNames": []
+  },
+  {
+    "name": "tr",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines a row in an HTML table. contains one or more <th> or <td> elements",
+    "attributeNames": []
+  },
+  {
+    "name": "track",
+    "defType": "Element",
+    "concrete": "ElementVoid",
+    "comment": "specifies text tracks for <audio> or <video> elements",
+    "attributeNames": [
+      "default",
+      "kind",
+      "label_attr",
+      "src",
+      "srclang"
+    ]
+  },
+  {
+    "name": "u",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "represents some text that is unarticulated and styled differently from normal text, such as misspelled words",
+    "attributeNames": []
+  },
+  {
+    "name": "ul",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "defines an unordered (bulleted list)",
+    "attributeNames": []
+  },
+  {
+    "name": "var",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to defines a variable in programming or in a mathematical expression. This tag is not deprecated. However, it is possible to achieve richer effect by using CSS",
+    "attributeNames": []
+  },
+  {
+    "name": "video",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "used to embed video content in a document",
+    "attributeNames": [
+      "autoplay",
+      "controls",
+      "height",
+      "loop",
+      "muted",
+      "poster",
+      "preload",
+      "src",
+      "width"
+    ]
+  },
+  {
+    "name": "wbr",
+    "defType": "Element",
+    "concrete": "Element",
+    "comment": "(Word Break Opportunity tag specifies where in a text it would be ok to add a line-break. When a word is too long, the browser might break it at the wrong place. You can use the <wbr> element to add word break \topportunities. ",
+    "attributeNames": []
+  }
+]

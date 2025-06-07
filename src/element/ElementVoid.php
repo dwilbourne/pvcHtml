@@ -8,15 +8,107 @@ declare(strict_types=1);
 
 namespace pvc\html\element;
 
-use pvc\html\err\AttributeNotAllowedException;
-use pvc\html\err\InvalidDefinitionIdException;
-use pvc\interfaces\html\attribute\AttributeCustomDataInterface;
+use Error;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use pvc\html\attribute\GlobalAttributes;
+use pvc\html\attributes\AccesskeyTrait;
+use pvc\html\attributes\ClassTrait;
+use pvc\html\attributes\ContenteditableTrait;
+use pvc\html\attributes\DirTrait;
+use pvc\html\attributes\DraggableTrait;
+use pvc\html\attributes\EnterkeyhintTrait;
+use pvc\html\attributes\HiddenTrait;
+use pvc\html\attributes\IdTrait;
+use pvc\html\attributes\InertTrait;
+use pvc\html\attributes\InputmodeTrait;
+use pvc\html\attributes\LangTrait;
+use pvc\html\attributes\PopoverTrait;
+use pvc\html\attributes\SpellcheckTrait;
+use pvc\html\attributes\TabindexTrait;
+use pvc\html\attributes\TranslateTrait;
+use pvc\html\content_model\ContentModel;
+use pvc\html\err\GetDataTypeException;
+use pvc\html\err\InvalidAttributeException;
+use pvc\html\factory\HtmlFactory;
+use pvc\htmlbuilder\definitions\types\AttributeValueDataType;
 use pvc\interfaces\html\attribute\AttributeInterface;
-use pvc\interfaces\html\attribute\EventInterface;
-use pvc\interfaces\html\builder\definitions\DefinitionFactoryInterface;
-use pvc\interfaces\html\builder\definitions\DefinitionType;
-use pvc\interfaces\html\builder\HtmlBuilderInterface;
 use pvc\interfaces\html\element\ElementVoidInterface;
+use pvc\html\events\OnabortTrait;
+use pvc\html\events\OnauxclickTrait;
+use pvc\html\events\OnbeforeinputTrait;
+use pvc\html\events\OnbeforematchTrait;
+use pvc\html\events\OnbeforetoggleTrait;
+use pvc\html\events\OnblurTrait;
+use pvc\html\events\OncancelTrait;
+use pvc\html\events\OncanplayTrait;
+use pvc\html\events\OncanplaythroughTrait;
+use pvc\html\events\OnchangeTrait;
+use pvc\html\events\OnclickTrait;
+use pvc\html\events\OncloseTrait;
+use pvc\html\events\OncontextlostTrait;
+use pvc\html\events\OncontextmenuTrait;
+use pvc\html\events\OncontextrestoredTrait;
+use pvc\html\events\OncopyTrait;
+use pvc\html\events\OncuechangeTrait;
+use pvc\html\events\OncutTrait;
+use pvc\html\events\OndblclickTrait;
+use pvc\html\events\OndragTrait;
+use pvc\html\events\OndragendTrait;
+use pvc\html\events\OndragenterTrait;
+use pvc\html\events\OndragleaveTrait;
+use pvc\html\events\OndragoverTrait;
+use pvc\html\events\OndragstartTrait;
+use pvc\html\events\OndropTrait;
+use pvc\html\events\OndurationchangeTrait;
+use pvc\html\events\OnemptiedTrait;
+use pvc\html\events\OnendedTrait;
+use pvc\html\events\OnerrorTrait;
+use pvc\html\events\OnfocusTrait;
+use pvc\html\events\OnformdataTrait;
+use pvc\html\events\OninputTrait;
+use pvc\html\events\OninvalidTrait;
+use pvc\html\events\OnkeydownTrait;
+use pvc\html\events\OnkeypressTrait;
+use pvc\html\events\OnkeyupTrait;
+use pvc\html\events\OnloadTrait;
+use pvc\html\events\OnloadeddataTrait;
+use pvc\html\events\OnloadedmetadataTrait;
+use pvc\html\events\OnloadstartTrait;
+use pvc\html\events\OnmousedownTrait;
+use pvc\html\events\OnmouseenterTrait;
+use pvc\html\events\OnmouseleaveTrait;
+use pvc\html\events\OnmousemoveTrait;
+use pvc\html\events\OnmouseoutTrait;
+use pvc\html\events\OnmouseoverTrait;
+use pvc\html\events\OnmouseupTrait;
+use pvc\html\events\OnpasteTrait;
+use pvc\html\events\OnpauseTrait;
+use pvc\html\events\OnplayTrait;
+use pvc\html\events\OnplayingTrait;
+use pvc\html\events\OnprogressTrait;
+use pvc\html\events\OnratechangeTrait;
+use pvc\html\events\OnresetTrait;
+use pvc\html\events\OnresizeTrait;
+use pvc\html\events\OnscrollTrait;
+use pvc\html\events\OnscrollendTrait;
+use pvc\html\events\OnsecuritypolicyviolationTrait;
+use pvc\html\events\OnseekedTrait;
+use pvc\html\events\OnseekingTrait;
+use pvc\html\events\OnselectTrait;
+use pvc\html\events\OnslotchangeTrait;
+use pvc\html\events\OnstalledTrait;
+use pvc\html\events\OnsubmitTrait;
+use pvc\html\events\OnsuspendTrait;
+use pvc\html\events\OntimeupdateTrait;
+use pvc\html\events\OntoggleTrait;
+use pvc\html\events\OnvolumechangeTrait;
+use pvc\html\events\OnwaitingTrait;
+use pvc\html\events\OnwebkitanimationendTrait;
+use pvc\html\events\OnwebkitanimationiterationTrait;
+use pvc\html\events\OnwebkitanimationstartTrait;
+use pvc\html\events\OnwebkittransitionendTrait;
+use pvc\html\events\OnwheelTrait;
 use pvc\interfaces\validator\ValTesterInterface;
 
 /**
@@ -26,68 +118,23 @@ use pvc\interfaces\validator\ValTesterInterface;
  * handles html5 compliant tags / code.
  *
  * This class is for "voidElements" or "empty" tags, which are tags that do not have closing tags (e.g. "<br>" or "<col>")
- *
- * @template VendorSpecificDefinition of DefinitionFactoryInterface
- * @implements ElementVoidInterface<VendorSpecificDefinition>
  */
 class ElementVoid implements ElementVoidInterface
 {
     /**
-     * @var HtmlBuilderInterface<VendorSpecificDefinition>
-     *
-     * ordinarily, I would set this in the constructor.  But doing so in this case creates a circular
-     * dependency in the ContainerFactory class.  The HtmlBuilder has a dependency on the ContainerFactory
-     * and the circular dependency is created if the ContainerFactory needs to resolve HtmlBuilder as part of the
-     * constructor of any given element. The problem is resolved by having the htmlBuilder get the element from the container and
-     * then manually set the HtmlFactory object using setter injection in the HtmlFactory class.
-     */
-    protected HtmlBuilderInterface $htmlBuilder;
-
-    /**
-     * TODO: consider using actual deftypes instead of these constants
-     */
-    public const ATTRIBUTES = 1;
-
-    public const EVENTS = 2;
-
-    /**
      * @var string
      */
-    protected string $defId;
+    protected(set) string $name;
 
     /**
-     * @var string
+     * @var HtmlFactory
      */
-    protected string $name;
+    protected HtmlFactory $htmlFactory;
 
     /**
      * @var array<string>
      */
-    protected array $allowedAttributeDefIds = [];
-
-    /**
-     * @var array<string>
-     */
-    protected array $globalAttributes = [
-        'accesskey',
-        'class',
-        'contenteditable',
-        'dir',
-        'draggable',
-        'enterkeyhint',
-        'hidden',
-        'id',
-        'inert',
-        'inputmode',
-        'lang',
-        'popover',
-        'spellcheck',
-        'style',
-        'tabindex',
-        'title',
-        'translate'
-    ];
-
+    protected array $allowedAttributes = [];
 
     /**
      * @var array<string, AttributeInterface>
@@ -95,288 +142,329 @@ class ElementVoid implements ElementVoidInterface
     protected array $attributes = [];
 
     /**
-     * getFactory
-     * @return HtmlBuilderInterface<VendorSpecificDefinition>
+     * @var array<string> 
      */
-    public function getHtmlBuilder(): HtmlBuilderInterface
-    {
-        return $this->htmlBuilder;
-    }
-
+    protected array $allowedEvents = [
+        'onabort',
+        'onauxclick',
+        'onbeforeinput',
+        'onbeforematch',
+        'onbeforetoggle',
+        'onblur',
+        'oncancel',
+        'oncanplay',
+        'oncanplaythrough',
+        'onchange',
+        'onclick',
+        'onclose',
+        'oncontextlost',
+        'oncontextmenu',
+        'oncontextrestored',
+        'oncopy',
+        'oncuechange',
+        'oncut',
+        'ondblclick',
+        'ondrag',
+        'ondragend',
+        'ondragenter',
+        'ondragleave',
+        'ondragover',
+        'ondragstart',
+        'ondrop',
+        'ondurationchange',
+        'onemptied',
+        'onended',
+        'onerror',
+        'onfocus',
+        'onformdata',
+        'oninput',
+        'oninvalid',
+        'onkeydown',
+        'onkeypress',
+        'onkeyup',
+        'onload',
+        'onloadeddata',
+        'onloadedmetadata',
+        'onloadstart',
+        'onmousedown',
+        'onmouseenter',
+        'onmouseleave',
+        'onmousemove',
+        'onmouseout',
+        'onmouseover',
+        'onmouseup',
+        'onpaste',
+        'onpause',
+        'onplay',
+        'onplaying',
+        'onprogress',
+        'onratechange',
+        'onreset',
+        'onresize',
+        'onscroll',
+        'onscrollend',
+        'onsecuritypolicyviolation',
+        'onseeked',
+        'onseeking',
+        'onselect',
+        'onslotchange',
+        'onstalled',
+        'onsubmit',
+        'onsuspend',
+        'ontimeupdate',
+        'ontoggle',
+        'onvolumechange',
+        'onwaiting',
+        'onwebkitanimationend',
+        'onwebkitanimationiteration',
+        'onwebkitanimationstart',
+        'onwebkittransitionend',
+        'onwheel'
+    ];
+    
     /**
-     * setFactory
-     * @param HtmlBuilderInterface<VendorSpecificDefinition> $htmlBuilder
+     * @param  string  $name
+     * @param array<string> $allowedAttributes
+     * @param  HtmlFactory  $htmlFactory
      */
-    public function setHtmlBuilder(HtmlBuilderInterface $htmlBuilder): void
-    {
-        $this->htmlBuilder = $htmlBuilder;
-    }
-
-    public function getDefId(): string
-    {
-        return $this->defId;
-    }
-
-    public function setDefId(string $defId): void
-    {
-        $this->defId = $defId;
-    }
-
-    /**
-     * getGlobalAttributeDefIds
-     * @return string[]
-     */
-    public function getGlobalAttributeDefIds(): array
-    {
-        return $this->globalAttributes;
-    }
-
-    /**
-     * getName
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * setName
-     * changing the element id implies having to change the list of attributes the element supports so attributes are
-     * reinitialized!
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function __construct(
+        string $name,
+        array $allowedAttributes,
+        HtmlFactory $htmlFactory,
+        protected(set) ContentModel $contentModel
+    )
     {
         $this->name = $name;
-        $this->attributes = [];
+        foreach($allowedAttributes as $attribute) {
+            $this->allowedAttributes[] = $attribute;
+        }
+        $this->htmlFactory = $htmlFactory;
     }
 
     /**
-     * setAllowedAttributeDefIds
-     * @param array<string> $allowedAttributeDefIds
-     */
-    public function setAllowedAttributeDefIds(array $allowedAttributeDefIds): void
-    {
-        $this->allowedAttributeDefIds = $allowedAttributeDefIds;
-    }
-
-    public function getAllowedAttributeDefIds(): array
-    {
-        return $this->allowedAttributeDefIds;
-    }
-
-    /**
-     * isAllowedAttribute
-     * @param AttributeInterface|string $attribute
+     * @param  string  $attribute
+     *
      * @return bool
      */
-    public function isAllowedAttribute(AttributeInterface|string $attribute): bool
+    private function isAllowedAttribute(string $attribute): bool
     {
-        $defId = ($attribute instanceof AttributeInterface) ? $attribute->getDefId() : $attribute;
-
-        /**
-         * if it is a global attributeArrayElement, it is ok
-         */
-        if (in_array($defId, $this->getGlobalAttributeDefIds())) return true;
-
-        /**
-         * if the defId is in the list of allowed attributes, it is OK
-         */
-        if (in_array($defId, $this->getAllowedAttributeDefIds())) return true;
-
-        /**
-         * as far as I know, it is not 'illegal' to add any event to an element
-         */
-        if ($this->htmlBuilder->getDefinitionType($defId) == DefinitionType::Event) return true;
-
-        return false;
+        return in_array($attribute, array_merge(GlobalAttributes::attributeNames(), $this->allowedAttributes, $this->allowedEvents));
+    }
+    
+    private function getAttribute(string $attribute): ?AttributeInterface
+    {
+        return $this->attributes[$attribute] ?? null;
     }
 
     /**
-     * getAttribute
-     * @param string $defId
-     * @return AttributeInterface|null
+     * @param  string  $name
+     * @param string|int|bool ...$values
+     *
+     * @return ElementVoidInterface
+     * @throws InvalidAttributeException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function getAttribute(string $defId): AttributeInterface|null
+    public function setAttribute(string $name, ...$values): ElementVoidInterface
     {
-        return $this->attributes[$defId] ?? null;
-    }
-
-    /**
-     * setAttribute
-     * @param string|AttributeInterface $attribute
-     * @param ...$values
-     * @return $this
-     * @throws AttributeNotAllowedException
-     * @throws InvalidDefinitionIdException
-     */
-    public function setAttribute(string|AttributeInterface $attribute, ...$values): ElementVoid
-    {
-        /**
-         * convert $attributeArrayElement if necessary to AttributeInterface
-         */
-        if (is_string($attribute)) {
-            $attribute = $this->makeOrGetAttribute($attribute);
+        if (!$this->isAllowedAttribute($name)) {
+            throw new InvalidAttributeException($name);
+        }
+        if (!$attribute = $this->getAttribute($name)) {
+            $attribute = $this->htmlFactory->makeAttribute($name);
+            $this->attributes[$name] = $attribute;
         }
         $attribute->setValue(...$values);
-        $this->attributes[$attribute->getDefId()] = $attribute;
         return $this;
     }
 
     /**
-     * setCustomData
-     * @param string|AttributeCustomDataInterface $attribute
-     *
-     * If $attributeArrayElement is a string, then it is interpreted as a definition id.  Normally, attributeArrayElement definition id's need
-     * to be unique within the attributeArrayElement container.  But since this is a custom attributeArrayElement, it does not exist within
-     * the container at all.  The 'uniqueness' of the defId is what distinguishes it from other attributes within this
-     * element. It can be any string that you want as long as it starts with 'data-'.  It was tempting to make the
-     * parameter just the part of the string after the 'data-' prefix, but in order to get the attributeArrayElement, you *must*
-     * use the entire identifier (e.g. 'data-foo').  Here's why: it would be confusing but not technically wrong to
-     * create a custom attributeArrayElement called 'data-name', for example, for an element that already has a name attributeArrayElement.
-     * Then if you accessed it by the suffix (e.g. 'name'), you would not know whether you are
-     * referring to the name attributeArrayElement or the data-name attributeArrayElement. (Either that or you would end up setting the
-     * attributeArrayElement with one name and getting it with another). So to keep things symmetrical and neat, custom
-     * attributes always use the fully qualified name (which is used as the definition id and the key within the
-     * attributes array).
-     *
-     * @return ElementVoid<VendorSpecificDefinition>
+     * @inheritDoc
+     * @throws GetDataTypeException
      */
-    public function setCustomData(
-        string|AttributeCustomDataInterface $attribute,
-        string $value,
-        ValTesterInterface $valTester = null
-    ): ElementVoid {
-        if (is_string($attribute)) {
-            $attribute = $this->getHtmlBuilder()->makeCustomData($attribute, $value, $valTester);
-        } else {
+    public function addCustomData(
+        string $name,
+        ?string $valueType = null,
+        ?bool $caseSensitive = null,
+        ?ValTesterInterface $tester = null,
+    ): void
+    {
+        /**
+         * ensure customData with the same name does not already exist
+         */
+        if ($this->getAttribute($name)) {
             /**
-             * if not null, set the value tester *before* setting the value :)
+             * throw a warning
              */
-            if ($valTester) {
-                $attribute->setTester($valTester);
-            }
-            $attribute->setValue($value);
-        }
-        $this->attributes[$attribute->getDefId()] = $attribute;
-        return $this;
-    }
-
-    /**
-     * setEvent
-     * @param EventInterface $event
-     * @return ElementVoidInterface<VendorSpecificDefinition>
-     */
-    public function setEvent(EventInterface $event): ElementVoidInterface
-    {
-        $this->attributes[$event->getDefId()] = $event;
-        return $this;
-    }
-
-    /**
-     * __call
-     * @param string|AttributeInterface $attribute
-     * @param array<string> $arguments
-     * @return mixed
-     * @throws AttributeNotAllowedException
-     * @throws InvalidDefinitionIdException
-     * in terms of semantics, I would really rather that we could use __set here.  But php requires that __set return
-     * void, whereas __call returns mixed, which is necessary for creating fluent setters for attributeArrayElement values.
-     */
-    public function __call(string|AttributeInterface $attribute, array $arguments): mixed
-    {
-        /**
-         * unpack the array into an argument list for setAttribute
-         */
-        return $this->setAttribute($attribute, ...$arguments);
-    }
-
-    /**
-     * __get
-     * make or get the attributeArrayElement
-     * @param string $defId
-     * @return AttributeInterface|null
-     */
-    public function __get(string $defId): ?AttributeInterface
-    {
-        return $this->makeOrGetAttribute($defId);
-    }
-
-    protected function makeOrGetAttribute(string $defId) : AttributeInterface
-    {
-        /**
-         * if the attributeArrayElement exists, return it.
-         */
-        if ($attribute = $this->getAttribute($defId)) return $attribute;
-
-        /**
-         * even if the allowedAttributes array is empty (meaning that any attributeArrayElement is OK), the isAllowedAttribute
-         * method will return false if the defId is in the container but is not an attributeArrayElement or an event (e.g. if it
-         * is an element, a valueTester or an 'other')
-         */
-        if (!$this->isAllowedAttribute($defId)) {
-            throw new AttributeNotAllowedException($defId, $this->getDefId());
+            trigger_error('Attribute ' . $name . ' is already defined', E_USER_WARNING);
         }
 
         /**
-         * do we know how to make it and is it either an attribute or an event?
+         * convert $valueType to an enum if it is not null
          */
-        $defType = $this->getHtmlBuilder()->getDefinitionType($defId);
-        if (!in_array($defType, [DefinitionType::Attribute, DefinitionType::Event])) {
-            throw new InvalidDefinitionIdException($defId);
+
+        /**
+         * coalesce valueType to a string because AttributeValueDataType::tryFrom method does not accept null
+         */
+        $valueType = $valueType ?? '';
+        $type = AttributeValueDataType::tryFrom($valueType);
+        if (!empty($valueType) && is_null($type)) {
+            throw new GetDataTypeException($valueType);
         }
 
-        $method =  ($defType == DefinitionType::Attribute) ? 'makeAttribute' : 'makeEvent';
-        $result = $this->getHtmlBuilder()->$method($defId);
-
-        assert($result instanceof  AttributeInterface);
-        return $result;
-    }
-
-    /**
-     * getAttributes
-     * @param int $defTypeMask
-     * @return array<AttributeInterface>
-     */
-    public function getAttributes(int $defTypeMask = self::ATTRIBUTES | self::EVENTS): array
-    {
-        $callback = function (AttributeInterface $attributesArrayElement) use ($defTypeMask) : bool {
-            /**
-             * @var DefinitionType $defType
-             */
-            $defType = $this->getHtmlBuilder()->getDefinitionType($attributesArrayElement->getDefId());
-            $isAttribute = ($defType == DefinitionType::Attribute) ? self::ATTRIBUTES : 0;
-            $isEvent = ($defType == DefinitionType::Event) ? self::EVENTS : 0;
-            return (($defTypeMask & $isAttribute) || ($defTypeMask & $isEvent));
-        };
-
-        return array_filter($this->attributes, $callback);
+        $attribute = $this->htmlFactory->makeCustomData(
+            $name,
+            $type,
+            $caseSensitive,
+            $tester,
+        );
+        $this->attributes[$name] = $attribute;
     }
 
     /**
      * removeAttribute
-     * @param string $defId
-     * removes an attributeArrayElement (or event)
+     *
+     * @param string  $name
      */
-    public function removeAttribute(string $defId): void
+    public function removeAttribute(string $name): void
     {
-        unset($this->attributes[$defId]);
+        unset($this->attributes[$name]);
+    }
+
+    /**
+     * @return array<AttributeInterface>
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @return array
+     * void elements cannot have child nodes, but this stub makes it easier
+     * to traverse a DOM tree without having to differentiate between void
+     * elements and containing elements
+     */
+    public function getNodes(): array
+    {
+        return [];
     }
 
     /**
      * generateOpeningTag
+     *
      * @return string
      */
     public function generateOpeningTag(): string
     {
-        $z = '<' . $this->getName();
-        $callback = function (AttributeInterface $attribute): string {
+        $z = '<' . $this->name;
+
+        $callback = function (AttributeInterface $attribute) {
             return $attribute->render();
         };
-        $attributes = implode(' ', array_map($callback, $this->getAttributes()));
+
+        $attributes = implode(' ', array_map($callback, $this->attributes));
+
         $z .= (strlen($attributes) > 0) ? ' ' . $attributes : '';
         $z .= '>';
         return $z;
     }
+
+    /**
+     * global attributes
+     */
+    use AccesskeyTrait;
+    use ClassTrait;
+    use ContenteditableTrait;
+    use DirTrait;
+    use DraggableTrait;
+    use EnterkeyhintTrait;
+    use HiddenTrait;
+    use IdTrait;
+    use InertTrait;
+    use InputmodeTrait;
+    use LangTrait;
+    use PopoverTrait;
+    use SpellcheckTrait;
+    use TabindexTrait;
+    use TranslateTrait;
+
+    /**
+     * events
+     */
+    use OnabortTrait;
+    use OnauxclickTrait;
+    use OnbeforeinputTrait;
+    use OnbeforematchTrait;
+    use OnbeforetoggleTrait;
+    use OnblurTrait;
+    use OncancelTrait;
+    use OncanplayTrait;
+    use OncanplaythroughTrait;
+    use OnchangeTrait;
+    use OnclickTrait;
+    use OncloseTrait;
+    use OncontextlostTrait;
+    use OncontextmenuTrait;
+    use OncontextrestoredTrait;
+    use OncopyTrait;
+    use OncuechangeTrait;
+    use OncutTrait;
+    use OndblclickTrait;
+    use OndragTrait;
+    use OndragendTrait;
+    use OndragenterTrait;
+    use OndragleaveTrait;
+    use OndragoverTrait;
+    use OndragstartTrait;
+    use OndropTrait;
+    use OndurationchangeTrait;
+    use OnemptiedTrait;
+    use OnendedTrait;
+    use OnerrorTrait;
+    use OnfocusTrait;
+    use OnformdataTrait;
+    use OninputTrait;
+    use OninvalidTrait;
+    use OnkeydownTrait;
+    use OnkeypressTrait;
+    use OnkeyupTrait;
+    use OnloadTrait;
+    use OnloadeddataTrait;
+    use OnloadedmetadataTrait;
+    use OnloadstartTrait;
+    use OnmousedownTrait;
+    use OnmouseenterTrait;
+    use OnmouseleaveTrait;
+    use OnmousemoveTrait;
+    use OnmouseoutTrait;
+    use OnmouseoverTrait;
+    use OnmouseupTrait;
+    use OnpasteTrait;
+    use OnpauseTrait;
+    use OnplayTrait;
+    use OnplayingTrait;
+    use OnprogressTrait;
+    use OnratechangeTrait;
+    use OnresetTrait;
+    use OnresizeTrait;
+    use OnscrollTrait;
+    use OnscrollendTrait;
+    use OnsecuritypolicyviolationTrait;
+    use OnseekedTrait;
+    use OnseekingTrait;
+    use OnselectTrait;
+    use OnslotchangeTrait;
+    use OnstalledTrait;
+    use OnsubmitTrait;
+    use OnsuspendTrait;
+    use OntimeupdateTrait;
+    use OntoggleTrait;
+    use OnvolumechangeTrait;
+    use OnwaitingTrait;
+    use OnwebkitanimationendTrait;
+    use OnwebkitanimationiterationTrait;
+    use OnwebkitanimationstartTrait;
+    use OnwebkittransitionendTrait;
+    use OnwheelTrait;
 }

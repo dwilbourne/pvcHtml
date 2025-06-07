@@ -11,66 +11,30 @@ namespace pvcTests\html\unit_tests\attribute;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\AttributeSingleValue;
-use pvc\html\err\InvalidAttributeException;
 use pvc\html\err\InvalidAttributeValueException;
 use pvc\html\err\InvalidNumberOfParametersException;
+use pvc\htmlbuilder\definitions\types\AttributeValueDataType;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeSingleValueTest extends TestCase
 {
-    protected ValTesterInterface|MockObject $tester;
+    protected string $name = 'foo';
+    protected AttributeValueDataType $dataType = AttributeValueDataType::String;
+    protected bool $caseSensitive = false;
+    protected ValTesterInterface&MockObject $tester;
 
     protected AttributeSingleValue $attribute;
 
     public function setUp(): void
     {
         $this->tester = $this->createMock(ValTesterInterface::class);
-        $this->attribute = new AttributeSingleValue();
-        $this->attribute->setName('foo');
-        $this->attribute->setTester($this->tester);
-    }
-
-
-    /**
-     * testSetValueConvertsCaseIfNotCaseSensitive
-     * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
-     */
-    public function testSetValueConvertsCaseIfNotCaseSensitive(): void
-    {
-        $value = 'FOO';
-        $this->attribute->setCaseSensitive(true);
         $this->tester->method('testValue')->willReturn(true);
-        $this->attribute->setValue($value);
-        self::assertEquals($value, $this->attribute->getValue());
-
-        $value = 'FOO';
-        $this->attribute->setCaseSensitive(false);
-        $this->tester->method('testValue')->willReturn(true);
-        $this->attribute->setValue($value);
-        self::assertEquals(strtolower($value), $this->attribute->getValue());
-    }
-
-    /**
-     * testSetValueFailsWithZeroArguments
-     * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
-     */
-    public function testSetValueFailsWithZeroArguments(): void
-    {
-        self::expectException(InvalidNumberOfParametersException::class);
-        $this->attribute->setValue();
-    }
-
-    /**
-     * testSetValuefailsWithEmptyArgument
-     * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
-     */
-    public function testSetValuefailsWithEmptyArgument(): void
-    {
-        self::expectException(InvalidAttributeValueException::class);
-        $this->attribute->setValue('');
+        $this->attribute = new AttributeSingleValue(
+            $this->name,
+            $this->dataType,
+            $this->caseSensitive,
+            $this->tester,
+        );
     }
 
     /**
@@ -85,42 +49,17 @@ class AttributeSingleValueTest extends TestCase
     }
 
     /**
-     * testSetValueThrowsExceptionWhenTesterFails
-     * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeSingleValue::setValue
-     */
-    public function testSetValueThrowsExceptionWhenTesterFails(): void
-    {
-        $value = 'bar';
-        $this->tester->method('testValue')->willReturn(false);
-        self::expectException(InvalidAttributeValueException::class);
-        $this->attribute->setValue($value);
-    }
-
-    /**
      * testSetGetValue
      * @throws InvalidAttributeValueException
      * @covers \pvc\html\attribute\AttributeSingleValue::setValue
      * @covers \pvc\html\attribute\AttributeSingleValue::getValue
-     * @covers \pvc\html\attribute\AttributeSingleValue::__get
      */
-    public function testSetGetValue(): void
+    public function testSetValueSucceedsWithOneArgument(): void
     {
         $value = 'bar';
         $this->tester->method('testValue')->willReturn(true);
         $this->attribute->setValue($value);
         self::assertEquals($value, $this->attribute->getValue());
-        self::assertEquals($value, $this->attribute->value);
-    }
-
-    /**
-     * testMagicGetThrowsExceptionForBadAttribute
-     * @covers \pvc\html\attribute\AttributeSingleValue::__get
-     */
-    public function testMagicGetThrowsExceptionForBadAttribute(): void
-    {
-        self::expectException(InvalidAttributeException::class);
-        $this->attribute->foo;
     }
 
     /**
@@ -130,12 +69,19 @@ class AttributeSingleValueTest extends TestCase
      */
     public function testRenderWithValueSet(): void
     {
-        $name = 'foo';
-        $value = 'bar\'s';
-        $this->tester->method('testValue')->willReturn(true);
-        $this->attribute->setName($name);
+        $value = 'bar';
         $this->attribute->setValue($value);
-        $expectedRendering = $name . '=\'bar\'s\'';
+        $expectedRendering = $this->name . '=' . $value;
+        self::assertEquals($expectedRendering, $this->attribute->render());
+    }
+
+    /**
+     * @return void
+     * @covers \pvc\html\attribute\AttributeSingleValue::render
+     */
+    public function testRenderWithoutValueSet(): void
+    {
+        $expectedRendering  = '';
         self::assertEquals($expectedRendering, $this->attribute->render());
     }
 }

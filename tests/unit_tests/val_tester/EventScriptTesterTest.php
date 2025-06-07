@@ -42,7 +42,7 @@ class EventScriptTesterTest extends TestCase
      * EventScriptTesterDataProvider
      * @return array<string, bool, string>
      */
-    public function EventScriptTesterDataProvider(): array
+    public static function EventScriptTesterDataProvider(): array
     {
         return [
             [true, 'some javascript;', 'failed to pass string that has length greater than 2 and ends with a ;'],

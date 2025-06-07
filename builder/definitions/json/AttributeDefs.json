@@ -1,0 +1,858 @@
+[
+  {
+    "name": "accept",
+    "defType": "Attribute",
+    "concrete": "AttributeMultiValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "pvc\\html\\val_tester\\MediaTypeTester"
+  },
+  {
+    "name": "accept-charset",
+    "defType": "Attribute",
+    "concrete": "AttributeMultiValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "charsetTester"
+  },
+  {
+    "name": "accesskey",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "accessKeyTester"
+  },
+  {
+    "name": "action",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "urlTester"
+  },
+  {
+    "name": "alt",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "pvc\\validator\\val_tester\\ctype\\CTypeTesterPrintable"
+  },
+  {
+    "name": "async",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "autocomplete",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "autocompleteTester"
+  },
+  {
+    "name": "autofocus",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "charset",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "charsetTester"
+  },
+  {
+    "name": "checked",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "cite",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "urlTester"
+  },
+  {
+    "name": "class",
+    "defType": "Attribute",
+    "concrete": "AttributeMultiValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "cssClassTester"
+  },
+  {
+    "name": "cols",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "int",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "colspan",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "int",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "content",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "contenteditable",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "controls",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "coords",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "pvc\\html\\val_tester\\AreaCoordsTester"
+  },
+  {
+    "name": "crossorigin",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "crossOriginTester"
+  },
+  {
+    "name": "data",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "urlTester"
+  },
+  {
+    "name": "datetime",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "javascriptDateTimeTester"
+  },
+  {
+    "name": "default",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "defer",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "dir",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "textDirectionTester"
+  },
+  {
+    "name": "dirname",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "disabled",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "download",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "draggable",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "yesNoTester"
+  },
+  {
+    "name": "enctype",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "encTypeTester"
+  },
+  {
+    "name": "enterkeyhint",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "for",
+    "defType": "Attribute",
+    "concrete": "AttributeMultiValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "form",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "formaction",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "urlTester"
+  },
+  {
+    "name": "formnovalidate",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "headers",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "height",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "hidden",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "high",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "href",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "urlTester"
+  },
+  {
+    "name": "hreflang",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "languageCodeTester"
+  },
+  {
+    "name": "http-equiv",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "id",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": true,
+    "valTester": "htmlIdNameTester"
+  },
+  {
+    "name": "inert",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "inputmode",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "inputModeTester"
+  },
+  {
+    "name": "ismap",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "itemscope",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "kind",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "label",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "lang",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "languageCodeTester"
+  },
+  {
+    "name": "list",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "loop",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "low",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "max",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "maxlength",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "media",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "method",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "methodTypeTester"
+  },
+  {
+    "name": "min",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "multiple",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "muted",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "name",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": true,
+    "valTester": "htmlIdNameTester"
+  },
+  {
+    "name": "nomodule",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "novalidate",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "open",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "optimum",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "pattern",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "regexPatternTester"
+  },
+  {
+    "name": "ping",
+    "defType": "Attribute",
+    "concrete": "AttributeMultiValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "urlTester"
+  },
+  {
+    "name": "placeholder",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "playsinline",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "popover",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "popovertarget",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "htmlIdNameTester"
+  },
+  {
+    "name": "popovertargetaction",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "popoverTargetActionTester"
+  },
+  {
+    "name": "poster",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "urlTester"
+  },
+  {
+    "name": "preload",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "preloadTester"
+  },
+  {
+    "name": "readonly",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "referrerpolicy",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "referrerPolicyTester"
+  },
+  {
+    "name": "rel",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "relChoiceTester"
+  },
+  {
+    "name": "required",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "reversed",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "rows",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "rowspan",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "sandbox",
+    "defType": "Attribute",
+    "concrete": "AttributeMultiValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "sandBoxChoiceTester"
+  },
+  {
+    "name": "scope",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "scopeTester"
+  },
+  {
+    "name": "selected",
+    "defType": "Attribute",
+    "concrete": "AttributeVoid",
+    "dataType": "bool",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "shape",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "shapeTester"
+  },
+  {
+    "name": "size",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "sizes",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "sizesTester"
+  },
+  {
+    "name": "span",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "spellcheck",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "trueFalseTester"
+  },
+  {
+    "name": "src",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "urlTester"
+  },
+  {
+    "name": "srcdoc",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "srclang",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "languageCodeTester"
+  },
+  {
+    "name": "srcset",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "urlTester"
+  },
+  {
+    "name": "start",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "step",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "style",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "tabindex",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "target",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "targetTester"
+  },
+  {
+    "name": "title",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "pvc\\html\\val_tester\\TitleTester"
+  },
+  {
+    "name": "translate",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "yesNoTester"
+  },
+  {
+    "name": "type",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "buttonTypeTester"
+  },
+  {
+    "name": "type",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "inputTypeTester"
+  },
+  {
+    "name": "mimetype",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "mediaTypeTester"
+  },
+  {
+    "name": "usemap",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "value",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": ""
+  },
+  {
+    "name": "width",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "positiveIntegerSimpleTester"
+  },
+  {
+    "name": "wrap",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "wrapTester"
+  },
+  {
+    "name": "xmlns",
+    "defType": "Attribute",
+    "concrete": "AttributeSingleValue",
+    "dataType": "string",
+    "caseSensitive": false,
+    "valTester": "xmlnsTester"
+  }
+]

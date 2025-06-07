@@ -16,7 +16,7 @@ use Throwable;
  */
 class DuplicateDefinitionIdException extends LogicException
 {
-    public function __construct(string $defId, Throwable $prev = null)
+    public function __construct(string $defId, ?Throwable $prev = null)
     {
         parent::__construct($defId, $prev);
     }

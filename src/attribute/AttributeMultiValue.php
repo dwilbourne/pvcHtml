@@ -7,86 +7,27 @@ declare(strict_types=1);
 
 namespace pvc\html\attribute;
 
-use pvc\html\err\InvalidAttributeException;
 use pvc\html\err\InvalidAttributeValueException;
 use pvc\html\err\InvalidNumberOfParametersException;
-use pvc\interfaces\html\attribute\AttributeMultiValueInterface;
 
 /**
  * Class AttributeMultiValue
  */
-class AttributeMultiValue extends AttributeWithValue implements AttributeMultiValueInterface
+class AttributeMultiValue extends Attribute
 {
     /**
-     * @var array<string>
+     * @param  array<string|int>  $values
+     *
+     * @return array<string|int>
+     * @throws InvalidNumberOfParametersException
      */
-    protected array $values = [];
-
-
-    /**
-     * setValues
-     * @param string ...$values
-     * @throws InvalidAttributeValueException
-     */
-    public function setValue(...$values): void
+    protected function confirmParameterCount(array $values): array
     {
-        /**
-         * test to make sure $values is not empty
-         */
-        if (empty($values)) {
+        if (count($values) < 1) {
             throw new InvalidNumberOfParametersException('>=1');
         }
-
-        $newValues = [];
-        foreach ($values as $value) {
-            /**
-             * set to lower case if not case-sensitive
-             */
-            if (!$this->isCaseSensitive()) {
-                $value = strtolower($value);
-            }
-
-            /**
-             * test the array element
-             */
-            if (!$this->getTester()->testValue(($value))) {
-                throw new InvalidAttributeValueException($this->getName(), $value);
-            }
-            $newValues[] = $value;
-        }
-
-        /**
-         * set the values
-         */
-        $this->values = $newValues;
+        return $values;
     }
-
-    /**
-     * getValue
-     * @return array<string>
-     */
-    public function getValue(): array
-    {
-        return $this->values;
-    }
-
-    /**
-     * __get
-     * add a little fluency so you can write ->value instead of ->getValue()
-     * @param string $id
-     * @return array<string>
-     * @throws InvalidAttributeException
-     */
-    public function __get(string $id): array
-    {
-        if ($id == 'value' || $id == 'values') {
-            return $this->getValue();
-        } else {
-            throw new InvalidAttributeException($id);
-        }
-    }
-
-
 
     /**
      * render
@@ -94,10 +35,12 @@ class AttributeMultiValue extends AttributeWithValue implements AttributeMultiVa
      */
     public function render(): string
     {
-        if (empty($this->getValues())) {
-            throw new InvalidAttributeValueException($this->getName(), '{null}');
+        if (is_null($value = $this->getValue())) {
+            return '';
+        } else {
+            assert(is_array($value));
+            return $this->getName() . "=" . implode(' ', $value);
         }
-        return $this->name . "='" . implode(' ', $this->values) . "'";
     }
 
     /**
@@ -112,10 +55,12 @@ class AttributeMultiValue extends AttributeWithValue implements AttributeMultiVa
 
     /**
      * getValues
-     * @return array<string>
+     * @return array<string|int>
      */
     public function getValues(): array
     {
-        return $this->values;
+        $result = $this->getValue();
+        assert(is_array($result));
+        return $result;
     }
 }

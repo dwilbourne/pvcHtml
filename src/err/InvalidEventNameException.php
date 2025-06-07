@@ -15,7 +15,7 @@ use Throwable;
  */
 class InvalidEventNameException extends LogicException
 {
-    public function __construct(string $eventName, Throwable $prev = null)
+    public function __construct(string $eventName, ?Throwable $prev = null)
     {
         parent::__construct($eventName, $prev);
     }

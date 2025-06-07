@@ -17,7 +17,7 @@ use Throwable;
  */
 class DTOInvalidPropertyValueException extends RuntimeException
 {
-    public function __construct(string $propertyName, mixed $value, string $className, Throwable $prev = null)
+    public function __construct(string $propertyName, mixed $value, string $className, ?Throwable $prev = null)
     {
         parent::__construct($propertyName, $value, $className, $prev);
     }

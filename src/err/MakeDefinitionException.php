@@ -16,7 +16,7 @@ use Throwable;
  */
 class MakeDefinitionException extends LogicException
 {
-    public function __construct(string $type, Throwable $prev = null)
+    public function __construct(string $type, ?Throwable $prev = null)
     {
         parent::__construct($type, $prev);
     }

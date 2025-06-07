@@ -48,7 +48,7 @@ class RegexIdNameTest extends TestCase
      * dataProvider
      * @return array|array[]
      */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return array(
             'contains numbers and lowercase letters - OK' => ['a94p', true],

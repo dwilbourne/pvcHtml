@@ -40,7 +40,7 @@ class RegexCustomDataNameTest extends TestCase
         self::assertEquals($expectedResult, $this->regex->match($testName));
     }
 
-    public function customDataNameDataProvider(): array
+    public static function customDataNameDataProvider(): array
     {
         return array(
             'contains numbers and lowercase letters - OK' => ['a94p', true],

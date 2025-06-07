@@ -1,0 +1,377 @@
+[
+  {
+    "name": "onabort",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onauxclick",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onbeforeinput",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onbeforematch",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onbeforetoggle",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onblur",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oncancel",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oncanplay",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oncanplaythrough",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onchange",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onclick",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onclose",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oncontextlost",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oncontextmenu",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oncontextrestored",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oncopy",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oncuechange",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oncut",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ondblclick",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ondrag",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ondragend",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ondragenter",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ondragleave",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ondragover",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ondragstart",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ondrop",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ondurationchange",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onemptied",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onended",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onerror",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onfocus",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onformdata",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oninput",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "oninvalid",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onkeydown",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onkeypress",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onkeyup",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onload",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onloadeddata",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onloadedmetadata",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onloadstart",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onmousedown",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onmouseenter",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onmouseleave",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onmousemove",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onmouseout",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onmouseover",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onmouseup",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onpaste",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onpause",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onplay",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onplaying",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onprogress",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onratechange",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onreset",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onresize",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onscroll",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onscrollend",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onsecuritypolicyviolation",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onseeked",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onseeking",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onselect",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onslotchange",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onstalled",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onsubmit",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onsuspend",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ontimeupdate",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "ontoggle",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onvolumechange",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onwaiting",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onwebkitanimationend",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onwebkitanimationiteration",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onwebkitanimationstart",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onwebkittransitionend",
+    "defType": "Event",
+    "concrete": "Event"
+  },
+  {
+    "name": "onwheel",
+    "defType": "Event",
+    "concrete": "Event"
+  }
+]

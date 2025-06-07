@@ -37,6 +37,7 @@ class _HtmlXData extends XDataAbstract
             DTOMissingPropertyException::class => 1021,
             DTOExtraPropertyException::class => 1025,
             InvalidAttributeException::class => 1026,
+            GetDataTypeException::class => 1027,
         ];
     }
 
@@ -60,6 +61,7 @@ class _HtmlXData extends XDataAbstract
             DTOMissingPropertyException::class => 'DTO ${className} constructor is missing the following properties: [${missingPropertyNames}].',
             DTOExtraPropertyException::class => 'DTO ${className} constructor was passed an extra property [${extraPropertyName}]',
             InvalidAttributeException::class => '${badAttributeName} is not a valid attribute.',
+            GetDataTypeException::class => 'invalid data tpe encountered while constructing ${name}.',
         ];
     }
 }

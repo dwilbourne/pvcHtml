@@ -46,7 +46,7 @@ class MediaTypeTesterTest extends TestCase
         self::assertEquals($expectedResult, $this->tester->testValue($mediaType), $comment);
     }
 
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             ['audio/*', true, 'failed to validate audio/*'],

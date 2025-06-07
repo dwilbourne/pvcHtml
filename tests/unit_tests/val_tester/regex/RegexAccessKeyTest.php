@@ -40,7 +40,7 @@ class RegexAccessKeyTest extends TestCase
         self::assertEquals($expectedResult, $this->regex->match($value));
     }
 
-    public function accesskeyDataProvider(): array
+    public static function accesskeyDataProvider(): array
     {
         return array(
             "lower case letter 'a' OK" => ['a', true],

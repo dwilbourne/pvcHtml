@@ -16,7 +16,7 @@ use Throwable;
  */
 class InvalidCustomDataNameException extends LogicException
 {
-    public function __construct(string $badName, Throwable $prev = null)
+    public function __construct(string $badName, ?Throwable $prev = null)
     {
         parent::__construct($badName, $prev);
     }

@@ -43,7 +43,7 @@ class RegexCssClassTest extends TestCase
         self::assertEquals($expectedResult, $this->regex->match($className));
     }
 
-    public function cssClassDataProvider(): array
+    public static function cssClassDataProvider(): array
     {
         return array(
             'begins with a letter, contains numbers and letters - OK' => ['a94P', true],
@@ -54,6 +54,4 @@ class RegexCssClassTest extends TestCase
             'cannot contain a dollar sign - bad' => ['Js56$9jk', false]
         );
     }
-
-
 }

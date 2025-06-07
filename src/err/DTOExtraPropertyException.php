@@ -16,7 +16,7 @@ use Throwable;
  */
 class DTOExtraPropertyException extends RuntimeException
 {
-    public function __construct(string $extraPropertyName, string $className, Throwable $prev = null)
+    public function __construct(string $extraPropertyName, string $className, ?Throwable $prev = null)
     {
         parent::__construct($extraPropertyName, $className, $prev);
     }

@@ -17,7 +17,7 @@ use Throwable;
  */
 class DTOMissingPropertyException extends RuntimeException
 {
-    public function __construct(string $missingPropertyNames, string $className, Throwable $prev = null)
+    public function __construct(string $missingPropertyNames, string $className, ?Throwable $prev = null)
     {
         parent::__construct($missingPropertyNames, $className, $prev);
     }

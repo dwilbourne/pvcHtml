@@ -11,102 +11,62 @@ namespace pvcTests\html\unit_tests\attribute;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pvc\html\attribute\AttributeMultiValue;
-use pvc\html\err\InvalidAttributeException;
 use pvc\html\err\InvalidAttributeValueException;
-use pvc\html\err\InvalidNumberOfParametersException;
+use pvc\htmlbuilder\definitions\types\AttributeValueDataType;
 use pvc\interfaces\validator\ValTesterInterface;
 
 class AttributeMultiValueTest extends TestCase
 {
-    /**
-     * @var ValTesterInterface<string>|MockObject
-     */
-    protected ValTesterInterface|MockObject $tester;
+    protected string $name = 'foo';
+    protected AttributeValueDataType $dataType = AttributeValueDataType::String;
+    protected bool $caseSensitive = false;
+    protected ValTesterInterface&MockObject $tester;
 
     protected AttributeMultiValue $attribute;
 
     public function setUp(): void
     {
         $this->tester = $this->createMock(ValTesterInterface::class);
-        $this->attribute = new AttributeMultiValue();
-        $this->attribute->setName('foo');
-        $this->attribute->setTester($this->tester);
-    }
-
-    /**
-     * testSetValueFailsWhenValueIsEmpty
-     * @throws InvalidNumberOfParametersException
-     * @covers \pvc\html\attribute\AttributeMultiValue::setValue
-     */
-    public function testSetValueFailsWhenValueIsEmpty(): void
-    {
-        self::expectException(InvalidNumberOfParametersException::class);
-        $this->attribute->setValue();
-    }
-
-    /**
-     * testSetValueConvertsValueToLowerCaseIfCaseSensitive
-     * @throws InvalidAttributeValueException
-     * @covers \pvc\html\attribute\AttributeMultiValue::setValue
-     * @covers \pvc\html\attribute\AttributeMultiValue::getValue
-     */
-    public function testSetValueConvertsValueToLowerCaseIfCaseSensitive(): void
-    {
-        $values = ['FOO', 'BAR'];
-        $this->attribute->setCaseSensitive(true);
         $this->tester->method('testValue')->willReturn(true);
-        $this->attribute->setValue(...$values);
-        self::assertEquals($values, $this->attribute->getValue());
-
-        $values = ['FOO', 'BAR'];
-        $this->attribute->setCaseSensitive(false);
-        $this->tester->method('testValue')->willReturn(true);
-        $this->attribute->setValue(...$values);
-        $expectedResult = array_map('strtolower', $values);
-        self::assertEquals($expectedResult, $this->attribute->getValue());
+        $this->attribute = new AttributeMultiValue(
+            $this->name,
+            $this->dataType,
+            $this->caseSensitive,
+            $this->tester,
+        );
     }
 
     /**
      * testSetGetValue
      * @throws InvalidAttributeValueException
      * @covers \pvc\html\attribute\AttributeMultiValue::setValue
-     * @covers \pvc\html\attribute\AttributeMultiValue::getValue
-     * @covers \pvc\html\attribute\AttributeMultiValue::__get
      * @covers \pvc\html\attribute\AttributeMultiValue::setValues
+     * @covers \pvc\html\attribute\AttributeMultiValue::getValue
      * @covers \pvc\html\attribute\AttributeMultiValue::getValues
      */
-    public function testSetGetValue(): void
+    public function testSetGetValueSucceedsWithMultipleArguments(): void
     {
-        $this->tester->method('testValue')->willReturn(true);
         $testValue = ['bar', 'baz', 'quux'];
         $this->attribute->setValues(...$testValue);
+        self::assertEquals($testValue, $this->attribute->getValue());
         self::assertEquals($testValue, $this->attribute->getValues());
-        self::assertEquals($testValue, $this->attribute->value);
-        self::assertEquals($testValue, $this->attribute->values);
     }
 
     /**
-     * testMagicGetThrowsExceptionForBadAttribute
-     * @covers \pvc\html\attribute\AttributeMultiValue::__get
-     */
-    public function testMagicGetThrowsExceptionForBadAttribute(): void
-    {
-        self::expectException(InvalidAttributeException::class);
-        $this->attribute->foo;
-    }
-
-    /**
-     * testSetValueThrowsExceptionWhenTesterFails
+     * @return void
      * @throws InvalidAttributeValueException
      * @covers \pvc\html\attribute\AttributeMultiValue::setValue
+     * @covers \pvc\html\attribute\AttributeMultiValue::setValues
      * @covers \pvc\html\attribute\AttributeMultiValue::getValue
+     * @covers \pvc\html\attribute\AttributeMultiValue::getValues
      */
-    public function testSetValueThrowsExceptionWhenTesterFails(): void
+    public function testSetGetValueSucceedsWithSingleArgument(): void
     {
-        $this->tester->method('testValue')->willReturn(false);
-        $testValue = ['bar', 'baz', 'quux'];
-        self::expectException(InvalidAttributeValueException::class);
-        $this->attribute->setValue(...$testValue);
+        $testValue = 'bar';
+        $expectedResult = [$testValue];
+        $this->attribute->setValues($testValue);
+        self::assertEquals($expectedResult, $this->attribute->getValue());
+        self::assertEquals($expectedResult, $this->attribute->getValues());
     }
 
     /**
@@ -117,10 +77,8 @@ class AttributeMultiValueTest extends TestCase
      */
     public function testRenderWithNoValueSet(): void
     {
-        $name = 'foo';
-        $this->attribute->setName($name);
-        self::expectException(InvalidAttributeValueException::class);
-        $this->attribute->render();
+        $expectedResult = '';
+        self::assertEquals($expectedResult, $this->attribute->render());
     }
 
     /**
@@ -130,12 +88,9 @@ class AttributeMultiValueTest extends TestCase
      */
     public function testRenderWithOneValueSet(): void
     {
-        $name = 'foo';
         $testValue = ['bar'];
-        $this->tester->method('testValue')->willReturn(true);
-        $this->attribute->setName($name);
         $this->attribute->setValue(...$testValue);
-        $expectedOutput = $name . '=\'bar\'';
+        $expectedOutput = $this->name . '=bar';
         self::assertEquals($expectedOutput, $this->attribute->render());
     }
 
@@ -146,12 +101,9 @@ class AttributeMultiValueTest extends TestCase
      */
     public function testRenderWithMultipleValueSet(): void
     {
-        $name = 'foo';
         $testValue = ['bar', 'baz', 'quux'];
-        $this->tester->method('testValue')->willReturn(true);
-        $this->attribute->setName($name);
         $this->attribute->setValue(...$testValue);
-        $expectedOutput = $name . '=\'bar baz quux\'';
+        $expectedOutput = $this->name . '=bar baz quux';
         self::assertEquals($expectedOutput, $this->attribute->render());
     }
 }

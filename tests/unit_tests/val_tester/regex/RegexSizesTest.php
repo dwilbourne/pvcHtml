@@ -31,7 +31,7 @@ class RegexSizesTest extends TestCase
         $this->assertEquals($expectedResult, $this->regex->match($size));
     }
 
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return array(
             'zeros make no sense but are ok' => ['0x0', true, 'failed on zeros make no sense but are ok'],
